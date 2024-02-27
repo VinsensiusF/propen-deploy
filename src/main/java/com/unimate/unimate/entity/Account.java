@@ -31,6 +31,9 @@ public class Account {
 
     private String profilePicture;
 
+    // UNVERIFIED, VERIFIED
+    private String status;
+
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "roleId")
     private Role role;
