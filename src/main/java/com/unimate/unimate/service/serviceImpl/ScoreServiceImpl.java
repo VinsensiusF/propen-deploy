@@ -1,14 +1,15 @@
-package com.unimate.unimate.service;
+package com.unimate.unimate.service.serviceImpl;
 
 import com.unimate.unimate.entity.Score;
 import com.unimate.unimate.repository.ScoreRepository;
+import com.unimate.unimate.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ScoreServiceImpl implements ScoreService{
+public class ScoreServiceImpl implements ScoreService {
     @Autowired
     private ScoreRepository scoreRepository;
 

@@ -1,14 +1,15 @@
-package com.unimate.unimate.service;
+package com.unimate.unimate.service.serviceImpl;
 
 import com.unimate.unimate.entity.Ujian;
 import com.unimate.unimate.repository.UjianRepository;
+import com.unimate.unimate.service.UjianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UjianServiceImpl implements UjianService{
+public class UjianServiceImpl implements UjianService {
     @Autowired
     private UjianRepository ujianRepository;
 

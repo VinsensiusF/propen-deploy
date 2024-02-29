@@ -1,14 +1,15 @@
-package com.unimate.unimate.service;
+package com.unimate.unimate.service.serviceImpl;
 
 import com.unimate.unimate.entity.Scholarship;
 import com.unimate.unimate.repository.ScholarshipRepository;
+import com.unimate.unimate.service.ScholarshipService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ScholarshipServiceImpl implements ScholarshipService{
+public class ScholarshipServiceImpl implements ScholarshipService {
     @Autowired
     private ScholarshipRepository scholarshipRepository;
 
