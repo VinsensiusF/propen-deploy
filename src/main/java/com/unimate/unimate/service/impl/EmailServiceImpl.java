@@ -1,4 +1,4 @@
-package com.unimate.unimate.service.serviceImpl;
+package com.unimate.unimate.service.impl;
 
 import com.unimate.unimate.service.EmailService;
 import org.springframework.stereotype.Service;

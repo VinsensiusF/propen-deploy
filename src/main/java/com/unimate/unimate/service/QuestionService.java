@@ -1,6 +1,5 @@
 package com.unimate.unimate.service;
 
-import com.unimate.unimate.entity.Partnership;
 import com.unimate.unimate.entity.Question;
 
 import java.util.List;

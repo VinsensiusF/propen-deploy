@@ -1,13 +1,12 @@
 package com.unimate.unimate.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.time.Instant;
-import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -16,6 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "emailVerificationToken")
+//TODO RENAME to TOKEN
+//TODO VALIDATE TOKEN ANOTATION
 public class EmailVerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +27,9 @@ public class EmailVerificationToken {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "accountId")
     private Account account;
+
+    //TODO ENUM TOKEN TYPE
+//    private
 
     private Instant issuedAt;
 

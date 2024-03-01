@@ -6,9 +6,10 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class BaseCustomizedException extends RuntimeException {
-    private HttpStatus httpStatus;
-    private String message;
-    public BaseCustomizedException(HttpStatus httpStatus, String message){
+    private final HttpStatus httpStatus;
+    private final String message;
+
+    public BaseCustomizedException(HttpStatus httpStatus, String message) {
         super(message);
         this.httpStatus = httpStatus;
         this.message = message;

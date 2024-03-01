@@ -19,22 +19,22 @@ import java.time.temporal.ChronoUnit;
 @UtilityClass
 public class JwtUtility {
 
-  public static String jwtGenerator(Long id, String secret) throws JWTCreationException {
-    return JWT.create()
-            .withExpiresAt(Instant.now().plus(100000000, ChronoUnit.MINUTES))
-            .withJWTId(String.valueOf(id))
-            .withIssuer("auth0")
-            .sign(Algorithm.HMAC256(secret.getBytes(StandardCharsets.UTF_8)));
-  }
-
-  public static DecodedJWT jwtVerifier(String token, String secret) throws JWTVerificationException {
-    if(token.startsWith("Bearer ")){
-      token = token.split("Bearer ")[1];
+    public static String jwtGenerator(Long id, String secret) throws JWTCreationException {
+        return JWT.create()
+                .withExpiresAt(Instant.now().plus(100000000, ChronoUnit.MINUTES))
+                .withJWTId(String.valueOf(id))
+                .withIssuer("auth0")
+                .sign(Algorithm.HMAC256(secret.getBytes(StandardCharsets.UTF_8)));
     }
-    final Algorithm algorithm = Algorithm.HMAC256(secret.getBytes(StandardCharsets.UTF_8));
-    final JWTVerifier verifier = JWT.require(algorithm)
-        .withIssuer("auth0")
-        .build();
-    return verifier.verify(token);
-  }
+
+    public static DecodedJWT jwtVerifier(String token, String secret) throws JWTVerificationException {
+        if (token.startsWith("Bearer ")) {
+            token = token.split("Bearer ")[1];
+        }
+        final Algorithm algorithm = Algorithm.HMAC256(secret.getBytes(StandardCharsets.UTF_8));
+        final JWTVerifier verifier = JWT.require(algorithm)
+                .withIssuer("auth0")
+                .build();
+        return verifier.verify(token);
+    }
 }

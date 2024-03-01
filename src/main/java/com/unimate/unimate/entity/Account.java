@@ -1,15 +1,16 @@
 package com.unimate.unimate.entity;
 
+import com.unimate.unimate.enums.AccountStatusEnum;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
-import java.util.Date;
+import java.time.Instant;
+
 
 @Getter
 @Setter
@@ -32,17 +33,18 @@ public class Account {
     private String profilePicture;
 
     // UNVERIFIED, VERIFIED
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private AccountStatusEnum status;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "roleId")
+    @JoinColumn(name = "role_id")
     private Role role;
 
     @CreationTimestamp
-    private Date createdAt;
+    private Instant createdAt;
 
     @UpdateTimestamp
-    private Date modifiedAt;
+    private Instant modifiedAt;
 
-    private Date deletedAt;
+    private Instant deletedAt;
 }

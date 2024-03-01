@@ -16,5 +16,6 @@ public class AspectHelper {
                 .findFirst()
                 .map(HttpServletRequest.class::cast)
                 .orElse(null);
+    }
 
 }
