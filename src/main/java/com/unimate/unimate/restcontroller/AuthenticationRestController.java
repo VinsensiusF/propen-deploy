@@ -1,8 +1,10 @@
 package com.unimate.unimate.restcontroller;
 
+import com.unimate.unimate.dto.ForgetPasswordDTO;
 import com.unimate.unimate.dto.SignInDTO;
 import com.unimate.unimate.dto.SignUpDTO;
 import com.unimate.unimate.dto.VerificationRequestDTO;
+import com.unimate.unimate.entity.Token;
 import com.unimate.unimate.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +25,6 @@ public class AuthenticationRestController {
     public AuthenticationRestController(AuthenticationService authenticationService){
         this.authenticationService = authenticationService;
     }
-
-
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> body) {
@@ -56,6 +56,20 @@ public class AuthenticationRestController {
         signUpDTO.setName(body.get("name"));
 
         return authenticationService.signUp(signUpDTO);
+    }
+
+    @PostMapping("/forget-password")
+    public ResponseEntity<String> forgetPassword(@RequestBody Map<String, String> body) {
+        ForgetPasswordDTO forgetPasswordDTO = new ForgetPasswordDTO();
+        forgetPasswordDTO.setEmail(body.get("email"));
+
+        try {
+            Token token = authenticationService.forgetPassword(forgetPasswordDTO);
+            return ResponseEntity.status(HttpStatus.OK).body("Password reset link has been sent. Check your email for verification.");
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        }
     }
 
 }

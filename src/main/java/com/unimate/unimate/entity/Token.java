@@ -14,17 +14,17 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "emailVerificationToken")
+@Table(name = "token")
 //TODO RENAME to TOKEN
 //TODO VALIDATE TOKEN ANOTATION
-public class EmailVerificationToken {
+public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private UUID token;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "accountId")
     private Account account;
 

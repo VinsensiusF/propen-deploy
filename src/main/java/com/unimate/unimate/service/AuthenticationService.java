@@ -1,15 +1,13 @@
 package com.unimate.unimate.service;
 
 import com.unimate.unimate.config.AuthConfigProperties;
-import com.unimate.unimate.dto.SignInDTO;
-import com.unimate.unimate.dto.SignUpDTO;
-import com.unimate.unimate.dto.VerificationRequestDTO;
+import com.unimate.unimate.dto.*;
 import com.unimate.unimate.entity.Account;
-import com.unimate.unimate.entity.EmailVerificationToken;
+import com.unimate.unimate.entity.Token;
 import com.unimate.unimate.enums.AccountStatusEnum;
 import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.repository.AccountRepository;
-import com.unimate.unimate.repository.EmailVerificationTokenRepository;
+import com.unimate.unimate.repository.TokenRepository;
 import com.unimate.unimate.repository.RoleRepository;
 import com.unimate.unimate.util.JwtUtility;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +27,19 @@ public class AuthenticationService {
     //todo autowird in constructor
     private final EmailService emailService;
     private final AccountRepository accountRepository;
-    private final EmailVerificationTokenRepository emailVerificationTokenRepository;
+    private final TokenRepository tokenRepository;
     private final AuthConfigProperties configProperties;
     private final RoleRepository roleRepository;
 
     @Autowired
     public AuthenticationService( EmailService emailService,
                                   AccountRepository accountRepository,
-                                  EmailVerificationTokenRepository emailVerificationTokenRepository,
+                                  TokenRepository tokenRepository,
                                   AuthConfigProperties configProperties,
                                   RoleRepository roleRepository) {
         this.emailService = emailService;
         this.accountRepository = accountRepository;
-        this.emailVerificationTokenRepository = emailVerificationTokenRepository;
+        this.tokenRepository = tokenRepository;
         this.configProperties = configProperties;
         this.roleRepository = roleRepository;
     }
@@ -75,16 +73,16 @@ public class AuthenticationService {
         account.setStatus(AccountStatusEnum.UNVERIFIED);
         accountRepository.save(account);
 
-        EmailVerificationToken emailVerificationToken = new EmailVerificationToken();
-        emailVerificationToken.setToken(UUID.randomUUID());
-        emailVerificationToken.setAccount(account);
-        emailVerificationToken.setIssuedAt(Instant.now());
-        emailVerificationToken.setExpiredAt(Instant.now().plus(30, ChronoUnit.MINUTES));
-        emailVerificationTokenRepository.save(emailVerificationToken);
+        Token token = new Token();
+        token.setToken(UUID.randomUUID());
+        token.setAccount(account);
+        token.setIssuedAt(Instant.now());
+        token.setExpiredAt(Instant.now().plus(30, ChronoUnit.MINUTES));
+        tokenRepository.save(token);
 
         //ToDo implement email service
         HashMap<String, String> body = new HashMap<>();
-        body.put("verificationlink", generateVerificationLink(emailVerificationToken.getToken()));
+        body.put("verificationlink", generateVerificationLink(token.getToken()));
         emailService.send(account.getEmail(), body);
 
         return ResponseEntity.ok("Account has been created. Check your email for verification.");
@@ -97,10 +95,10 @@ public class AuthenticationService {
 
     public ResponseEntity<String> verifyEmail(VerificationRequestDTO verificationRequestDTO) {
         // Find the corresponding verification token
-        Optional<EmailVerificationToken> optionalToken = emailVerificationTokenRepository.findEmailVerificationTokenByToken(verificationRequestDTO.getToken());
+        Optional<Token> optionalToken = tokenRepository.findTokenByToken(verificationRequestDTO.getToken());
 
         if (optionalToken.isPresent()) {
-            EmailVerificationToken verificationToken = optionalToken.get();
+            Token verificationToken = optionalToken.get();
             if (verificationToken.getExpiredAt().isBefore(Instant.now())) {
                 //todo Token has expired & Handle expiration logic
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
@@ -115,6 +113,60 @@ public class AuthenticationService {
                 accountRepository.save(account);
                 //todo Redirect to login page
                 return ResponseEntity.ok("User has been successfully verified. Redirecting to login page...");
+            }
+
+        } else {
+            //TODO Token is invalid & Handle invalid token logic
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
+        }
+    }
+
+    public Token forgetPassword(ForgetPasswordDTO forgetPasswordDTO) {
+        // Find the corresponding verification token
+        Optional<Account> existingAccount = accountRepository.findAccountByEmail(forgetPasswordDTO.getEmail());
+        if (existingAccount.isEmpty()) {
+            throw new RuntimeException("Account is not existed");
+        }
+        Account account = existingAccount.get();
+        Token token = new Token();
+        token.setToken(UUID.randomUUID());
+        token.setAccount(account);
+        token.setIssuedAt(Instant.now());
+        token.setExpiredAt(Instant.now().plus(30, ChronoUnit.MINUTES));
+        tokenRepository.save(token);
+
+        HashMap<String, String> body = new HashMap<>();
+        body.put("verificationlink", generateVerificationLink(token.getToken()));
+        emailService.send(account.getEmail(), body);
+
+        return token;
+    }
+
+    public ResponseEntity<String> verifyForgetPassword(VerificationForgetPasswordDTO verificationForgetPasswordDTO) {
+        // Find the corresponding verification token
+        Optional<Token> optionalToken = tokenRepository.findTokenByToken(verificationForgetPasswordDTO.getToken());
+
+        if (optionalToken.isPresent()) {
+            Token verificationToken = optionalToken.get();
+            if (verificationToken.getExpiredAt().isBefore(Instant.now())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
+            }
+            Account account = verificationToken.getAccount();
+            if (account.getStatus() == AccountStatusEnum.UNVERIFIED) {
+                return ResponseEntity.ok("Account is not verified and can't change password");
+            } else {
+                //check password and repeated password
+                String newPassword = verificationForgetPasswordDTO.getPassword();
+                if(newPassword.equals(verificationForgetPasswordDTO.getRepeatedPassword())){
+                    final String password = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+                    account.setPassword(password);
+                    accountRepository.save(account);
+                    //todo Redirect to login page
+                    return ResponseEntity.ok("User's password has been changed. Redirecting to login page...");
+                }
+                else{
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password and Repeaated Password are not the same.");
+                }
             }
 
         } else {
