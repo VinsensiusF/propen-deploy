@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/verify")
 public class VerificationRestController {
+    private final AuthenticationService authenticationService;
     @Autowired
-    private AuthenticationService authenticationService;
-    //TODO PISAHKAN ENDPOINT
+    public VerificationRestController(AuthenticationService authenticationService){
+        this.authenticationService = authenticationService;
+    }
     @PostMapping("/email")
     public ResponseEntity<String> verifyEmail(@RequestBody VerificationRequestDTO verificationRequestDTO) {
         return authenticationService.verifyEmail(verificationRequestDTO);

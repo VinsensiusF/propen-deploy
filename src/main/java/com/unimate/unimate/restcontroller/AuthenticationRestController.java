@@ -18,8 +18,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationRestController {
+    private final AuthenticationService authenticationService;
     @Autowired
-    private AuthenticationService authenticationService;
+    public AuthenticationRestController(AuthenticationService authenticationService){
+        this.authenticationService = authenticationService;
+    }
+
+
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> body) {
