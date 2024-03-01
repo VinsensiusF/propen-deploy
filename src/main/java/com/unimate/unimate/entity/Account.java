@@ -36,7 +36,7 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private AccountStatusEnum status;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
 

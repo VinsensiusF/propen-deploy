@@ -53,9 +53,4 @@ public class AuthenticationRestController {
         return authenticationService.signUp(signUpDTO);
     }
 
-    //TODO PISAHKAN ENDPOINT
-    @PostMapping("/verify/email")
-    public ResponseEntity<String> verifyEmail(@RequestBody VerificationRequestDTO verificationRequestDTO) {
-        return authenticationService.verifyEmail(verificationRequestDTO);
-    }
 }
