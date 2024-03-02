@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-@Order(3)
 @Slf4j
 public class ValidateTokenAspect {
 //    private static final String UNAUTHORIZED = "Unauthorized";

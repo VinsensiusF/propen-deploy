@@ -1,7 +1,6 @@
 package com.unimate.unimate.restcontroller;
 
-import com.unimate.unimate.dto.ForgetPasswordDTO;
-import com.unimate.unimate.dto.VerificationForgetPasswordDTO;
+import com.unimate.unimate.dto.VerificationForgotPasswordDTO;
 import com.unimate.unimate.dto.VerificationRequestDTO;
 import com.unimate.unimate.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +23,8 @@ public class VerificationRestController {
         return authenticationService.verifyEmail(verificationRequestDTO);
     }
 
-    @PostMapping("/forget-password")
-    public ResponseEntity<String> verifyForgetPassword(@RequestBody VerificationForgetPasswordDTO verificationForgetPasswordDTO) {
-        return authenticationService.verifyForgetPassword(verificationForgetPasswordDTO);
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> verifyForgotPassword(@RequestBody VerificationForgotPasswordDTO verificationForgotPasswordDTO) {
+        return authenticationService.verifyForgotPassword(verificationForgotPasswordDTO);
     }
 }

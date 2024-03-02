@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class ForgetPasswordDTO {
+public class ResendEmailDTO {
     @NotNull
     private String email;
 }

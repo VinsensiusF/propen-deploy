@@ -1,5 +1,6 @@
 package com.unimate.unimate.entity;
 
+import com.unimate.unimate.enums.TokenType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,7 +30,8 @@ public class Token {
     private Account account;
 
     //TODO ENUM TOKEN TYPE
-//    private
+    @Enumerated(EnumType.STRING)
+    private TokenType tokenType;
 
     private Instant issuedAt;
 

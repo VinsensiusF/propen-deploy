@@ -1,10 +1,14 @@
 package com.unimate.unimate.restcontroller;
 
-import com.unimate.unimate.dto.ForgetPasswordDTO;
+import com.unimate.unimate.dto.ForgotPasswordDTO;
+import com.unimate.unimate.dto.ResendEmailDTO;
 import com.unimate.unimate.dto.SignInDTO;
 import com.unimate.unimate.dto.SignUpDTO;
-import com.unimate.unimate.dto.VerificationRequestDTO;
+import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.entity.Token;
+import com.unimate.unimate.enums.TokenType;
+import com.unimate.unimate.repository.AccountRepository;
+import com.unimate.unimate.repository.TokenRepository;
 import com.unimate.unimate.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -58,18 +66,24 @@ public class AuthenticationRestController {
         return authenticationService.signUp(signUpDTO);
     }
 
-    @PostMapping("/forget-password")
-    public ResponseEntity<String> forgetPassword(@RequestBody Map<String, String> body) {
-        ForgetPasswordDTO forgetPasswordDTO = new ForgetPasswordDTO();
-        forgetPasswordDTO.setEmail(body.get("email"));
+    @PostMapping("/forgot-password")
+    //todo example    @ValidateToken(RoleType.Admin)
+    public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> body) {
+        ForgotPasswordDTO forgotPasswordDTO = new ForgotPasswordDTO();
+        forgotPasswordDTO.setEmail(body.get("email"));
 
         try {
-            Token token = authenticationService.forgetPassword(forgetPasswordDTO);
+            Token token = authenticationService.forgotPassword(forgotPasswordDTO);
             return ResponseEntity.status(HttpStatus.OK).body("Password reset link has been sent. Check your email for verification.");
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/resend")
+    public ResponseEntity<String> resendEmail(@RequestBody ResendEmailDTO resendEmailDTO){
+        return authenticationService.resendEmail(resendEmailDTO);
     }
 
 }
