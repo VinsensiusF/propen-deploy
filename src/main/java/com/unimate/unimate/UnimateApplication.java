@@ -14,18 +14,13 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-<<<<<<< src/main/java/com/unimate/unimate/UnimateApplication.java
-
 import java.util.List;
-=======
->>>>>>> src/main/java/com/unimate/unimate/UnimateApplication.java
 
 @SpringBootApplication
 @EnableJpaRepositories
 @EntityScan("com.unimate.*")
 @ComponentScan(basePackages = "com.unimate.unimate.*")
 @ConfigurationPropertiesScan(basePackages = {"com.unimate.unimate.config"})
-<<<<<<< src/main/java/com/unimate/unimate/UnimateApplication.java
 public class UnimateApplication implements CommandLineRunner {
 
     @Autowired
