@@ -1,5 +1,6 @@
 package com.unimate.unimate.restcontroller;
 
+import com.unimate.unimate.aspect.ValidateToken;
 import com.unimate.unimate.dto.CleanAccountDTO;
 import com.unimate.unimate.dto.CreateAccountDTO;
 import com.unimate.unimate.dto.UpdateAccountDTO;
@@ -52,6 +53,7 @@ public class AccountRestController {
     }
 
     @GetMapping("/find-by-email")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
     public ResponseEntity<?> findAccountByEmail(@RequestBody Map<String, String> body) {
         Optional<Account> existingAccount = accountService.getAccountByEmail(body.get("email"));
         if (existingAccount.isEmpty()) {
@@ -72,6 +74,7 @@ public class AccountRestController {
     }
 
     @GetMapping("/{id}")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
     public ResponseEntity<?> findAccountById(@PathVariable("id") Long id) {
         Optional<Account> existingAccount = accountService.getAccountById(id);
         if (existingAccount.isEmpty()) {
@@ -89,6 +92,7 @@ public class AccountRestController {
     }
 
     @PostMapping("/create")
+    @ValidateToken({RoleEnum.ADMIN})
     public ResponseEntity<?> createAccount(@Valid @RequestBody CreateAccountDTO body){
 
         Optional<Account> existingAccount = accountService.getAccountByEmail(body.getEmail());
@@ -112,6 +116,7 @@ public class AccountRestController {
     }
 
     @PutMapping("/{id}")
+    @ValidateToken({RoleEnum.ADMIN})
     public ResponseEntity<?> updateAccountById(@Valid @RequestBody UpdateAccountDTO body, @PathVariable("id") Long id) {
         Optional<Account> existingAccount = accountService.getAccountById(id);
 
@@ -125,12 +130,6 @@ public class AccountRestController {
 
         // checks if the new email has been used before
         //TODO
-
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println(body);
 
         Account accountToUpdate = new Account();
         accountToUpdate.setId(body.getId());
@@ -151,6 +150,7 @@ public class AccountRestController {
 
 
     @DeleteMapping("/{id}")
+    @ValidateToken({RoleEnum.ADMIN})
     public ResponseEntity<?> deleteAccountById(@PathVariable("id") Long id) {
         Optional<Account> existingAccount = accountService.getAccountById(id);
         if (existingAccount.isEmpty()) {
