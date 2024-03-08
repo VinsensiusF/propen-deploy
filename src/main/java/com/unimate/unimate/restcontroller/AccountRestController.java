@@ -24,8 +24,8 @@ public class AccountRestController {
 
     @GetMapping("/starter")
     public List<Account> starter(){
-        return authenticationService.findAll();
-//        return authenticationService.starter();
+//        return authenticationService.findAll();
+        return authenticationService.starter();
     }
 
 //    @GetMapping()
