@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class AccountVerificationTokenException extends BaseCustomizedException {
 
-    public AccountVerificationTokenException(String message){
+    public AccountVerificationTokenException(String message) {
         super(HttpStatus.BAD_REQUEST, message);
     }
 }

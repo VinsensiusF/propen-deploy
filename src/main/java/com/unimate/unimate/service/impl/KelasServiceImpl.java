@@ -1,16 +1,21 @@
-package com.unimate.unimate.service;
+package com.unimate.unimate.service.impl;
 
 import com.unimate.unimate.entity.Kelas;
 import com.unimate.unimate.repository.KelasRepository;
+import com.unimate.unimate.service.KelasService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class KelasServiceImpl implements KelasService{
+public class KelasServiceImpl implements KelasService {
+    private final KelasRepository kelasRepository;
+
     @Autowired
-    private KelasRepository kelasRepository;
+    public KelasServiceImpl(KelasRepository kelasRepository){
+        this.kelasRepository = kelasRepository;
+    }
 
     @Override
     public void saveKelas(Kelas kelas) {

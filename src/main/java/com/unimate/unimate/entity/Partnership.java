@@ -1,5 +1,6 @@
 package com.unimate.unimate.entity;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -26,6 +26,7 @@ public class Partnership {
 
     private String email;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @CreationTimestamp

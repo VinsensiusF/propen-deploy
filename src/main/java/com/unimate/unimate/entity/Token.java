@@ -1,12 +1,13 @@
 package com.unimate.unimate.entity;
 
+import com.unimate.unimate.enums.TokenType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.Date;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -14,23 +15,25 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "loginTokenModel")
-public class LoginTokenModel {
+@Table(name = "token")
+//TODO RENAME to TOKEN
+//TODO VALIDATE TOKEN ANOTATION
+public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private UUID token;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "accountId")
     private Account account;
 
-    private UUID refreshToken;
+    //TODO ENUM TOKEN TYPE
+    @Enumerated(EnumType.STRING)
+    private TokenType tokenType;
 
-    private Date issuedAt;
+    private Instant issuedAt;
 
-    private Date expiredAt;
-
-    private Date refreshTokenExpiredAt;
+    private Instant expiredAt;
 }

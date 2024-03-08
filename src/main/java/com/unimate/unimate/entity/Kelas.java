@@ -1,9 +1,13 @@
 package com.unimate.unimate.entity;
-import lombok.*;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Getter
@@ -19,7 +23,7 @@ public class Kelas {
     private Long id;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "teacherId")
+    @JoinColumn(name = "teacher_id")
     private Account teacher;
 
     private String name;

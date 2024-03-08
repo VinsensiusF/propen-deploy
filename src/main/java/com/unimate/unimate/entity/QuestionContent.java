@@ -1,13 +1,10 @@
 package com.unimate.unimate.entity;
 
-import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
 
 @Getter
 @Setter
@@ -20,6 +17,10 @@ public class QuestionContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "questionId")
+    private Question question;
 
     private String questionSentence;
 
