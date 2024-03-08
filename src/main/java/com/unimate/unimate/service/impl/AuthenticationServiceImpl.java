@@ -3,6 +3,7 @@ package com.unimate.unimate.service.impl;
 import com.unimate.unimate.config.AuthConfigProperties;
 import com.unimate.unimate.dto.*;
 import com.unimate.unimate.entity.Account;
+import com.unimate.unimate.entity.Role;
 import com.unimate.unimate.entity.Token;
 import com.unimate.unimate.enums.AccountStatusEnum;
 import com.unimate.unimate.enums.RoleEnum;
@@ -201,6 +202,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         emailService.send(account.getEmail(), body);
 
         return ResponseEntity.ok("Email has been sent.");
+    }
+
+    @Override
+    public List<Account> starter() {
+        List<Role> roles = roleRepository.findAll();
+        if (roles.isEmpty()) {
+            for (RoleEnum roleName : RoleEnum.values()) {
+                Role role = new Role();
+                role.setName(roleName);
+                roleRepository.save(role);
+            }
+        }
+        if(findAll().isEmpty()){
+            SignUpDTO signUpDTOAdmin = new SignUpDTO("admin@gmail.com", "admin", "admin");
+            SignUpDTO signUpDTOTopLevel = new SignUpDTO("toplevel@gmail.com", "toplevel", "toplevel");
+            SignUpDTO signUpDTOTeacher = new SignUpDTO("teacher@gmail.com", "teacher", "teacher");
+            SignUpDTO signUpDTOCS = new SignUpDTO("cs@gmail.com", "cs", "cs");
+            initialSignUp(signUpDTOAdmin);
+            initialSignUp(signUpDTOTeacher);
+            initialSignUp(signUpDTOTopLevel);
+            initialSignUp(signUpDTOCS);
+        }
+        return accountRepository.findAll();
     }
 
     public void initialSignUp(SignUpDTO signUpDTO) {
