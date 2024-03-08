@@ -1,12 +1,10 @@
 package com.unimate.unimate.service;
 
 import com.unimate.unimate.dto.*;
-<<<<<<< src/main/java/com/unimate/unimate/service/AuthenticationService.java
 import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.entity.Token;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface AuthenticationService {
