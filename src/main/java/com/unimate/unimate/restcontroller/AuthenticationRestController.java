@@ -4,6 +4,7 @@ import com.unimate.unimate.dto.ForgotPasswordDTO;
 import com.unimate.unimate.dto.ResendEmailDTO;
 import com.unimate.unimate.dto.SignInDTO;
 import com.unimate.unimate.dto.SignUpDTO;
+
 import com.unimate.unimate.entity.Token;
 import com.unimate.unimate.service.AuthenticationService;
 import com.unimate.unimate.service.impl.AuthenticationServiceImpl;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthenticationRestController {
@@ -23,8 +25,6 @@ public class AuthenticationRestController {
     public AuthenticationRestController(AuthenticationService authenticationService){
         this.authenticationService = authenticationService;
     }
-
-
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> body) {
         SignInDTO signInDTO = new SignInDTO();

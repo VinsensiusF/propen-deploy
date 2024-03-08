@@ -2,8 +2,8 @@ package com.unimate.unimate.entity;
 
 import com.unimate.unimate.enums.AccountStatusEnum;
 import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 

@@ -17,5 +17,4 @@ public interface AuthenticationService {
     ResponseEntity<String> verifyForgotPassword(VerificationForgotPasswordDTO verificationForgotPasswordDTO);
     ResponseEntity<String> resendEmail(ResendEmailDTO resendEmailDTO);
     List<Account> starter();
-
 }
