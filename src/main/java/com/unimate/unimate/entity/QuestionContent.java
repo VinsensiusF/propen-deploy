@@ -18,6 +18,10 @@ public class QuestionContent {
     @Column(name = "id")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "questionId")
+    private Question question;
+
     private String questionSentence;
 
     private String a;

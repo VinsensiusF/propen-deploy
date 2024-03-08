@@ -3,6 +3,8 @@ package com.unimate.unimate.restcontroller;
 import com.unimate.unimate.dto.VerificationForgotPasswordDTO;
 import com.unimate.unimate.dto.VerificationRequestDTO;
 import com.unimate.unimate.service.AuthenticationService;
+
+import com.unimate.unimate.service.impl.AuthenticationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

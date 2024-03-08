@@ -1,4 +1,4 @@
-package com.unimate.unimate;
+package com.unimate.unimate.enums;
 
 public enum AccessCode {
     ACCEPT_PAYMENT, LIMITING_DISCOUNT, CHANGE_TAX, CASH_REGISTER, VIEW_RECEIPT, PURCHASE_RETURN, PRINT_SEND_RECEIPT, CHANGE_ITEM, POS_VIEW_ITEM_COST, VIEW_SETTING,

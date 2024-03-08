@@ -2,11 +2,9 @@ package com.unimate.unimate.entity;
 
 import com.unimate.unimate.enums.AccountStatusEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import lombok.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
@@ -29,6 +27,10 @@ public class Account {
     private String password;
 
     private String name;
+
+//    @Type(type = "org.hibernate.type.ImageType")
+//    @Lob
+//    private byte[] profilePicture;
 
     private String profilePicture;
 

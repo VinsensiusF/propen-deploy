@@ -1,6 +1,5 @@
 package com.unimate.unimate.restcontroller;
 
-import com.unimate.unimate.ValidateToken;
 import com.unimate.unimate.dto.CleanAccountDTO;
 import com.unimate.unimate.dto.CreateAccountDTO;
 import com.unimate.unimate.dto.UpdateAccountDTO;
@@ -24,6 +23,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/account")
 public class AccountRestController {
@@ -32,14 +37,18 @@ public class AccountRestController {
 
     private final AccountMapper accountMapper;
 
+    private final AuthenticationService authenticationService;
+
     @Autowired
     public AccountRestController(AccountService accountService,
                                  RoleRepository roleRepository,
-                                 AccountMapper accountMapper
+                                 AccountMapper accountMapper,
+                                 AuthenticationService authenticationService
     ){
         this.accountService = accountService;
         this.roleRepository = roleRepository;
         this.accountMapper = accountMapper;
+        this.authenticationService = authenticationService;
     }
 
     @GetMapping("/find-by-email")
@@ -159,6 +168,14 @@ public class AccountRestController {
         generalResponseDTO.setMessage(String.format("Account with ID %s has been successfully deleted", accountId));
         return ResponseEntity.ok(generalResponseDTO);
     }
+
+    @GetMapping("/starter")
+    public List<Account> starter(){
+//        return authenticationService.findAll();
+        return authenticationService.starter();
+
+    }
+
 
 //    @GetMapping()
 //    @ValidateToken(RoleEnum.STUDENT)

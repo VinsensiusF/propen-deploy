@@ -6,11 +6,15 @@ import com.unimate.unimate.enums.AccountStatusEnum;
 import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.repository.RoleRepository;
 import com.unimate.unimate.service.AccountService;
+import com.unimate.unimate.service.AuthenticationService;
+
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -27,8 +31,9 @@ public class UnimateApplication {
 
     @Bean
     @Transactional
-    CommandLineRunner run(AccountService accountService, RoleRepository roleRepository) {
+    CommandLineRunner run(AccountService accountService, RoleRepository roleRepository, AuthenticationService authenticationService) {
         return args -> {
+            authenticationService.starter();
             Role studentRole = new Role();
             studentRole.setName(RoleEnum.STUDENT);
             roleRepository.save(studentRole);

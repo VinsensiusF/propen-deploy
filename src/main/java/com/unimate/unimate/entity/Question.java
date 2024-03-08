@@ -20,9 +20,9 @@ public class Question {
     @Column(name = "id")
     private Long id;
 
-    @Type(JsonBinaryType.class)
-    @Column(name = "content", columnDefinition = "jsonb")
-    private QuestionContent content;
+//    @Type(JsonBinaryType.class)
+//    @Column(name = "content", columnDefinition = "jsonb")
+//    private QuestionContent content;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ujianId")

@@ -1,4 +1,6 @@
-package com.unimate.unimate;
+package com.unimate.unimate.aspect;
+
+import com.unimate.unimate.enums.RoleEnum;
 
 import com.unimate.unimate.enums.RoleEnum;
 

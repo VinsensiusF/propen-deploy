@@ -10,8 +10,12 @@ import java.util.List;
 
 @Service
 public class ScoreServiceImpl implements ScoreService {
+    private final ScoreRepository scoreRepository;
+
     @Autowired
-    private ScoreRepository scoreRepository;
+    public ScoreServiceImpl(ScoreRepository scoreRepository){
+        this.scoreRepository = scoreRepository;
+    }
 
     @Override
     public void saveScore(Score score) {

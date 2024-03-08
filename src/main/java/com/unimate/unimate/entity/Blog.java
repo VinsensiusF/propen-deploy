@@ -22,7 +22,9 @@ public class Blog {
     @Column(name = "id")
     private Long id;
 
-    //Text not VARCHAR
+    private String title;
+
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @CreationTimestamp

@@ -10,8 +10,12 @@ import java.util.List;
 
 @Service
 public class KelasServiceImpl implements KelasService {
+    private final KelasRepository kelasRepository;
+
     @Autowired
-    private KelasRepository kelasRepository;
+    public KelasServiceImpl(KelasRepository kelasRepository){
+        this.kelasRepository = kelasRepository;
+    }
 
     @Override
     public void saveKelas(Kelas kelas) {

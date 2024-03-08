@@ -1,6 +1,5 @@
 package com.unimate.unimate.service.impl;
 
-
 import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.exception.EntityNotFoundException;
 import com.unimate.unimate.repository.AccountRepository;
@@ -65,6 +64,4 @@ public class AccountServiceImpl implements AccountService {
     public Optional<Account> getAccountByEmail(String email) {
         return accountRepository.findAccountByEmail(email);
     }
-
-
 }

@@ -1,21 +1,18 @@
 package com.unimate.unimate.dto;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Accessors(chain = true)
-public class SignUpDTO {
+public class UpdateBlogDTO {
     @NotNull
-    private String email;
+    private Long id;
+
     @NotNull
-    private String password;
+    private String title;
+
     @NotNull
-    private String name;
+    private String content;
 }

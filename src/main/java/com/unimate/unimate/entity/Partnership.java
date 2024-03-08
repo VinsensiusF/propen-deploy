@@ -26,6 +26,7 @@ public class Partnership {
 
     private String email;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @CreationTimestamp

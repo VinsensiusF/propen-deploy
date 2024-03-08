@@ -22,7 +22,7 @@ public class Ujian {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "kelasId")
     private Kelas kelas;
 

@@ -18,5 +18,4 @@ public interface AccountService {
     Optional<Account> getAccountById(Long id);
 
     Optional<Account> getAccountByEmail(String email);
-
 }
