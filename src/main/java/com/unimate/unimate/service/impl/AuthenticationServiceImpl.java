@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,6 +48,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.roleRepository = roleRepository;
     }
 
+    @Override
+    public List<Account> findAll() {
+        return accountRepository.findAll();
+    }
 
     public String login(SignInDTO signInDTO) {
         final Account account = accountRepository.findAccountByEmail(signInDTO.getEmail())
@@ -196,5 +201,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         emailService.send(account.getEmail(), body);
 
         return ResponseEntity.ok("Email has been sent.");
+    }
+
+    public void initialSignUp(SignUpDTO signUpDTO) {
+        Optional<Account> existingAccount = accountRepository.findAccountByEmail(signUpDTO.getEmail());
+        if (existingAccount.isPresent()) {
+            throw new RuntimeException("Account has already existed");
+        }
+        final Account account = new Account();
+        String name = signUpDTO.getName();
+        switch (name) {
+            case "teacher" -> account.setRole(roleRepository.findRoleByName(RoleEnum.TEACHER));
+            case "admin" -> account.setRole(roleRepository.findRoleByName(RoleEnum.ADMIN));
+            case "toplevel" -> account.setRole(roleRepository.findRoleByName(RoleEnum.TOP_LEVEL));
+            case "cs" -> account.setRole(roleRepository.findRoleByName(RoleEnum.CUSTOMER_SERVICE));
+        }
+
+        account.setEmail(signUpDTO.getEmail());
+        account.setName(signUpDTO.getName());
+        final String password = BCrypt.hashpw(signUpDTO.getPassword(), BCrypt.gensalt());
+        account.setPassword(password);
+        account.setStatus(AccountStatusEnum.VERIFIED);
+        accountRepository.save(account);
     }
 }
