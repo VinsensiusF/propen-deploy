@@ -1,4 +1,6 @@
-package com.unimate.unimate;
+package com.unimate.unimate.aspect;
+
+import com.unimate.unimate.enums.RoleEnum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,5 +16,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidateToken {
-    RoleType[] value();
+    RoleEnum[] value();
 }
