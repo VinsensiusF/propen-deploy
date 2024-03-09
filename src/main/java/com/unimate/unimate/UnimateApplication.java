@@ -18,6 +18,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @SpringBootApplication
 @EnableJpaRepositories
@@ -34,28 +35,13 @@ public class UnimateApplication {
     CommandLineRunner run(AccountService accountService, RoleRepository roleRepository, AuthenticationService authenticationService) {
         return args -> {
             authenticationService.starter();
-            Role studentRole = new Role();
-            studentRole.setName(RoleEnum.STUDENT);
-            roleRepository.save(studentRole);
-
-            Role adminRole = new Role();
-            adminRole.setName(RoleEnum.ADMIN);
-            roleRepository.save(adminRole);
-
-            Role teacherRole = new Role();
-            teacherRole.setName(RoleEnum.TEACHER);
-            roleRepository.save(teacherRole);
-
-            Role topLevel = new Role();
-            topLevel.setName(RoleEnum.TOP_LEVEL);
-            roleRepository.save(topLevel);
 
             Account account = new Account();
             account.setName("Bintang");
             account.setEmail("bintang@gmail.com");
-            account.setPassword("12345");
+            account.setPassword(BCrypt.hashpw("12345", BCrypt.gensalt()));
             account.setProfilePicture("pic");
-            account.setRole(studentRole);
+            account.setRole(roleRepository.findRoleByName(RoleEnum.STUDENT));
             account.setStatus(AccountStatusEnum.VERIFIED);
 
             accountService.saveAccount(account);
