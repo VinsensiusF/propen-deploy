@@ -1,19 +1,16 @@
 package com.unimate.unimate;
 
 import com.unimate.unimate.entity.Account;
-import com.unimate.unimate.entity.Role;
 import com.unimate.unimate.enums.AccountStatusEnum;
 import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.repository.RoleRepository;
 import com.unimate.unimate.service.AccountService;
 import com.unimate.unimate.service.AuthenticationService;
-
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,7 +21,9 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 @EnableJpaRepositories
 @EntityScan("com.unimate.*")
 @ComponentScan(basePackages = "com.unimate.unimate.*")
+@ConfigurationPropertiesScan(basePackages = {"com.unimate.unimate.config"})
 public class UnimateApplication {
+
 
     public static void main(String[] args) {
         SpringApplication.run(UnimateApplication.class, args);
@@ -32,10 +31,9 @@ public class UnimateApplication {
 
     @Bean
     @Transactional
-    CommandLineRunner run(AccountService accountService, RoleRepository roleRepository, AuthenticationService authenticationService) {
+    CommandLineRunner run(AuthenticationService authenticationService, RoleRepository roleRepository, RoleEnum roleEnum, AccountStatusEnum accountStatusEnum, AccountService accountService){
         return args -> {
             authenticationService.starter();
-
             Account account = new Account();
             account.setName("Bintang");
             account.setEmail("bintang@gmail.com");
