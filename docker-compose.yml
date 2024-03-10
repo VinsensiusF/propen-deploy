@@ -1,0 +1,60 @@
+version: '3.3'
+services:
+#  web:
+#    build:
+#      context: .
+#    restart: always
+#    ports:
+#      - "10001:8080"
+#    volumes:
+#      - ./file-storage:/file-storage
+#      - ./log:/log
+#    env_file:
+#      - unimate/.env
+#    depends_on:
+#      - db
+#    networks:
+#      - frontend-network
+#      - backend-network
+#    platform: linux/amd64
+#
+#  web2:
+#    build:
+#      context: .
+#    restart: always
+#    ports:
+#      - "10221:2020"
+#    volumes:
+#      - ./file-storage:/file-storage
+#      - ./log:/log
+#    env_file:
+#      - bacabaca/.env.app2
+#    depends_on:
+#      - db
+#    networks:
+#      - frontend-network
+#      - backend-network
+#    platform: linux/amd64
+
+  db:
+    image: postgres:14-alpine
+    ports:
+      - '15001:5432'
+    restart: 'no'
+    environment:
+      - POSTGRES_USER=unimate
+      - POSTGRES_PASSWORD=unimate
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - backend-network
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  frontend-network:
+    driver: bridge
+  backend-network:
+    driver: bridge
