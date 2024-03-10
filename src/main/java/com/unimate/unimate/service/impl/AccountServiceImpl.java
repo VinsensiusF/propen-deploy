@@ -31,7 +31,7 @@ public class AccountServiceImpl implements AccountService {
     public Account updateAccount(Account accountRequest) {
         Optional<Account> optionalAccount = getAccountById(accountRequest.getId());
         if (optionalAccount.isEmpty()) {
-            throw new EntityNotFoundException(Account.class);
+            throw new EntityNotFoundException();
         }
 
         Account account = optionalAccount.get();

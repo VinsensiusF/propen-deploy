@@ -11,6 +11,13 @@ public class UpdateKelasDTO {
     private Long id;
     @NotNull
     private String name;
+
+//    @NotNull
+//    private Float rating;
+
     @NotNull
+    private String category;
+
     private Long teacherId;
+
 }

@@ -1,5 +1,6 @@
 package com.unimate.unimate.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.Date;
+import java.util.*;
 
 @Getter
 @Setter
@@ -29,6 +30,12 @@ public class Kelas {
     private String name;
 
     private Float rating;
+
+    private String category;
+
+    @OneToMany(mappedBy = "kelas", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<KelasSiswa> kelasSiswa = new ArrayList<>();
 
     @CreationTimestamp
     private Date createdAt;

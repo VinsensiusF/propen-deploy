@@ -6,10 +6,9 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class CreateKelasDTO {
+public class SetTeacherDTO {
     @NotNull
-    private String name;
+    private Long teacherId;
     @NotNull
-    private String category;
-
+    private Long kelasId;
 }

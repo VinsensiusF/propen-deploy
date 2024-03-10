@@ -31,7 +31,7 @@ public class UnimateApplication {
 
     @Bean
     @Transactional
-    CommandLineRunner run(AuthenticationService authenticationService, RoleRepository roleRepository, RoleEnum roleEnum, AccountStatusEnum accountStatusEnum, AccountService accountService){
+    CommandLineRunner run(AuthenticationService authenticationService, RoleRepository roleRepository, AccountService accountService){
         return args -> {
             authenticationService.starter();
             Account account = new Account();
@@ -42,6 +42,15 @@ public class UnimateApplication {
             account.setRole(roleRepository.findRoleByName(RoleEnum.STUDENT));
             account.setStatus(AccountStatusEnum.VERIFIED);
 
+            Account teacher = new Account();
+            teacher.setName("Pak Guru");
+            teacher.setEmail("pakguru@gmail.com");
+            teacher.setPassword(BCrypt.hashpw("12345", BCrypt.gensalt()));
+            teacher.setProfilePicture("pic");
+            teacher.setRole(roleRepository.findRoleByName(RoleEnum.TEACHER));
+            teacher.setStatus(AccountStatusEnum.VERIFIED);
+
+            accountService.saveAccount(teacher);
             accountService.saveAccount(account);
         };
     }
