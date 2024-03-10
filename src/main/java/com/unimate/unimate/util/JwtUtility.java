@@ -59,7 +59,7 @@ public class JwtUtility {
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secret.getBytes(StandardCharsets.UTF_8)))
                 .build()
                 .verify(token);
-        String[] tokenRoles = decodedJWT.getClaim("roles").asArray(String.class);
-        return Arrays.stream(roles).anyMatch(role -> Arrays.asList(tokenRoles).contains(role.name()));
+         String[] tokenRoles = decodedJWT.getClaim("roles").asArray(String.class);
+         return Arrays.stream(roles).anyMatch(role -> Arrays.asList(tokenRoles).contains(role.name()));
     }
 }

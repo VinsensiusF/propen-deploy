@@ -3,6 +3,7 @@ package com.unimate.unimate.service.impl;
 import com.unimate.unimate.dto.BlogDTO;
 import com.unimate.unimate.dto.UpdateBlogDTO;
 import com.unimate.unimate.entity.Blog;
+import com.unimate.unimate.exception.BlogNotFound;
 import com.unimate.unimate.repository.BlogRepository;
 import com.unimate.unimate.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,9 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public Blog updateBlog(UpdateBlogDTO updateBlogDTO) {
         Blog blog = getBlogById(updateBlogDTO.getId());
+        if(blog == null){
+            throw new BlogNotFound();
+        }
         blog.setTitle(updateBlogDTO.getTitle());
         blog.setContent(updateBlogDTO.getContent());
         saveBlog(blog);

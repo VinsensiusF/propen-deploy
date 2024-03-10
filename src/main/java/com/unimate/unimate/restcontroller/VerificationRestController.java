@@ -1,16 +1,12 @@
 package com.unimate.unimate.restcontroller;
 
 import com.unimate.unimate.dto.VerificationForgotPasswordDTO;
-import com.unimate.unimate.dto.VerificationRequestDTO;
 import com.unimate.unimate.service.AuthenticationService;
-
-import com.unimate.unimate.service.impl.AuthenticationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/verify")
@@ -20,9 +16,9 @@ public class VerificationRestController {
     public VerificationRestController(AuthenticationService authenticationService){
         this.authenticationService = authenticationService;
     }
-    @PostMapping("/email")
-    public ResponseEntity<String> verifyEmail(@RequestBody VerificationRequestDTO verificationRequestDTO) {
-        return authenticationService.verifyEmail(verificationRequestDTO);
+    @GetMapping("/email")
+    public ResponseEntity<String> verifyEmail(@RequestParam UUID token) {
+        return authenticationService.verifyEmail(token);
     }
 
     @PostMapping("/forgot-password")

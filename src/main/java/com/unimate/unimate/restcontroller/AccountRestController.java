@@ -176,7 +176,6 @@ public class AccountRestController {
 
     }
 
-
 //    @GetMapping()
 //    @ValidateToken(RoleEnum.STUDENT)
 //    public ResponseEntity<AccountDTO> getAccount(){
