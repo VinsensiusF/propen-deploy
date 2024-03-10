@@ -31,20 +31,12 @@ public class AuthenticationRestController {
         signInDTO.setEmail(body.get("email"));
         signInDTO.setPassword(body.get("password"));
 
-        try {
-            String token = authenticationService.login(signInDTO);
+        String token = authenticationService.login(signInDTO);
 
-            Map<String, String> responseMap = new HashMap<>();
-            responseMap.put("token", token);
+        Map<String, String> responseMap = new HashMap<>();
+        responseMap.put("token", token);
 
-            return ResponseEntity.ok(responseMap);
-        }
-        catch (RuntimeException e) {
-            Map<String, String> errorMap = new HashMap<>();
-            errorMap.put("error", e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorMap);
-        }
+        return ResponseEntity.ok(responseMap);
     }
 
     @PostMapping("/signup")
@@ -62,13 +54,8 @@ public class AuthenticationRestController {
         ForgotPasswordDTO forgotPasswordDTO = new ForgotPasswordDTO();
         forgotPasswordDTO.setEmail(body.get("email"));
 
-        try {
-            Token token = authenticationService.forgotPassword(forgotPasswordDTO);
-            return ResponseEntity.status(HttpStatus.OK).body("Password reset link has been sent. Check your email for verification.");
-        }
-        catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
-        }
+        Token token = authenticationService.forgotPassword(forgotPasswordDTO);
+        return ResponseEntity.status(HttpStatus.OK).body("Password reset link has been sent. Check your email for verification.");
     }
 
     @PostMapping("/resend")

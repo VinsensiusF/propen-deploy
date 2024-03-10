@@ -1,5 +1,6 @@
 package com.unimate.unimate.service.impl;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.unimate.unimate.config.AuthConfigProperties;
 import com.unimate.unimate.dto.*;
 import com.unimate.unimate.entity.Account;
@@ -8,6 +9,7 @@ import com.unimate.unimate.entity.Token;
 import com.unimate.unimate.enums.AccountStatusEnum;
 import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.enums.TokenType;
+import com.unimate.unimate.exception.*;
 import com.unimate.unimate.repository.AccountRepository;
 import com.unimate.unimate.repository.TokenRepository;
 import com.unimate.unimate.repository.RoleRepository;
@@ -56,14 +58,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     public String login(SignInDTO signInDTO) {
         final Account account = accountRepository.findAccountByEmail(signInDTO.getEmail())
-                .orElseThrow(() -> new RuntimeException("Account Not Found"));
+                .orElseThrow(AccountNotFoundException::new);
 
         //status need enum
         if(account.getStatus() == AccountStatusEnum.UNVERIFIED){
-            throw new RuntimeException("Account not verified yet!");
+            throw new UnverifiedUserException();
         }
         if (!BCrypt.checkpw(signInDTO.getPassword(), account.getPassword())) {
-            throw new RuntimeException("Password is not valid!");
+            throw new InvalidPasswordException();
         }
         return "Bearer " + JwtUtility.jwtGenerator(account.getId(), configProperties.getSecret(), account.getRole().getName());
     }
@@ -71,7 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public ResponseEntity<String> signUp(SignUpDTO signUpDTO) {
         Optional<Account> existingAccount = accountRepository.findAccountByEmail(signUpDTO.getEmail());
         if (existingAccount.isPresent()) {
-            throw new RuntimeException("Account has already existed");
+            throw new AccountExistedException();
         }
         final Account account = new Account();
         account.setRole(roleRepository.findRoleByName(RoleEnum.STUDENT));
@@ -100,26 +102,28 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     //todo AUTH CONFIG PROPERTIES
     private String generateVerificationLink(UUID token) {
-        return "https://unimate.co.id/verify/email?token=" + token.toString();
+        return "http://localhost:8080/api/verify/email?token=" + token.toString();
     }
 
-    public ResponseEntity<String> verifyEmail(VerificationRequestDTO verificationRequestDTO) {
+    public ResponseEntity<String> verifyEmail(UUID id) {
         // Find the corresponding verification token
-        Optional<Token> optionalToken = tokenRepository.findTokenByTokenAndTokenType(verificationRequestDTO.getToken(), TokenType.ACCOUNT_VERIFICATION);
+        Optional<Token> optionalToken = tokenRepository.findTokenByTokenAndTokenType(id, TokenType.ACCOUNT_VERIFICATION);
 
         if (optionalToken.isEmpty()) {
-            //TODO Token is invalid & Handle invalid token logic
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
+            throw new InvalidTokenException();
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
         }
         Token verificationToken = optionalToken.get();
         if (verificationToken.getExpiredAt().isBefore(Instant.now())) {
             //todo Token has expired & Handle expiration logic
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
+            throw new InvalidTokenException();
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
         }
         Account account = verificationToken.getAccount();
         if (account.getStatus() == AccountStatusEnum.VERIFIED) {
             //todo User has already been activated & Redirect to login page
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User has already been activated. Redirecting to login page...");
+            throw new VerifiedUserException();
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User has already been verified. Redirecting to login page...");
         } else {
             // Mark account status as verified
             account.setStatus(AccountStatusEnum.VERIFIED);
@@ -133,7 +137,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // Find the corresponding verification token
         Optional<Account> existingAccount = accountRepository.findAccountByEmail(forgotPasswordDTO.getEmail());
         if (existingAccount.isEmpty()) {
-            throw new RuntimeException("Account is not existed");
+            throw new AccountNotFoundException();
         }
         Account account = existingAccount.get();
         Token token = new Token();
@@ -156,15 +160,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Optional<Token> optionalToken = tokenRepository.findTokenByTokenAndTokenType(verificationForgotPasswordDTO.getToken(), TokenType.FORGOT_PASSWORD);
 
         if (optionalToken.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
+            throw new InvalidTokenException();
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
         }
         Token verificationToken = optionalToken.get();
         if (verificationToken.getExpiredAt().isBefore(Instant.now())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
+            throw new InvalidTokenException();
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
         }
         Account account = verificationToken.getAccount();
         if (account.getStatus() == AccountStatusEnum.UNVERIFIED) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account is not verified and can't change password");
+            throw new UnverifiedUserException();
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account is not verified and can't change password");
         }
         String newPassword = verificationForgotPasswordDTO.getPassword();
         final String password = BCrypt.hashpw(newPassword, BCrypt.gensalt());
@@ -176,7 +183,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public ResponseEntity<String> resendEmail(ResendEmailDTO resendEmailDTO){
         Optional<Account> optionalAccount = accountRepository.findAccountByEmail(resendEmailDTO.getEmail());
         if(optionalAccount.isEmpty()){
-            return ResponseEntity.status(HttpStatus.OK).body("Account Not found.");
+            throw new AccountNotFoundException();
+            //return ResponseEntity.status(HttpStatus.OK).body("Account Not found.");
         }
         Account account = optionalAccount.get();
         if (account.getStatus() == AccountStatusEnum.VERIFIED) {
@@ -186,7 +194,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Optional<Token> optionalToken = tokenRepository.findTokenByAccountAndTokenTypeAndExpiredAtIsAfter(account, TokenType.ACCOUNT_VERIFICATION, Instant.now());
         if(optionalToken.isPresent()){
             //Case where there is still active token, user needs to wait for delay.
-            return ResponseEntity.status(HttpStatus.OK).body("We have sent you the email before. If you don't receive your email, please try again after 15 minutes.");
+            throw new EmailSentException();
+            //return ResponseEntity.status(HttpStatus.OK).body("We have sent you the email before. If you don't receive your email, please try again after 15 minutes.");
         }
 
         Token token = new Token();
