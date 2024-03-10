@@ -8,25 +8,25 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Table(name = "kelasSiswa")
 public class KelasSiswa {
 
-    @EmbeddedId
-    private KelasSiswaKey id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("kelasId")
-    @JoinColumn(name = "kelas_id")
+    @JoinColumn(name = "kelas_id", referencedColumnName = "id")
     private Kelas kelas;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @MapsId("siswaId")
-    @JoinColumn(name = "siswa_id")
-    private Account account;
+    @JoinColumn(name = "siswa_id", referencedColumnName = "id")
+    private Account siswa;
 
+    @Column(name = "rating")
     private Integer rating;
 
 }

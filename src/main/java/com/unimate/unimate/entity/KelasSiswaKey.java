@@ -10,7 +10,6 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Embeddable
 public class KelasSiswaKey implements Serializable {
     @Column(name = "siswa_id")

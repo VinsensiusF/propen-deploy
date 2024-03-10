@@ -54,7 +54,7 @@ public class ValidateTokenAspect {
         }
 
         // Load account from the database
-        Account account = accountService.getAccountById(accountId);
+        Account account = accountService.getAccountById(accountId).get();
 
         // Set the account in the context
         AccountContext.setAccount(account);

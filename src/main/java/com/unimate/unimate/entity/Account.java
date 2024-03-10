@@ -1,5 +1,6 @@
 package com.unimate.unimate.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unimate.unimate.enums.AccountStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -43,6 +48,10 @@ public class Account {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(mappedBy = "siswa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<KelasSiswa> kelasSiswa = new ArrayList<>();
 
     @CreationTimestamp
     private Instant createdAt;
