@@ -15,7 +15,7 @@ import java.util.Date;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "class")
+@Table(name = "kelas")
 public class Kelas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +27,8 @@ public class Kelas {
     private Account teacher;
 
     private String name;
+
+    private Float rating;
 
     @CreationTimestamp
     private Date createdAt;
