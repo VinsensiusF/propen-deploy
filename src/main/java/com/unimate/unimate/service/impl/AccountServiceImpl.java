@@ -1,9 +1,13 @@
 package com.unimate.unimate.service.impl;
 
+import com.unimate.unimate.config.AuthConfigProperties;
 import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.exception.EntityNotFoundException;
 import com.unimate.unimate.repository.AccountRepository;
+import com.unimate.unimate.repository.TokenRepository;
 import com.unimate.unimate.service.AccountService;
+import com.unimate.unimate.util.JwtUtility;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -12,13 +16,19 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
+    private final TokenRepository tokenRepository;
+
+    private final AuthConfigProperties configProperties;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, TokenRepository tokenRepository, AuthConfigProperties configProperties) {
         this.accountRepository = accountRepository;
+        this.tokenRepository = tokenRepository;
+        this.configProperties = configProperties;
     }
 
     @Override
@@ -64,4 +74,12 @@ public class AccountServiceImpl implements AccountService {
     public Optional<Account> getAccountByEmail(String email) {
         return accountRepository.findAccountByEmail(email);
     }
+
+    @Override
+    public Account getAccountFromJwt(String jwt) {
+        Long accountId = JwtUtility.extractAccountId(jwt, configProperties.getSecret());
+        return getAccountById(accountId).orElseThrow(EntityNotFoundException::new);
+    }
+
+
 }

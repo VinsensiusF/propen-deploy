@@ -3,6 +3,7 @@ package com.unimate.unimate.aspect;
 import com.unimate.unimate.AccountContext;
 import com.unimate.unimate.config.AuthConfigProperties;
 import com.unimate.unimate.entity.Account;
+import com.unimate.unimate.exception.AccountNotFoundException;
 import com.unimate.unimate.exception.ForbiddenException;
 import com.unimate.unimate.service.AccountService;
 import com.unimate.unimate.util.JwtUtility;
@@ -54,7 +55,7 @@ public class ValidateTokenAspect {
         }
 
         // Load account from the database
-        Account account = accountService.getAccountById(accountId).get();
+        Account account = accountService.getAccountById(accountId).orElseThrow(AccountNotFoundException::new);
 
         // Set the account in the context
         AccountContext.setAccount(account);
