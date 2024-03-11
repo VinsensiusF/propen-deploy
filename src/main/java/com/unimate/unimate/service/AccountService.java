@@ -18,4 +18,6 @@ public interface AccountService {
     Optional<Account> getAccountById(Long id);
 
     Optional<Account> getAccountByEmail(String email);
+
+    Account getAccountFromJwt(String jwt);
 }

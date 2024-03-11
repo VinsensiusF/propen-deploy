@@ -13,7 +13,9 @@ import com.unimate.unimate.exception.dto.GeneralResponseDTO;
 import com.unimate.unimate.repository.RoleRepository;
 import com.unimate.unimate.service.AccountService;
 import com.unimate.unimate.service.AuthenticationService;
+import com.unimate.unimate.util.JwtUtility;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +34,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/account")
+@Slf4j
 public class AccountRestController {
     private final AccountService accountService;
     private final RoleRepository roleRepository;
-
     private final AccountMapper accountMapper;
-
     private final AuthenticationService authenticationService;
 
     @Autowired
@@ -176,9 +177,17 @@ public class AccountRestController {
 
     }
 
-//    @GetMapping()
-//    @ValidateToken(RoleEnum.STUDENT)
-//    public ResponseEntity<AccountDTO> getAccount(){
-//        return accountService.getAccount;
-//    }
+    @GetMapping("/get-logged-in-from-jwt")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
+    public Account getAccountInfoFromToken(@RequestHeader("Authorization") String jwtToken) {
+        // Extract Bearer token from Authorization header
+        if (jwtToken != null && jwtToken.startsWith("Bearer ")) {
+            String token = jwtToken.substring(7); // Extract token excluding "Bearer "
+            // Decode and verify the token, extract user information as needed
+            // For simplicity, let's just return the token content here
+            return accountService.getAccountFromJwt(token);
+        } else {
+            return null;
+        }
+    }
 }
