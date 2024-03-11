@@ -41,6 +41,10 @@ public class Account {
 
     private String profilePicture;
 
+    private String address;
+
+    private String phoneNumber;
+
     // UNVERIFIED, VERIFIED
     @Enumerated(EnumType.STRING)
     private AccountStatusEnum status;
