@@ -11,10 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Getter
@@ -44,6 +41,8 @@ public class Account {
     private String address;
 
     private String phoneNumber;
+    
+    private Date birthday;
 
     // UNVERIFIED, VERIFIED
     @Enumerated(EnumType.STRING)
@@ -52,6 +51,9 @@ public class Account {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
 
     @OneToMany(mappedBy = "siswa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
