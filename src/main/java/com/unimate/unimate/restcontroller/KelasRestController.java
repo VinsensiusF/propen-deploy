@@ -8,6 +8,7 @@ import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.exception.KelasNotFoundException;
 import com.unimate.unimate.service.KelasService;
 import com.unimate.unimate.service.KelasSiswaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,14 +44,14 @@ public class KelasRestController {
 
     @PostMapping("/create")
     @ValidateToken(RoleEnum.ADMIN)
-    public ResponseEntity<Kelas> createKelas(@RequestBody CreateKelasDTO createKelasDTO) {
+    public ResponseEntity<Kelas> createKelas(@Valid @RequestBody CreateKelasDTO createKelasDTO) {
         Kelas kelas = kelasService.createKelas(createKelasDTO);
         return ResponseEntity.ok(kelas);
     }
 
     @PutMapping("/update")
     @ValidateToken(RoleEnum.ADMIN)
-    public ResponseEntity<Kelas> updateKelas(@RequestBody UpdateKelasDTO updateKelasDTO) {
+    public ResponseEntity<Kelas> updateKelas(@Valid @RequestBody UpdateKelasDTO updateKelasDTO) {
         Kelas kelas = kelasService.updateKelas(updateKelasDTO);
         return ResponseEntity.ok(kelas);
     }

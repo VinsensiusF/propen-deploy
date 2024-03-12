@@ -45,9 +45,22 @@ public class KelasServiceImpl implements KelasService {
     @Override
     public Kelas createKelas(CreateKelasDTO createKelasDTO) {
         Kelas kelas = new Kelas();
+
+        if (createKelasDTO.getTeacherId() != null) {
+            Optional<Account> teacher = accountService.getAccountById(createKelasDTO.getTeacherId());
+            if (teacher.isEmpty()) {
+                throw new AccountNotFoundException();
+            }
+            kelas.setTeacher(teacher.get());
+        }
+
         kelas.setName(createKelasDTO.getName());
         kelas.setRating(0f);
         kelas.setCategory(createKelasDTO.getCategory());
+        kelas.setDescription(createKelasDTO.getDescription());
+        kelas.setBenefits(createKelasDTO.getBenefits());
+        kelas.setSyllabuses(createKelasDTO.getSyllabuses());
+        kelas.setPrice(createKelasDTO.getPrice());
         saveKelas(kelas);
         return kelas;
     }
@@ -60,20 +73,26 @@ public class KelasServiceImpl implements KelasService {
         if (kelas == null) {
             throw new KelasNotFoundException();
         }
-        Optional<Account> teacher = accountService.getAccountById(updateKelasDTO.getTeacherId());
-        if (teacher.isPresent()) {
+        if (updateKelasDTO.getTeacherId() != null) {
+            Optional<Account> teacher = accountService.getAccountById(updateKelasDTO.getTeacherId());
+            if (teacher.isEmpty()) {
+                throw new AccountNotFoundException();
+            }
             kelas.setTeacher(teacher.get());
         }
 
-
-
+        // disabled rating update by default
+        // kelas.setRating(updateKelasDTO.getRating());
         kelas.setName(updateKelasDTO.getName());
-
-//        kelas.setRating(updateKelasDTO.getRating());
         kelas.setCategory(updateKelasDTO.getCategory());
+        kelas.setDescription(updateKelasDTO.getDescription());
+        kelas.setPrice(updateKelasDTO.getPrice());
+        kelas.setBenefits(updateKelasDTO.getBenefits());
+        kelas.setSyllabuses(updateKelasDTO.getSyllabuses());
         saveKelas(kelas);
         return kelas;
     }
+
 
     @Override
     public Kelas setTeacherToKelas(SetTeacherDTO teacherDTO) {

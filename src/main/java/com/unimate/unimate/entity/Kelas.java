@@ -33,6 +33,20 @@ public class Kelas {
 
     private String category;
 
+    private String description;
+
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "benefits", joinColumns = @JoinColumn(name = "kelasId"))
+    @Column(name = "benefit", nullable = false)
+    private List<String> benefits = new ArrayList<>();
+
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "syllabuses", joinColumns = @JoinColumn(name = "kelasId"))
+    @Column(name = "syllabus", nullable = false)
+    private List<String> syllabuses;
+
+    private Long price;
+
     @OneToMany(mappedBy = "kelas", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<KelasSiswa> kelasSiswa = new ArrayList<>();

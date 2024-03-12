@@ -38,18 +38,18 @@ import java.util.List;
 public class AccountRestController {
     private final AccountService accountService;
     private final RoleRepository roleRepository;
-    private final AccountMapper accountMapper;
+
+    @Autowired
+    private AccountMapper accountMapper;
     private final AuthenticationService authenticationService;
 
     @Autowired
     public AccountRestController(AccountService accountService,
                                  RoleRepository roleRepository,
-                                 AccountMapper accountMapper,
                                  AuthenticationService authenticationService
     ){
         this.accountService = accountService;
         this.roleRepository = roleRepository;
-        this.accountMapper = accountMapper;
         this.authenticationService = authenticationService;
     }
 
@@ -111,6 +111,11 @@ public class AccountRestController {
         account.setProfilePicture(body.getProfilePicture());
         account.setRole(roleRepository.findRoleByName(RoleEnum.valueOf(body.getRole())));
         account.setStatus(AccountStatusEnum.VERIFIED);
+        account.setAddress(body.getAddress());
+        account.setPhoneNumber(body.getPhoneNumber());
+        account.setBirthday(body.getBirthday());
+        account.setJob(body.getJob());
+        account.setBio(body.getBio());
         accountService.saveAccount(account);
 
         return ResponseEntity.ok(account);
