@@ -44,6 +44,8 @@ public class Account {
     
     private Date birthday;
 
+    private String job;
+
     // UNVERIFIED, VERIFIED
     @Enumerated(EnumType.STRING)
     private AccountStatusEnum status;
