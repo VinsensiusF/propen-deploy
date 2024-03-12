@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.Date;
+
 @Data
 @Accessors(chain = true)
 public class CreateAccountDTO {
@@ -17,4 +19,14 @@ public class CreateAccountDTO {
     private String profilePicture;
     @NotNull
     private String Role;
+    @NotNull
+    private String address;
+    @NotNull
+    private String phoneNumber;
+    @NotNull
+    private Date birthday;
+    @NotNull
+    private String job;
+    @NotNull
+    private String bio;
 }

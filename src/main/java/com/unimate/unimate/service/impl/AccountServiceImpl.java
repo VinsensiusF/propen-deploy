@@ -51,6 +51,11 @@ public class AccountServiceImpl implements AccountService {
         account.setRole(accountRequest.getRole());
         account.setStatus(accountRequest.getStatus());
         account.setProfilePicture(accountRequest.getProfilePicture());
+        account.setAddress(accountRequest.getAddress());
+        account.setPhoneNumber(accountRequest.getPhoneNumber());
+        account.setBirthday(accountRequest.getBirthday());
+        account.setJob(accountRequest.getJob());
+        account.setBio(accountRequest.getBio());
         accountRepository.save(account);
         return account;
     }
