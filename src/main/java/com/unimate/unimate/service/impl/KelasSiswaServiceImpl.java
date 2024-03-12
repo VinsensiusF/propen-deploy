@@ -15,6 +15,7 @@ import com.unimate.unimate.service.KelasSiswaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,6 +75,54 @@ public class KelasSiswaServiceImpl implements KelasSiswaService {
             return null;
         }
         return list;
+    }
+
+    @Override
+    public List<Kelas> getAllKelasEnrolledByStudent(Long studentId) {
+        Optional<Account> siswa = accountService.getAccountById(studentId);
+        if (siswa.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+
+        List<KelasSiswa> kelasSiswaList = siswa.get().getKelasSiswa();
+        List<Kelas> kelasList = new ArrayList<>();
+        for (KelasSiswa ks :
+                kelasSiswaList) {
+            kelasList.add(ks.getKelas());
+        }
+        return kelasList;
+    }
+
+    @Override
+    public List<Account> getAllStudentsInAClass(Long kelasId) {
+        Kelas kelas = kelasService.getKelasById(kelasId);
+        if (kelas == null) {
+            throw new KelasNotFoundException();
+        }
+        List<Account> enrolledStudents = new ArrayList<>();
+        for (KelasSiswa ks : kelas.getKelasSiswa()) {
+            enrolledStudents.add(ks.getSiswa());
+        }
+        return enrolledStudents;
+    }
+
+    @Override
+    public Boolean isStudentEnrolledInAClass(Long kelasId, Long studentId) {
+        Kelas kelas = kelasService.getKelasById(kelasId);
+        Optional<Account> siswa = accountService.getAccountById(studentId);
+
+        if (siswa.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+
+        if (kelas == null) {
+            throw new KelasNotFoundException();
+        }
+
+        KelasSiswa kelasSiswa = kelasSiswaRepository.findKelasSiswaByKelasIdAndSiswaId(kelasId, studentId);
+
+        // returns true if siswa is enrolled, otherwise false
+        return kelasSiswa != null;
     }
 
     @Override

@@ -18,13 +18,14 @@ public class KelasSiswa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "kelas_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "kelas_id")
     private Kelas kelas;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "siswa_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "siswa_id")
     private Account siswa;
+
 
     @Column(name = "rating")
     private Integer rating;

@@ -27,6 +27,8 @@ public class UpdateKelasDTO {
     private List<String> benefits;
     @NotNull
     private List<String> syllabuses;
+    @NotNull
+    private Boolean isFinished;
 
     private Long teacherId;
 

@@ -2,6 +2,7 @@ package com.unimate.unimate.restcontroller;
 
 import com.unimate.unimate.aspect.ValidateToken;
 import com.unimate.unimate.dto.*;
+import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.entity.Kelas;
 import com.unimate.unimate.entity.KelasSiswa;
 import com.unimate.unimate.enums.RoleEnum;
@@ -90,6 +91,28 @@ public class KelasRestController {
         kelasSiswaService.disenrollStudent(kelasSiswaDTO);
         return ResponseEntity.ok("Siswa has been successfully disenrolled from Kelas");
     }
+
+    @GetMapping("/enrolled-students/{id}")
+    @ValidateToken(RoleEnum.ADMIN)
+    public ResponseEntity<?> getEnrolledStudents(@PathVariable("id") Long kelasId) {
+        List<Account> enrolledStudents = kelasSiswaService.getAllStudentsInAClass(kelasId);
+        return ResponseEntity.ok(enrolledStudents);
+    }
+
+    @GetMapping("/classes-enrolled/{id}")
+    @ValidateToken(RoleEnum.ADMIN)
+    public ResponseEntity<?> getClassesEnrolled(@PathVariable("id") Long siswaId) {
+        List<Kelas> classesEnrolled = kelasSiswaService.getAllKelasEnrolledByStudent(siswaId);
+        return ResponseEntity.ok(classesEnrolled);
+    }
+
+    @GetMapping("/is-enrolled")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
+    public ResponseEntity<?> isStudentEnrolled(@RequestParam(required = true, name = "kelasId") Long kelasId, @RequestParam(required = true, name = "siswaId") Long siswaId) {
+        Boolean isEnrolled = kelasSiswaService.isStudentEnrolledInAClass(kelasId, siswaId);
+        return ResponseEntity.ok(isEnrolled);
+    }
+
 
     @PostMapping("/rating")
     @ValidateToken(RoleEnum.ADMIN)

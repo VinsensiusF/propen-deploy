@@ -47,7 +47,9 @@ public class Kelas {
 
     private Long price;
 
-    @OneToMany(mappedBy = "kelas", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Boolean isFinished;
+
+    @OneToMany(mappedBy = "kelas")
     @JsonIgnore
     private List<KelasSiswa> kelasSiswa = new ArrayList<>();
 

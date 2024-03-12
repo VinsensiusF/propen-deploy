@@ -89,8 +89,10 @@ public class KelasServiceImpl implements KelasService {
         kelas.setPrice(updateKelasDTO.getPrice());
         kelas.setBenefits(updateKelasDTO.getBenefits());
         kelas.setSyllabuses(updateKelasDTO.getSyllabuses());
+        kelas.setIsFinished(updateKelasDTO.getIsFinished());
         saveKelas(kelas);
         return kelas;
+
     }
 
 
