@@ -53,6 +53,12 @@ public class AccountRestController {
         this.authenticationService = authenticationService;
     }
 
+    @GetMapping("/get-all")
+    @ValidateToken(RoleEnum.ADMIN)
+    public ResponseEntity<?> getAllAccounts() {
+        return ResponseEntity.ok(accountService.getAllAccount());
+    }
+
     @GetMapping("/find-by-email")
     @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
     public ResponseEntity<?> findAccountByEmail(@RequestBody Map<String, String> body) {
