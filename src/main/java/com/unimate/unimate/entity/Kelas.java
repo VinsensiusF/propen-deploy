@@ -29,7 +29,7 @@ public class Kelas {
 
     private String name;
 
-    private Float rating;
+    private Float rating = 0f;
 
     private String category;
 
@@ -48,6 +48,8 @@ public class Kelas {
     private Long price;
 
     private Boolean isFinished = false;
+
+    private Long peserta = 0L;
 
     @OneToMany(mappedBy = "kelas")
     @JsonIgnore
