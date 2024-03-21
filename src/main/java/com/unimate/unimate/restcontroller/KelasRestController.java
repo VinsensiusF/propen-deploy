@@ -66,10 +66,13 @@ public class KelasRestController {
         }
         List<KelasSiswa> kelasSiswaList = kelasSiswaService.findKelasSiswaListByKelasId(id);
 
-        for (KelasSiswa ks :
-                kelasSiswaList) {
-            kelasSiswaService.deleteKelasSiswa(ks);
+        if (kelasSiswaList != null && !kelasSiswaList.isEmpty()) {
+            for (KelasSiswa ks :
+                    kelasSiswaList) {
+                kelasSiswaService.deleteKelasSiswa(ks);
+            }
         }
+
 
         kelasService.deleteKelas(kelas);
 
@@ -100,7 +103,7 @@ public class KelasRestController {
     }
 
     @GetMapping("/classes-enrolled/{id}")
-    @ValidateToken(RoleEnum.ADMIN)
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.CUSTOMER_SERVICE, RoleEnum.TOP_LEVEL})
     public ResponseEntity<?> getClassesEnrolled(@PathVariable("id") Long siswaId) {
         List<Kelas> classesEnrolled = kelasSiswaService.getAllKelasEnrolledByStudent(siswaId);
         return ResponseEntity.ok(classesEnrolled);

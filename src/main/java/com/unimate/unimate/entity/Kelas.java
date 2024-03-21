@@ -47,11 +47,14 @@ public class Kelas {
 
     private Long price;
 
-    private Boolean isFinished;
+    private Boolean isFinished = false;
 
     @OneToMany(mappedBy = "kelas")
     @JsonIgnore
     private List<KelasSiswa> kelasSiswa = new ArrayList<>();
+
+    @OneToMany(mappedBy = "kelas", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Course> courses = new ArrayList<>();
 
     @CreationTimestamp
     private Date createdAt;
