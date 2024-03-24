@@ -4,23 +4,24 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
-
 @Data
 @Accessors(chain = true)
-public class CreateKelasDTO {
+public class UpdateCourseContentDTO {
+    @NotNull
+    private Long id;
+
     @NotNull
     private String name;
+
     @NotNull
-    private String category;
+    private Integer type;
+
     @NotNull
     private String description;
-    @NotNull
-    private Long price;
-    @NotNull
-    private List<String> benefits;
-    @NotNull
-    private List<String> syllabuses;
-    private Long teacherId;
 
+    @NotNull
+    private String link;
+
+    @NotNull
+    private Long courseId;
 }

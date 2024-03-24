@@ -29,13 +29,35 @@ public class Kelas {
 
     private String name;
 
-    private Float rating;
+    private Float rating = 0f;
 
     private String category;
 
-    @OneToMany(mappedBy = "kelas", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "benefits", joinColumns = @JoinColumn(name = "kelasId"))
+    @Column(name = "benefit", nullable = false)
+    private List<String> benefits = new ArrayList<>();
+
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "syllabuses", joinColumns = @JoinColumn(name = "kelasId"))
+    @Column(name = "syllabus", nullable = false)
+    private List<String> syllabuses;
+
+    private Long price;
+
+    private Boolean isFinished = false;
+
+    private Long peserta = 0L;
+
+    @OneToMany(mappedBy = "kelas")
     @JsonIgnore
     private List<KelasSiswa> kelasSiswa = new ArrayList<>();
+
+    @OneToMany(mappedBy = "kelas", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Course> courses = new ArrayList<>();
 
     @CreationTimestamp
     private Date createdAt;

@@ -2,12 +2,14 @@ package com.unimate.unimate.restcontroller;
 
 import com.unimate.unimate.aspect.ValidateToken;
 import com.unimate.unimate.dto.*;
+import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.entity.Kelas;
 import com.unimate.unimate.entity.KelasSiswa;
 import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.exception.KelasNotFoundException;
 import com.unimate.unimate.service.KelasService;
 import com.unimate.unimate.service.KelasSiswaService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,14 +45,14 @@ public class KelasRestController {
 
     @PostMapping("/create")
     @ValidateToken(RoleEnum.ADMIN)
-    public ResponseEntity<Kelas> createKelas(@RequestBody CreateKelasDTO createKelasDTO) {
+    public ResponseEntity<Kelas> createKelas(@Valid @RequestBody CreateKelasDTO createKelasDTO) {
         Kelas kelas = kelasService.createKelas(createKelasDTO);
         return ResponseEntity.ok(kelas);
     }
 
     @PutMapping("/update")
     @ValidateToken(RoleEnum.ADMIN)
-    public ResponseEntity<Kelas> updateKelas(@RequestBody UpdateKelasDTO updateKelasDTO) {
+    public ResponseEntity<Kelas> updateKelas(@Valid @RequestBody UpdateKelasDTO updateKelasDTO) {
         Kelas kelas = kelasService.updateKelas(updateKelasDTO);
         return ResponseEntity.ok(kelas);
     }
@@ -64,10 +66,13 @@ public class KelasRestController {
         }
         List<KelasSiswa> kelasSiswaList = kelasSiswaService.findKelasSiswaListByKelasId(id);
 
-        for (KelasSiswa ks :
-                kelasSiswaList) {
-            kelasSiswaService.deleteKelasSiswa(ks);
+        if (kelasSiswaList != null && !kelasSiswaList.isEmpty()) {
+            for (KelasSiswa ks :
+                    kelasSiswaList) {
+                kelasSiswaService.deleteKelasSiswa(ks);
+            }
         }
+
 
         kelasService.deleteKelas(kelas);
 
@@ -89,6 +94,28 @@ public class KelasRestController {
         kelasSiswaService.disenrollStudent(kelasSiswaDTO);
         return ResponseEntity.ok("Siswa has been successfully disenrolled from Kelas");
     }
+
+    @GetMapping("/enrolled-students/{id}")
+    @ValidateToken(RoleEnum.ADMIN)
+    public ResponseEntity<?> getEnrolledStudents(@PathVariable("id") Long kelasId) {
+        List<Account> enrolledStudents = kelasSiswaService.getAllStudentsInAClass(kelasId);
+        return ResponseEntity.ok(enrolledStudents);
+    }
+
+    @GetMapping("/classes-enrolled/{id}")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.CUSTOMER_SERVICE, RoleEnum.TOP_LEVEL})
+    public ResponseEntity<?> getClassesEnrolled(@PathVariable("id") Long siswaId) {
+        List<Kelas> classesEnrolled = kelasSiswaService.getAllKelasEnrolledByStudent(siswaId);
+        return ResponseEntity.ok(classesEnrolled);
+    }
+
+    @GetMapping("/is-enrolled")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
+    public ResponseEntity<?> isStudentEnrolled(@RequestParam(required = true, name = "kelasId") Long kelasId, @RequestParam(required = true, name = "siswaId") Long siswaId) {
+        Boolean isEnrolled = kelasSiswaService.isStudentEnrolledInAClass(kelasId, siswaId);
+        return ResponseEntity.ok(isEnrolled);
+    }
+
 
     @PostMapping("/rating")
     @ValidateToken(RoleEnum.ADMIN)

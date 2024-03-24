@@ -1,5 +1,6 @@
 package com.unimate.unimate.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unimate.unimate.enums.AccountStatusEnum;
 import jakarta.persistence.*;
@@ -42,7 +43,8 @@ public class Account {
     private String address;
 
     private String phoneNumber;
-    
+
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthday;
 
     private String job;
@@ -58,7 +60,7 @@ public class Account {
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    @OneToMany(mappedBy = "siswa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "siswa")
     @JsonIgnore
     private List<KelasSiswa> kelasSiswa = new ArrayList<>();
 
