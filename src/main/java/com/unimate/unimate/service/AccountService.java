@@ -1,5 +1,6 @@
 package com.unimate.unimate.service;
 
+import com.unimate.unimate.dto.UpdatePasswordDTO;
 import com.unimate.unimate.entity.Account;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface AccountService {
     Optional<Account> getAccountByEmail(String email);
 
     Account getAccountFromJwt(String jwt);
+
+    Account changePasword(UpdatePasswordDTO changePasswordRequest, Account account);
 }

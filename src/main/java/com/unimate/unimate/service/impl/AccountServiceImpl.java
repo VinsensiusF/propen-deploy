@@ -1,6 +1,7 @@
 package com.unimate.unimate.service.impl;
 
 import com.unimate.unimate.config.AuthConfigProperties;
+import com.unimate.unimate.dto.UpdatePasswordDTO;
 import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.exception.EntityNotFoundException;
 import com.unimate.unimate.repository.AccountRepository;
@@ -9,7 +10,7 @@ import com.unimate.unimate.service.AccountService;
 import com.unimate.unimate.util.JwtUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +40,7 @@ public class AccountServiceImpl implements AccountService {
     // TODO implement updateAccount
     @Override
     public Account updateAccount(Account accountRequest) {
+        var passwordEncoder = new BCryptPasswordEncoder();
         Optional<Account> optionalAccount = getAccountById(accountRequest.getId());
         if (optionalAccount.isEmpty()) {
             throw new EntityNotFoundException();
@@ -47,7 +49,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = optionalAccount.get();
         account.setName(accountRequest.getName());
         account.setEmail(accountRequest.getEmail());
-        account.setPassword(BCrypt.hashpw(accountRequest.getPassword(), BCrypt.gensalt()));
+        account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
         account.setRole(accountRequest.getRole());
         account.setStatus(accountRequest.getStatus());
         account.setProfilePicture(accountRequest.getProfilePicture());
@@ -84,6 +86,22 @@ public class AccountServiceImpl implements AccountService {
     public Account getAccountFromJwt(String jwt) {
         Long accountId = JwtUtility.extractAccountId(jwt, configProperties.getSecret());
         return getAccountById(accountId).orElseThrow(EntityNotFoundException::new);
+    }
+
+
+     @Override
+    public Account changePasword(UpdatePasswordDTO request, Account account) {
+       var passwordEncoder = new BCryptPasswordEncoder();
+       var user = accountRepository.findAccountByEmail(account.getEmail()).get();
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getEmail())) {
+            throw new IllegalStateException("Wrong password");
+        }
+        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
+            throw new IllegalStateException("Password are not the same");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        return accountRepository.save(user);
     }
 
 

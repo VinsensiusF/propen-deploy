@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 import java.time.Instant;
@@ -76,6 +77,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     public ResponseEntity<String> signUp(SignUpDTO signUpDTO) {
         Optional<Account> existingAccount = accountRepository.findAccountByEmail(signUpDTO.getEmail());
+        var passwordEncoder = new BCryptPasswordEncoder();
         if (existingAccount.isPresent()) {
             throw new AccountExistedException();
         }
@@ -83,7 +85,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         account.setRole(roleRepository.findRoleByName(RoleEnum.STUDENT));
         account.setEmail(signUpDTO.getEmail());
         account.setName(signUpDTO.getName());
-        final String password = BCrypt.hashpw(signUpDTO.getPassword(), BCrypt.gensalt());
+        final String password = passwordEncoder.encode(signUpDTO.getPassword());
         account.setPassword(password);
         account.setStatus(AccountStatusEnum.UNVERIFIED);
         accountRepository.save(account);

@@ -4,6 +4,7 @@ import com.unimate.unimate.aspect.ValidateToken;
 import com.unimate.unimate.dto.CleanAccountDTO;
 import com.unimate.unimate.dto.CreateAccountDTO;
 import com.unimate.unimate.dto.UpdateAccountDTO;
+import com.unimate.unimate.dto.UpdatePasswordDTO;
 import com.unimate.unimate.dto.mapper.AccountMapper;
 import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.enums.AccountStatusEnum;
@@ -13,23 +14,19 @@ import com.unimate.unimate.exception.dto.GeneralResponseDTO;
 import com.unimate.unimate.repository.RoleRepository;
 import com.unimate.unimate.service.AccountService;
 import com.unimate.unimate.service.AuthenticationService;
-import com.unimate.unimate.util.JwtUtility;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.util.List;
 
 @RestController
@@ -38,6 +35,8 @@ import java.util.List;
 public class AccountRestController {
     private final AccountService accountService;
     private final RoleRepository roleRepository;
+    private static final String JWT_HEADER = "Authorization";
+    
 
     @Autowired
     private AccountMapper accountMapper;
@@ -101,6 +100,7 @@ public class AccountRestController {
     @PostMapping("/create")
     @ValidateToken({RoleEnum.ADMIN})
     public ResponseEntity<?> createAccount(@Valid @RequestBody CreateAccountDTO body){
+        var passwordEncoder = new BCryptPasswordEncoder();
 
         Optional<Account> existingAccount = accountService.getAccountByEmail(body.getEmail());
         if (existingAccount.isPresent()) {
@@ -113,7 +113,7 @@ public class AccountRestController {
         Account account = new Account();
         account.setName(body.getName());
         account.setEmail(body.getEmail());
-        account.setPassword(BCrypt.hashpw(body.getPassword(), BCrypt.gensalt()));
+        account.setPassword(passwordEncoder.encode(body.getPassword()));
         account.setProfilePicture(body.getProfilePicture());
         account.setRole(roleRepository.findRoleByName(RoleEnum.valueOf(body.getRole())));
         account.setStatus(AccountStatusEnum.VERIFIED);
@@ -201,5 +201,25 @@ public class AccountRestController {
             return null;
         }
     }
+
+    @PutMapping("/change-password")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
+    public ResponseEntity<String> changePassword(
+        @RequestBody UpdatePasswordDTO requestNewPassword, HttpServletRequest request
+    ) {
+        try {
+            final String requestTokenHeader = request.getHeader(JWT_HEADER);
+            var jwtToken = requestTokenHeader.substring(7);
+            Account account = accountService.getAccountFromJwt(jwtToken);         
+            accountService.changePasword(requestNewPassword, account);
+            return ResponseEntity.ok("Password changed successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to change password");
+        }
+    }
+
+
+
+ 
     
 }
