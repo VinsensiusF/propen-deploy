@@ -1,6 +1,7 @@
 package com.unimate.unimate.service;
 
 import com.unimate.unimate.dto.UpdatePasswordDTO;
+import com.unimate.unimate.dto.UpdateAccountDTO;
 import com.unimate.unimate.entity.Account;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface AccountService {
 
     void saveAccount(Account account);
 
-    Account updateAccount(Account account);
+    Account updateAccount(UpdateAccountDTO account);
 
     void deleteAccount(Account account);
 

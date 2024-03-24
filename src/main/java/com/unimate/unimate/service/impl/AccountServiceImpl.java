@@ -1,10 +1,14 @@
 package com.unimate.unimate.service.impl;
 
 import com.unimate.unimate.config.AuthConfigProperties;
+import com.unimate.unimate.dto.UpdateAccountDTO;
 import com.unimate.unimate.dto.UpdatePasswordDTO;
 import com.unimate.unimate.entity.Account;
+import com.unimate.unimate.enums.AccountStatusEnum;
+import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.exception.EntityNotFoundException;
 import com.unimate.unimate.repository.AccountRepository;
+import com.unimate.unimate.repository.RoleRepository;
 import com.unimate.unimate.repository.TokenRepository;
 import com.unimate.unimate.service.AccountService;
 import com.unimate.unimate.util.JwtUtility;
@@ -22,14 +26,16 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final TokenRepository tokenRepository;
+    private final RoleRepository roleRepository;
 
     private final AuthConfigProperties configProperties;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, TokenRepository tokenRepository, AuthConfigProperties configProperties) {
+    public AccountServiceImpl(AccountRepository accountRepository, TokenRepository tokenRepository, AuthConfigProperties configProperties, RoleRepository roleRepository) {
         this.accountRepository = accountRepository;
         this.tokenRepository = tokenRepository;
         this.configProperties = configProperties;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -39,20 +45,16 @@ public class AccountServiceImpl implements AccountService {
 
     // TODO implement updateAccount
     @Override
-    public Account updateAccount(Account accountRequest) {
+    public Account updateAccount(UpdateAccountDTO  accountRequest) {
         var passwordEncoder = new BCryptPasswordEncoder();
         Optional<Account> optionalAccount = getAccountById(accountRequest.getId());
         if (optionalAccount.isEmpty()) {
             throw new EntityNotFoundException();
         }
-
         Account account = optionalAccount.get();
         account.setName(accountRequest.getName());
         account.setEmail(accountRequest.getEmail());
         account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
-        account.setRole(accountRequest.getRole());
-        account.setStatus(accountRequest.getStatus());
-        account.setProfilePicture(accountRequest.getProfilePicture());
         account.setAddress(accountRequest.getAddress());
         account.setPhoneNumber(accountRequest.getPhoneNumber());
         account.setBirthday(accountRequest.getBirthday());
