@@ -50,6 +50,11 @@ public class KelasSiswaServiceImpl implements KelasSiswaService {
         kelasSiswa.setKelas(kelas);
         kelasSiswa.setSiswa(siswa.get());
         kelasSiswaRepository.save(kelasSiswa);
+
+        // increment peserta count
+        Long currPeserta = kelas.getPeserta();
+        kelas.setPeserta(currPeserta + 1);
+        kelasService.saveKelas(kelas);
         return kelasSiswa;
     }
 
@@ -61,6 +66,12 @@ public class KelasSiswaServiceImpl implements KelasSiswaService {
             throw new KelasSiswaNotFoundException();
         }
         deleteKelasSiswa(kelasSiswa);
+
+        // decrement peserta count
+        Kelas kelas = kelasService.getKelasById(kelasSiswaDTO.getKelasId());
+        Long currPeserta = kelas.getPeserta();
+        kelas.setPeserta(currPeserta - 1);
+        kelasService.saveKelas(kelas);
     }
 
     @Override
