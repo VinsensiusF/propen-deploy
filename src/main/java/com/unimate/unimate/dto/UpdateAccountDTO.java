@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Data
 @Accessors(chain = true)
@@ -23,4 +24,14 @@ public class UpdateAccountDTO {
     private String status;
     @NotNull
     private String password;
+    @NotNull
+    private String address;
+    @NotNull
+    private String phoneNumber;
+    @NotNull
+    private Date birthday;
+    @NotNull
+    private String job;
+    @NotNull
+    private String bio;
 }
