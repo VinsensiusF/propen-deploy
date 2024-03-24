@@ -3,6 +3,7 @@ package com.unimate.unimate.restcontroller;
 import com.unimate.unimate.aspect.ValidateToken;
 import com.unimate.unimate.dto.CleanAccountDTO;
 import com.unimate.unimate.dto.CreateAccountDTO;
+import com.unimate.unimate.dto.EditUserAccountDTO;
 import com.unimate.unimate.dto.UpdateAccountDTO;
 import com.unimate.unimate.dto.mapper.AccountMapper;
 import com.unimate.unimate.entity.Account;
@@ -14,6 +15,7 @@ import com.unimate.unimate.repository.RoleRepository;
 import com.unimate.unimate.service.AccountService;
 import com.unimate.unimate.service.AuthenticationService;
 import com.unimate.unimate.util.JwtUtility;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,7 @@ import java.util.List;
 public class AccountRestController {
     private final AccountService accountService;
     private final RoleRepository roleRepository;
+    private static final String JWT_HEADER = "Authorization";
 
     @Autowired
     private AccountMapper accountMapper;
@@ -143,21 +146,32 @@ public class AccountRestController {
         // checks if the new email has been used before
         //TODO
 
-        Account accountToUpdate = new Account();
-        accountToUpdate.setId(body.getId());
-        accountToUpdate.setName(body.getName());
-        accountToUpdate.setEmail(body.getEmail());
-        accountToUpdate.setPassword(body.getPassword());
-        accountToUpdate.setRole(roleRepository.findRoleByName(RoleEnum.valueOf(body.getRole())));
-        accountToUpdate.setStatus(AccountStatusEnum.valueOf(body.getStatus()));
-        accountToUpdate.setProfilePicture(body.getProfilePicture());
-
-
-        Account updatedAccount = accountService.updateAccount(accountToUpdate);
+        Account updatedAccount = accountService.updateAccount(body);
 
         // this shouldn't return password
         CleanAccountDTO cleanAccount = accountMapper.accountToCleanAccountDTO(updatedAccount);
         return ResponseEntity.ok(cleanAccount);
+    }
+
+    @PutMapping("/student")
+    @ValidateToken(RoleEnum.STUDENT)
+    public ResponseEntity<?> updateStudentAccount(@Valid @RequestBody EditUserAccountDTO editUserAccountDTO, HttpServletRequest request) {
+        try {
+            String requestToken = request.getHeader(JWT_HEADER).substring(7);
+            Account account = accountService.getAccountFromJwt(requestToken);
+
+            account.setName(editUserAccountDTO.getName());
+            account.setBio(editUserAccountDTO.getBio());
+            account.setBirthday(editUserAccountDTO.getBirthday());
+            account.setJob(editUserAccountDTO.getJob().toUpperCase());
+            account.setPhoneNumber(editUserAccountDTO.getPhoneNumber());
+            account.setAddress(editUserAccountDTO.getAddress());
+            accountService.saveAccount(account);
+            return ResponseEntity.ok(account);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Failed to update profile");
+        }
+
     }
 
 
