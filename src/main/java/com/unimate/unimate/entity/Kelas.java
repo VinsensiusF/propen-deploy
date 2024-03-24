@@ -33,6 +33,7 @@ public class Kelas {
 
     private String category;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
