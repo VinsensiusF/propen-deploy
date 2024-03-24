@@ -21,16 +21,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
+
+    @Value("${FRONT_END_URL}")
+    private String frontEndUrl;
+
+    @Value("${BACK_END_URL}")
+    private String backEndUrl;
+
     //todo autowird in constructor
     private final EmailService emailService;
     private final AccountRepository accountRepository;
@@ -102,8 +106,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     //todo AUTH CONFIG PROPERTIES
     private String generateVerificationLink(UUID token) {
-        return "http://localhost:8080/api/verify/email?token=" + token.toString();
+        return backEndUrl+"/api/verify/email?token=" + token.toString();
     }
+
+    private String generateVerificationForgetPassword(UUID token) {
+        return frontEndUrl + "/reset-password?token=" + token.toString();
+    }
+
+
 
     public ResponseEntity<String> verifyEmail(UUID id) {
         // Find the corresponding verification token
@@ -149,7 +159,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         tokenRepository.save(token);
 
         HashMap<String, String> body = new HashMap<>();
-        body.put("verificationlink", generateVerificationLink(token.getToken()));
+        body.put("verificationlink", generateVerificationForgetPassword(token.getToken()));
         emailService.send(account.getEmail(), body);
 
         return token;

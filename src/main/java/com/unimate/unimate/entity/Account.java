@@ -26,6 +26,7 @@ public class Account {
     private Long id;
 
     // TODO create SQL Index
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     private String password;

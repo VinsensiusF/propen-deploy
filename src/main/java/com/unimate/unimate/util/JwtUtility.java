@@ -6,12 +6,12 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.unimate.unimate.entity.Role;
+
 import com.unimate.unimate.enums.RoleEnum;
 import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Value;
 
-import javax.crypto.spec.SecretKeySpec;
+
+
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
