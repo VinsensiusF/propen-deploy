@@ -12,4 +12,13 @@ public class BlogDTO {
 
     @NotNull
     private String content;
+
+    @NotNull
+    private String readingTime;
+
+    @NotNull
+    private String type;
+
+    @NotNull
+    private String shortTitle;
 }

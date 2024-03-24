@@ -15,6 +15,8 @@ public interface AuthenticationService {
     ResponseEntity<String> signUp(SignUpDTO signUpDTO);
     ResponseEntity<String> verifyEmail(UUID id);
     Token forgotPassword(ForgotPasswordDTO forgotPasswordDTO);
+    Token changeEmail(ChangeEmailDTO changeEmailDTO);
+    ResponseEntity<String> verifyChangeEmail(VerificationChangeEmailDTO verificationChangeEmailDTO);
     ResponseEntity<String> verifyForgotPassword(VerificationForgotPasswordDTO verificationForgotPasswordDTO);
     ResponseEntity<String> resendEmail(ResendEmailDTO resendEmailDTO);
     List<Account> starter();

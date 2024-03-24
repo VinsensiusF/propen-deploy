@@ -3,19 +3,17 @@ package com.unimate.unimate.dto;
 import com.unimate.unimate.enums.ScholarshipDegree;
 import com.unimate.unimate.enums.ScholarshipStatus;
 import com.unimate.unimate.enums.ScholarshipType;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
 @Data
 @Accessors(chain = true)
-public class ScholarshipDTO {
+public class ScholarshipResponseDTO {
     @NotNull
     private String name;
 
