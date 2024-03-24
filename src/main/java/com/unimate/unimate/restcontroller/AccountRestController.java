@@ -223,6 +223,7 @@ public class AccountRestController {
         try {
             final String requestTokenHeader = request.getHeader(JWT_HEADER);
             var jwtToken = requestTokenHeader.substring(7);
+            System.out.println(jwtToken);
             Account account = accountService.getAccountFromJwt(jwtToken);         
             accountService.changePasword(requestNewPassword, account);
             return ResponseEntity.ok("Password changed successfully");

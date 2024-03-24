@@ -96,7 +96,7 @@ public class AccountServiceImpl implements AccountService {
        var passwordEncoder = new BCryptPasswordEncoder();
        var user = accountRepository.findAccountByEmail(account.getEmail()).get();
 
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getEmail())) {
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new IllegalStateException("Wrong password");
         }
         if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
