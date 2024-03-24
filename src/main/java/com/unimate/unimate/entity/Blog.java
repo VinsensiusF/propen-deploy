@@ -24,6 +24,17 @@ public class Blog {
 
     private String title;
 
+    private String penulis;
+
+    // 5-mins reading time
+    private String readingTime;
+
+    // info beasiswa
+    private String type;
+
+    // judul pendek
+    private String shortTitle;
+
     @Column(columnDefinition = "TEXT")
     private String content;
 

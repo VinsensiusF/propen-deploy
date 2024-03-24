@@ -1,13 +1,11 @@
 package com.unimate.unimate.restcontroller;
 
-import com.unimate.unimate.dto.ForgotPasswordDTO;
-import com.unimate.unimate.dto.ResendEmailDTO;
-import com.unimate.unimate.dto.SignInDTO;
-import com.unimate.unimate.dto.SignUpDTO;
+import com.unimate.unimate.aspect.ValidateToken;
+import com.unimate.unimate.dto.*;
 
 import com.unimate.unimate.entity.Token;
+import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.service.AuthenticationService;
-import com.unimate.unimate.service.impl.AuthenticationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +54,12 @@ public class AuthenticationRestController {
 
         Token token = authenticationService.forgotPassword(forgotPasswordDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Password reset link has been sent. Check your email for verification.");
+    }
+
+    @PostMapping("/change-email")
+    public ResponseEntity<String> changeEmail(@RequestBody ChangeEmailDTO changeEmailDTO) {
+        Token token = authenticationService.changeEmail(changeEmailDTO);
+        return ResponseEntity.status(HttpStatus.OK).body("Email change link has been sent. Check your email for verification.");
     }
 
     @PostMapping("/resend")

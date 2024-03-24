@@ -1,8 +1,9 @@
 package com.unimate.unimate.service;
 
+import com.unimate.unimate.dto.ScholarshipDTO;
+import com.unimate.unimate.dto.ScholarshipResponseDTO;
 import com.unimate.unimate.entity.Scholarship;
 
-import java.util.Date;
 import java.util.List;
 
 public interface ScholarshipService {
@@ -14,5 +15,9 @@ public interface ScholarshipService {
 
     Scholarship getScholarshipById(Long id);
 
-    Scholarship createScholarship(String name, String description, Date startedAt, Date endedAt);
+    ScholarshipResponseDTO getScholarshipDetailById(Long id);
+
+    Scholarship createScholarship(ScholarshipDTO scholarshipDTO);
+
+    Scholarship updateScholarship(ScholarshipDTO scholarshipDTO, long scholarshipId);
 }

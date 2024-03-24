@@ -19,4 +19,6 @@ public interface BlogService {
     Blog createBlog(BlogDTO blogDTO);
 
     Blog updateBlog(UpdateBlogDTO updateBlogDTO);
+
+    Blog findBlogByKeyword(String keyword);
 }
