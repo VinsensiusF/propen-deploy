@@ -20,10 +20,10 @@ public class UpdateAccountDTO {
     private String profilePicture;
     @NotNull
     private String role;
-    @NotNull
-    private String status;
-    @NotNull
-    private String password;
+//    @NotNull
+//    private String status;
+//    @NotNull
+//    private String password;
     @NotNull
     private String address;
     @NotNull

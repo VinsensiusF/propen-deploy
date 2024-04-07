@@ -16,17 +16,17 @@ public class CreateAccountDTO {
     @NotNull
     private String name;
     @NotNull
-    private String profilePicture;
-    @NotNull
     private String Role;
-    @NotNull
-    private String address;
-    @NotNull
-    private String phoneNumber;
-    @NotNull
-    private Date birthday;
-    @NotNull
-    private String job;
-    @NotNull
-    private String bio;
+//    @NotNull
+//    private String profilePicture;
+//    @NotNull
+//    private String address;
+//    @NotNull
+//    private String phoneNumber;
+//    @NotNull
+//    private Date birthday;
+//    @NotNull
+//    private String job;
+//    @NotNull
+//    private String bio;
 }
