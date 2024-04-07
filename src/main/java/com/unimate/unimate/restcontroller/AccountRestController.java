@@ -116,14 +116,15 @@ public class AccountRestController {
         account.setName(body.getName());
         account.setEmail(body.getEmail());
         account.setPassword(passwordEncoder.encode(body.getPassword()));
-        account.setProfilePicture(body.getProfilePicture());
         account.setRole(roleRepository.findRoleByName(RoleEnum.valueOf(body.getRole())));
         account.setStatus(AccountStatusEnum.VERIFIED);
-        account.setAddress(body.getAddress());
-        account.setPhoneNumber(body.getPhoneNumber());
-        account.setBirthday(body.getBirthday());
-        account.setJob(body.getJob());
-        account.setBio(body.getBio());
+
+//        account.setProfilePicture(body.getProfilePicture());
+//        account.setAddress(body.getAddress());
+//        account.setPhoneNumber(body.getPhoneNumber());
+//        account.setBirthday(body.getBirthday());
+//        account.setJob(body.getJob());
+//        account.setBio(body.getBio());
         accountService.saveAccount(account);
 
         return ResponseEntity.ok(account);
