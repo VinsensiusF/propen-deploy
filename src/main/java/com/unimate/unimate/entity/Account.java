@@ -60,7 +60,7 @@ public class Account {
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    @OneToMany(mappedBy = "siswa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "siswa", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<KelasSiswa> kelasSiswa = new ArrayList<>();
 

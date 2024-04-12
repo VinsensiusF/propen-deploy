@@ -1,70 +1,62 @@
 package com.unimate.unimate.service.impl;
 
 import com.unimate.unimate.dto.QuestionContentDTO;
-import com.unimate.unimate.entity.Question;
+import com.unimate.unimate.dto.UpdateQuestionContentDTO;
 import com.unimate.unimate.entity.QuestionContent;
 import com.unimate.unimate.entity.Ujian;
+import com.unimate.unimate.exception.QuestionContentNotFoundException;
+import com.unimate.unimate.exception.UjianNotFoundException;
 import com.unimate.unimate.repository.QuestionContentRepository;
-import com.unimate.unimate.repository.QuestionRepository;
 import com.unimate.unimate.service.QuestionService;
+import com.unimate.unimate.service.UjianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
-    private final QuestionRepository questionRepository;
     private final QuestionContentRepository questionContentRepository;
+    private final UjianService ujianService;
 
     @Autowired
-    public QuestionServiceImpl(QuestionRepository questionRepository, QuestionContentRepository questionContentRepository){
-        this.questionRepository = questionRepository;
+    public QuestionServiceImpl(QuestionContentRepository questionContentRepository, UjianService ujianService){
         this.questionContentRepository = questionContentRepository;
+        this.ujianService = ujianService;
+    }
+
+
+    @Override
+    public void saveQuesionContent(QuestionContent questionContent) {
+        questionContentRepository.save(questionContent);
+    }
+
+
+    @Override
+    public List<QuestionContent> getAllQuestionContent() {
+        return questionContentRepository.findAll();
+    };
+
+    @Override
+    public QuestionContent getQuestionContentById(Long id) {
+        return questionContentRepository.findQuestionContentById(id);
     }
 
     @Override
-    public void saveQuestion(Question question) {
-        questionRepository.save(question);
-    }
-
-    @Override
-    public List<Question> getAllQuestion() {
-        return questionRepository.findAll();
-    }
-
-    @Override
-    public Question getQuestionById(Long id) {
-        return questionRepository.findQuestionById(id);
-    }
-
-    @Override
-    public ArrayList<QuestionContent> getQuestionContentsByUjian(Ujian ujian) {
-        ArrayList<Question> questions = getQuestionsByUjian(ujian);
-        ArrayList<QuestionContent> contents = new ArrayList<>();
-        for(Question question : questions){
-            QuestionContent content = questionContentRepository.findQuestionContentsByQuestion(question);
-            contents.add(content);
+    public List<QuestionContent> getQuestionContentsByUjian(Long ujianId) {
+        Ujian ujian = ujianService.getUjianById(ujianId);
+        if (ujian == null) {
+            throw new UjianNotFoundException();
         }
-        return contents;
+        return ujian.getQuestionContents();
     }
 
-    @Override
-    public ArrayList<Question> getQuestionsByUjian(Ujian ujian) {
-        return questionRepository.findQuestionsByUjian(ujian);
-    }
+    public QuestionContent createQuestionContent(QuestionContentDTO questionContentDTO) {
+        Ujian ujian = ujianService.getUjianById(questionContentDTO.getUjianId());
+        if (ujian == null) {
+            throw new UjianNotFoundException();
+        }
 
-    @Override
-    public Question createQuestion(Ujian ujian) {
-        Question question = new Question();
-        question.setUjian(ujian);
-        questionRepository.save(question);
-
-        return question;
-    }
-
-    public QuestionContent createQuestionContent(Question question, QuestionContentDTO questionContentDTO) {
         QuestionContent questionContent = new QuestionContent();
         questionContent.setQuestionSentence(questionContentDTO.getQuestionSentence());
         questionContent.setA(questionContentDTO.getA());
@@ -72,9 +64,42 @@ public class QuestionServiceImpl implements QuestionService {
         questionContent.setC(questionContentDTO.getC());
         questionContent.setD(questionContentDTO.getD());
         questionContent.setCorrectAnswer(questionContentDTO.getCorrectAnswer());
-        questionContent.setQuestion(question);
+        questionContent.setUjian(ujian);
         questionContentRepository.save(questionContent);
 
         return questionContent;
     }
+
+    @Override
+    public QuestionContent updateQuestionContent(UpdateQuestionContentDTO updateQuestionContentDTO) {
+        QuestionContent questionContent = getQuestionContentById(updateQuestionContentDTO.getId());
+        if (questionContent == null) {
+            throw new QuestionContentNotFoundException();
+        }
+
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        System.out.println(updateQuestionContentDTO.toString());
+        System.out.println(updateQuestionContentDTO.getQuestionSentence());
+
+        // QuestionContents aren't allowed to change Ujian
+        questionContent.setA(updateQuestionContentDTO.getA());
+        questionContent.setB(updateQuestionContentDTO.getB());
+        questionContent.setC(updateQuestionContentDTO.getC());
+        questionContent.setD(updateQuestionContentDTO.getD());
+        questionContent.setQuestionSentence(updateQuestionContentDTO.getQuestionSentence());
+        questionContentRepository.save(questionContent);
+
+        return questionContent;
+    }
+
+    @Override
+    public void deleteQuestionContent(QuestionContent questionContent) {
+        questionContentRepository.delete(questionContent);
+    }
+
+
 }

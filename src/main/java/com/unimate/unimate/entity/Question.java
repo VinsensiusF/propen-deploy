@@ -24,7 +24,5 @@ public class Question {
 //    @Column(name = "content", columnDefinition = "jsonb")
 //    private QuestionContent content;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "ujianId")
-    private Ujian ujian;
+
 }

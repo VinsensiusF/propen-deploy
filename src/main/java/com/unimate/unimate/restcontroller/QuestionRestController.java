@@ -2,18 +2,22 @@ package com.unimate.unimate.restcontroller;
 
 import com.unimate.unimate.aspect.ValidateToken;
 import com.unimate.unimate.dto.QuestionContentDTO;
-import com.unimate.unimate.entity.Question;
+import com.unimate.unimate.dto.StudentAnswerDTO;
+import com.unimate.unimate.dto.UpdateQuestionContentDTO;
 import com.unimate.unimate.entity.QuestionContent;
 import com.unimate.unimate.entity.Ujian;
 import com.unimate.unimate.enums.RoleEnum;
+import com.unimate.unimate.exception.QuestionContentNotFoundException;
+import com.unimate.unimate.exception.UjianNotFoundException;
 import com.unimate.unimate.service.QuestionService;
 import com.unimate.unimate.service.UjianService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/question")
@@ -29,28 +33,79 @@ public class QuestionRestController {
 
     @PostMapping("/create")
     @ValidateToken({RoleEnum.ADMIN, RoleEnum.TEACHER})
-    public ResponseEntity<String> createQuestion(@RequestBody QuestionContentDTO questionContentDTO){
-        Ujian ujian = ujianService.getUjianById(questionContentDTO.getUjianId());
-        Question question = questionService.createQuestion(ujian);
-        QuestionContent questionContent = questionService.createQuestionContent(question, questionContentDTO);
+    public ResponseEntity<?> createQuestion(@RequestBody QuestionContentDTO questionContentDTO){
+        QuestionContent questionContent = questionService.createQuestionContent(questionContentDTO);
 
-        if (question != null & questionContent != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Question has been created successfully.");
+        if (questionContent != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(questionContent);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create Question.");
         }
     }
 
-    @GetMapping("/get-by-ujian")
+    @GetMapping("/get-by-ujian/{id}")
     @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER})
-    public ArrayList<QuestionContent> getQuestionsByUjianId(@RequestParam Long ujianId){
+    public List<QuestionContent> getQuestionsByUjianId(@PathVariable("id") Long ujianId){
         Ujian ujian = ujianService.getUjianById(ujianId);
-        ArrayList<QuestionContent> questionContents = questionService.getQuestionContentsByUjian(ujian);
+
+        if (ujian == null) {
+            throw new UjianNotFoundException();
+        }
+        List<QuestionContent> questionContents = questionService.getQuestionContentsByUjian(ujianId);
 
         if (questionContents != null) {
             return questionContents;
         } else {
             throw new RuntimeException("Failed to get the Questions");
         }
+    }
+
+    @GetMapping("/{id}")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER})
+    public ResponseEntity<QuestionContent> getQuestionById(@PathVariable("id") Long id) {
+        QuestionContent questionContent = questionService.getQuestionContentById(id);
+        if (questionContent == null) {
+            throw new QuestionContentNotFoundException();
+        }
+        return ResponseEntity.ok(questionContent);
+    }
+
+    @PutMapping("/update")
+    @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER})
+    public ResponseEntity<QuestionContent> updateQuestionContent(@Valid @RequestBody UpdateQuestionContentDTO updateQuestionContentDTO) {
+        QuestionContent questionContent = questionService.updateQuestionContent(updateQuestionContentDTO);
+        return ResponseEntity.ok(questionContent);
+    }
+
+    @DeleteMapping("/{id}")
+    @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER})
+    public ResponseEntity<?> deleteQuestionContent(@PathVariable("id") Long id) {
+        QuestionContent questionContent = questionService.getQuestionContentById(id);
+
+        if (questionContent == null) {
+            throw new QuestionContentNotFoundException();
+        }
+        questionService.deleteQuestionContent(questionContent);
+        return ResponseEntity.ok("QuestionContent has been successfully deleted.");
+    }
+
+    @PostMapping("/testgrade")
+    @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER,RoleEnum.STUDENT})
+    public ResponseEntity<?> gradeUjian(@RequestBody List<StudentAnswerDTO> studentAnswerDTOList) {
+        Integer grade = 0;
+
+        for (StudentAnswerDTO answerDTO : studentAnswerDTOList) {
+            QuestionContent questionContent = questionService.getQuestionContentById(answerDTO.getId());
+            if (questionContent == null) {
+                throw new QuestionContentNotFoundException();
+            }
+
+            boolean result = answerDTO.getOption().equals(questionContent.getCorrectAnswer());
+            if (result) {
+                grade++;
+            }
+        }
+
+        return ResponseEntity.ok("ok");
     }
 }

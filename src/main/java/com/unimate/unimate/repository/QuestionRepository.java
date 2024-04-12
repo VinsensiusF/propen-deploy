@@ -8,7 +8,4 @@ import java.util.ArrayList;
 
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
-    Question findQuestionById(Long id);
-
-    ArrayList<Question> findQuestionsByUjian(Ujian ujian);
 }

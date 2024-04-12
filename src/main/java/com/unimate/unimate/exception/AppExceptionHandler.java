@@ -51,4 +51,14 @@ public class AppExceptionHandler {
     public ResponseEntity<CustomErrorResponse> InvalidTokenException(InvalidPasswordException InvalidPasswordException){
         return new ResponseEntity<>(InvalidPasswordException.generateCustomErrorResponse(), HttpStatus.valueOf(InvalidPasswordException.getHttpStatusCode()));
     }
+
+    @ExceptionHandler(KelasNotFoundException.class)
+    public ResponseEntity<CustomErrorResponse> KelasNotFoundException(KelasNotFoundException kelasNotFoundException) {
+        return new ResponseEntity<>(kelasNotFoundException.generateCustomErrorResponse(), HttpStatus.valueOf(kelasNotFoundException.getHttpStatusCode()));
+    }
+
+    @ExceptionHandler(UjianNotFoundException.class)
+    public ResponseEntity<CustomErrorResponse> UjianNotFound(UjianNotFoundException ujianNotFound) {
+        return new ResponseEntity<>(ujianNotFound.generateCustomErrorResponse(), HttpStatus.valueOf(ujianNotFound.getHttpStatusCode()));
+    }
 }
