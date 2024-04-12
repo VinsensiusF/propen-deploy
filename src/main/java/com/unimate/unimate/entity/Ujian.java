@@ -33,6 +33,10 @@ public class Ujian {
     @OneToMany(mappedBy = "ujian", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionContent> questionContents = new ArrayList<>();
 
+    @OneToMany(mappedBy = "ujian", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<UjianSiswa> ujianSiswa = new ArrayList<>();
+
     private String title;
 
     //in seconds

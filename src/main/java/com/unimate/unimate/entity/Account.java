@@ -64,6 +64,10 @@ public class Account {
     @JsonIgnore
     private List<KelasSiswa> kelasSiswa = new ArrayList<>();
 
+    @OneToMany(mappedBy = "siswa", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<UjianSiswa> ujianSiswa = new ArrayList<>();
+
     @CreationTimestamp
     private Instant createdAt;
 

@@ -20,7 +20,7 @@ public class UjianSiswa {
 
     @ManyToOne
     @JoinColumn(name = "ujian_id")
-    private Ujian kelas;
+    private Ujian ujian;
 
     @ManyToOne
     @JoinColumn(name = "siswa_id")

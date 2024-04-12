@@ -64,14 +64,6 @@ public class KelasRestController {
         if (kelas == null) {
             throw new KelasNotFoundException();
         }
-        List<KelasSiswa> kelasSiswaList = kelasSiswaService.findKelasSiswaListByKelasId(id);
-
-        if (kelasSiswaList != null && !kelasSiswaList.isEmpty()) {
-            for (KelasSiswa ks :
-                    kelasSiswaList) {
-                kelasSiswaService.deleteKelasSiswa(ks);
-            }
-        }
 
 
         kelasService.deleteKelas(kelas);
