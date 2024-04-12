@@ -3,6 +3,7 @@ package com.unimate.unimate.restcontroller;
 import com.unimate.unimate.aspect.ValidateToken;
 import com.unimate.unimate.dto.QuestionContentDTO;
 import com.unimate.unimate.dto.StudentAnswerDTO;
+import com.unimate.unimate.dto.UjianResultDTO;
 import com.unimate.unimate.dto.UpdateQuestionContentDTO;
 import com.unimate.unimate.entity.QuestionContent;
 import com.unimate.unimate.entity.Ujian;
@@ -91,20 +92,32 @@ public class QuestionRestController {
 
     @PostMapping("/testgrade")
     @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER,RoleEnum.STUDENT})
-    public ResponseEntity<?> gradeUjian(@RequestBody List<StudentAnswerDTO> studentAnswerDTOList) {
+    public ResponseEntity<?> gradeUjian(@RequestBody UjianResultDTO ujianResultDTO) {
         Integer grade = 0;
 
-        for (StudentAnswerDTO answerDTO : studentAnswerDTOList) {
-            QuestionContent questionContent = questionService.getQuestionContentById(answerDTO.getId());
-            if (questionContent == null) {
-                throw new QuestionContentNotFoundException();
-            }
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        System.out.println("UjianID: "+ ujianResultDTO.getUjianId());
 
-            boolean result = answerDTO.getOption().equals(questionContent.getCorrectAnswer());
-            if (result) {
-                grade++;
-            }
+        for (StudentAnswerDTO answerDTO :
+                ujianResultDTO.getList()) {
+            System.out.println("QuestionID: " + answerDTO.getId());
+            System.out.println("Answer: " + answerDTO.getOption());
+            System.out.println("");
         }
+
+//        for (StudentAnswerDTO answerDTO : studentAnswerDTOList) {
+//            QuestionContent questionContent = questionService.getQuestionContentById(answerDTO.getId());
+//            if (questionContent == null) {
+//                throw new QuestionContentNotFoundException();
+//            }
+//
+//            boolean result = answerDTO.getOption().equals(questionContent.getCorrectAnswer());
+//            if (result) {
+//                grade++;
+//            }
+//        }
 
         return ResponseEntity.ok("ok");
     }
