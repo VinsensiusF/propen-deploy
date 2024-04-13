@@ -1,6 +1,7 @@
 package com.unimate.unimate.service.impl;
 
 import com.unimate.unimate.dto.CreateKelasDTO;
+import com.unimate.unimate.dto.KelasNameOnly;
 import com.unimate.unimate.dto.SetTeacherDTO;
 import com.unimate.unimate.dto.UpdateKelasDTO;
 import com.unimate.unimate.entity.Account;
@@ -127,5 +128,8 @@ public class KelasServiceImpl implements KelasService {
         return kelas;
     }
 
-
+    @Override
+    public List<KelasNameOnly> getAllKelasNames() {
+        return kelasRepository.findKelasNameByIdNotNull();
+    }
 }

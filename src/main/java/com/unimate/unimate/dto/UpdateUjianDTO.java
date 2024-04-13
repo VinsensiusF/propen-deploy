@@ -1,21 +1,18 @@
 package com.unimate.unimate.dto;
 
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
-import java.util.Date;
+import lombok.experimental.Accessors;
 
 @Data
-public class UjianDTO {
-
+@Accessors(chain = true)
+public class UpdateUjianDTO {
     @NotNull
-    private long kelasId;
+    private Long id;
 
     @NotNull
     private String title;
 
-    // Duration in seconds
     @NotNull
     private Long duration;
 }

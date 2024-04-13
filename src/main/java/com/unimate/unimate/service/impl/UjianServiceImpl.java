@@ -1,33 +1,28 @@
 package com.unimate.unimate.service.impl;
 
 import com.unimate.unimate.dto.UjianDTO;
-import com.unimate.unimate.entity.Question;
+import com.unimate.unimate.dto.UpdateUjianDTO;
+import com.unimate.unimate.entity.Kelas;
 import com.unimate.unimate.entity.Ujian;
-import com.unimate.unimate.repository.QuestionContentRepository;
-import com.unimate.unimate.repository.QuestionRepository;
+import com.unimate.unimate.exception.KelasNotFoundException;
+import com.unimate.unimate.exception.UjianNotFoundException;
 import com.unimate.unimate.repository.UjianRepository;
 import com.unimate.unimate.service.KelasService;
-import com.unimate.unimate.service.QuestionService;
 import com.unimate.unimate.service.UjianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UjianServiceImpl implements UjianService {
     private final UjianRepository ujianRepository;
-    private final QuestionService questionService;
-    private final QuestionContentRepository questionContentRepository;
     private final KelasService kelasService;
 
     @Autowired
-    public UjianServiceImpl(UjianRepository ujianRepository, KelasService kelasService, QuestionService questionService, QuestionContentRepository questionContentRepository){
+    public UjianServiceImpl(UjianRepository ujianRepository, KelasService kelasService){
         this.ujianRepository = ujianRepository;
         this.kelasService = kelasService;
-        this.questionService = questionService;
-        this.questionContentRepository = questionContentRepository;
     }
 
     @Override
@@ -47,9 +42,13 @@ public class UjianServiceImpl implements UjianService {
 
     @Override
     public Ujian createUjian(UjianDTO ujianDTO) {
+        Kelas kelas = kelasService.getKelasById(ujianDTO.getKelasId());
+        if (kelas == null) {
+            throw new KelasNotFoundException();
+        }
         Ujian ujian = new Ujian();
         ujian.setKelas(kelasService.getKelasById(ujianDTO.getKelasId()));
-        ujian.setStartedAt(ujianDTO.getStartedAt());
+        ujian.setTitle(ujianDTO.getTitle());
         ujian.setDuration(ujianDTO.getDuration());
         saveUjian(ujian);
 
@@ -57,7 +56,23 @@ public class UjianServiceImpl implements UjianService {
     }
 
     @Override
-    public void deleteUjian(Ujian ujian) {
-        ArrayList<Question> questions = questionService.getQuestionsByUjian(ujian);
+    public Ujian updateUjian(UpdateUjianDTO updateUjianDTO) {
+        Ujian ujian = getUjianById(updateUjianDTO.getId());
+        if (ujian == null) {
+            throw new UjianNotFoundException();
+        }
+        ujian.setDuration(updateUjianDTO.getDuration());
+        ujian.setTitle(updateUjianDTO.getTitle());
+        saveUjian(ujian);
+
+        return ujian;
     }
+
+    @Override
+    public void deleteUjian(Ujian ujian) {
+        ujianRepository.delete(ujian);
+    }
+
+
+
 }

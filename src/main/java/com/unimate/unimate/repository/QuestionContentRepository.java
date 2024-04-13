@@ -8,5 +8,4 @@ import java.util.ArrayList;
 
 public interface QuestionContentRepository extends JpaRepository<QuestionContent, Long> {
     QuestionContent findQuestionContentById(Long id);
-    QuestionContent findQuestionContentsByQuestion(Question question);
 }

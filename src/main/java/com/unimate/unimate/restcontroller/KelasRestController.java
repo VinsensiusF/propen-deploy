@@ -34,6 +34,12 @@ public class KelasRestController {
         return kelasService.getAllKelas();
     }
 
+    @GetMapping("/get-all-name-only")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
+    public ResponseEntity<?> getAllKelasNameOnly() {
+        return ResponseEntity.ok(kelasService.getAllKelasNames());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> findKelasById(@PathVariable("id") Long id) {
         Kelas kelas = kelasService.getKelasById(id);
@@ -63,14 +69,6 @@ public class KelasRestController {
         Kelas kelas = kelasService.getKelasById(id);
         if (kelas == null) {
             throw new KelasNotFoundException();
-        }
-        List<KelasSiswa> kelasSiswaList = kelasSiswaService.findKelasSiswaListByKelasId(id);
-
-        if (kelasSiswaList != null && !kelasSiswaList.isEmpty()) {
-            for (KelasSiswa ks :
-                    kelasSiswaList) {
-                kelasSiswaService.deleteKelasSiswa(ks);
-            }
         }
 
 
