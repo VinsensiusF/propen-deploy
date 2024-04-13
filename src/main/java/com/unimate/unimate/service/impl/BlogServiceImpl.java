@@ -45,6 +45,9 @@ public class BlogServiceImpl implements BlogService {
         Blog blog = new Blog();
         blog.setTitle(blogDTO.getTitle());
         blog.setContent(blogDTO.getContent());
+        blog.setReadingTime(blogDTO.getReadingTime());
+        blog.setType(blogDTO.getType());
+        blog.setShortTitle(blogDTO.getShortTitle());
         saveBlog(blog);
         return blog;
     }
@@ -60,5 +63,10 @@ public class BlogServiceImpl implements BlogService {
         saveBlog(blog);
 
         return blog;
+    }
+
+    @Override
+    public Blog findBlogByKeyword(String keyword) {
+        return blogRepository.findBlogByTitleContainingIgnoreCase(keyword);
     }
 }

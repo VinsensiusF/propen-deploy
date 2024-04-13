@@ -52,7 +52,7 @@ public class Kelas {
 
     private Long peserta = 0L;
 
-    @OneToMany(mappedBy = "kelas")
+    @OneToMany(mappedBy = "kelas", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<KelasSiswa> kelasSiswa = new ArrayList<>();
 

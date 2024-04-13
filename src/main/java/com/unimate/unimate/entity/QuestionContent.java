@@ -1,5 +1,6 @@
 package com.unimate.unimate.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,9 +19,10 @@ public class QuestionContent {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "questionId")
-    private Question question;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ujianId")
+    @JsonIgnore
+    private Ujian ujian;
 
     private String questionSentence;
 

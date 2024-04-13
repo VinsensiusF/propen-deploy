@@ -1,6 +1,7 @@
 package com.unimate.unimate.service;
 
 import com.unimate.unimate.dto.CreateKelasDTO;
+import com.unimate.unimate.dto.KelasNameOnly;
 import com.unimate.unimate.dto.SetTeacherDTO;
 import com.unimate.unimate.dto.UpdateKelasDTO;
 import com.unimate.unimate.entity.Kelas;
@@ -23,4 +24,6 @@ public interface KelasService {
     void deleteKelas(Kelas kelas);
 
     Kelas updateRating(Long idKelas, Float newRating);
+
+    List<KelasNameOnly> getAllKelasNames();
 }

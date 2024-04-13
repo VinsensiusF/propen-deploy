@@ -1,5 +1,6 @@
 package com.unimate.unimate.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +9,9 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,10 +26,18 @@ public class Ujian {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
     @JoinColumn(name = "kelasId")
     private Kelas kelas;
 
-    private Date startedAt;
+    @OneToMany(mappedBy = "ujian", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QuestionContent> questionContents = new ArrayList<>();
+
+    @OneToMany(mappedBy = "ujian", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<UjianSiswa> ujianSiswa = new ArrayList<>();
+
+    private String title;
 
     //in seconds
     private Long duration;

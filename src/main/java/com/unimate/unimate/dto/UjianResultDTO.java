@@ -4,21 +4,17 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @Data
 @Accessors(chain = true)
-public class BlogDTO {
+public class UjianResultDTO {
     @NotNull
-    private String title;
+    private Long ujianId;
 
     @NotNull
-    private String content;
+    private Long siswaId;
 
     @NotNull
-    private String readingTime;
-
-    @NotNull
-    private String type;
-
-    @NotNull
-    private String shortTitle;
+    private List<StudentAnswerDTO> list;
 }

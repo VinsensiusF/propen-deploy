@@ -37,6 +37,12 @@ public class BlogRestController {
         return blogService.getAllBlog();
     }
 
+    @GetMapping("/search")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
+    public Blog searchBlog(@RequestParam String keyword){
+        return blogService.findBlogByKeyword(keyword);
+    }
+
     @DeleteMapping("/delete")
     @ValidateToken(RoleEnum.ADMIN)
     public ResponseEntity<String> deleteBlog(@RequestParam Long id){

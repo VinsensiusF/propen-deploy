@@ -167,6 +167,62 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return token;
     }
 
+    @Override
+    public Token changeEmail(ChangeEmailDTO changeEmailDTO) {
+        // Find the corresponding verification token
+        Optional<Account> existingAccount = accountRepository.findAccountByEmail(changeEmailDTO.getOldEmail());
+        if (existingAccount.isEmpty()) {
+            throw new AccountNotFoundException();
+        }
+        Account account = existingAccount.get();
+        Token token = new Token();
+        token.setToken(UUID.randomUUID());
+        token.setAccount(account);
+        token.setTokenType(TokenType.ACCOUNT_VERIFICATION);
+        token.setIssuedAt(Instant.now());
+        token.setExpiredAt(Instant.now().plus(15, ChronoUnit.MINUTES));
+        tokenRepository.save(token);
+
+        account.setEmail(changeEmailDTO.getNewEmail());
+        account.setStatus(AccountStatusEnum.UNVERIFIED);
+        accountRepository.save(account);
+
+        HashMap<String, String> body = new HashMap<>();
+        body.put("verificationlink", generateVerificationLink(token.getToken()));
+        emailService.send(changeEmailDTO.getNewEmail(), body);
+
+        return token;
+    }
+
+    @Override
+    public ResponseEntity<String> verifyChangeEmail(VerificationChangeEmailDTO verificationChangeEmailDTO) {
+        // Find the corresponding verification token
+        Optional<Token> optionalToken = tokenRepository.findTokenByTokenAndTokenType(verificationChangeEmailDTO.getToken(), TokenType.ACCOUNT_VERIFICATION);
+
+        if (optionalToken.isEmpty()) {
+            throw new InvalidTokenException();
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
+        }
+        Token verificationToken = optionalToken.get();
+        if (verificationToken.getExpiredAt().isBefore(Instant.now())) {
+            throw new InvalidTokenException();
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid or expired token");
+        }
+        Account account = verificationToken.getAccount();
+        if (account.getStatus() == AccountStatusEnum.UNVERIFIED) {
+            throw new UnverifiedUserException();
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account is not verified and can't change password");
+        }
+        else {
+            // Mark account status as verified
+            account.setStatus(AccountStatusEnum.VERIFIED);
+            accountRepository.save(account);
+            //todo Redirect to login page
+            return ResponseEntity.ok("Email has been changed. Redirecting to login page...");
+        }
+    }
+
+    @Override
     public ResponseEntity<String> verifyForgotPassword(VerificationForgotPasswordDTO verificationForgotPasswordDTO) {
         // Find the corresponding verification token
         Optional<Token> optionalToken = tokenRepository.findTokenByTokenAndTokenType(verificationForgotPasswordDTO.getToken(), TokenType.FORGOT_PASSWORD);
@@ -192,6 +248,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return ResponseEntity.ok("User's password has been changed. Redirecting to login page...");
     }
 
+    @Override
     public ResponseEntity<String> resendEmail(ResendEmailDTO resendEmailDTO){
         Optional<Account> optionalAccount = accountRepository.findAccountByEmail(resendEmailDTO.getEmail());
         if(optionalAccount.isEmpty()){
