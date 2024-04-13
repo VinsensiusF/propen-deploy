@@ -89,36 +89,4 @@ public class QuestionRestController {
         questionService.deleteQuestionContent(questionContent);
         return ResponseEntity.ok("QuestionContent has been successfully deleted.");
     }
-
-    @PostMapping("/testgrade")
-    @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER,RoleEnum.STUDENT})
-    public ResponseEntity<?> gradeUjian(@RequestBody UjianResultDTO ujianResultDTO) {
-        Integer grade = 0;
-
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("UjianID: "+ ujianResultDTO.getUjianId());
-
-        for (StudentAnswerDTO answerDTO :
-                ujianResultDTO.getList()) {
-            System.out.println("QuestionID: " + answerDTO.getId());
-            System.out.println("Answer: " + answerDTO.getOption());
-            System.out.println("");
-        }
-
-//        for (StudentAnswerDTO answerDTO : studentAnswerDTOList) {
-//            QuestionContent questionContent = questionService.getQuestionContentById(answerDTO.getId());
-//            if (questionContent == null) {
-//                throw new QuestionContentNotFoundException();
-//            }
-//
-//            boolean result = answerDTO.getOption().equals(questionContent.getCorrectAnswer());
-//            if (result) {
-//                grade++;
-//            }
-//        }
-
-        return ResponseEntity.ok("ok");
-    }
 }
