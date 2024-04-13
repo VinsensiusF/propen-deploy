@@ -28,5 +28,5 @@ public class UjianSiswa {
 
 
     @Column(name = "grade")
-    private Integer grade;
+    private Double grade;
 }

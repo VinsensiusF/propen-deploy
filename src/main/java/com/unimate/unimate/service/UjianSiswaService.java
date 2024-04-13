@@ -15,7 +15,7 @@ public interface UjianSiswaService {
     List<UjianSiswa> getUjianSiswaByUjianId(Long ujianId);
     List<UjianSiswa> getUjianSiswaBySiswaId(Long siswaId);
     UjianSiswa getUjianSiswaByUjianIdAndSiswaId(Long ujianId, Long siswaId);
-    UjianSiswa gradeExam(UjianSiswaDTO ujianSiswaDTO, Integer grade);
+    UjianSiswa gradeExam(UjianSiswaDTO ujianSiswaDTO, Double grade);
 
 
 }

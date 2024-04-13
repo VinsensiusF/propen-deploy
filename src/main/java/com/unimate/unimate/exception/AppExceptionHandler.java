@@ -61,4 +61,14 @@ public class AppExceptionHandler {
     public ResponseEntity<CustomErrorResponse> UjianNotFound(UjianNotFoundException ujianNotFound) {
         return new ResponseEntity<>(ujianNotFound.generateCustomErrorResponse(), HttpStatus.valueOf(ujianNotFound.getHttpStatusCode()));
     }
+
+    @ExceptionHandler(UjianSiswaNotFoundException.class)
+    public ResponseEntity<CustomErrorResponse> UjianNotFound(UjianSiswaNotFoundException ujianSiswaNotFoundException) {
+        return new ResponseEntity<>(ujianSiswaNotFoundException.generateCustomErrorResponse(), HttpStatus.valueOf(ujianSiswaNotFoundException.getHttpStatusCode()));
+    }
+
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<CustomErrorResponse> UjianNotFound(AccountNotFoundException accountNotFoundException) {
+        return new ResponseEntity<>(accountNotFoundException.generateCustomErrorResponse(), HttpStatus.valueOf(accountNotFoundException.getHttpStatusCode()));
+    }
 }

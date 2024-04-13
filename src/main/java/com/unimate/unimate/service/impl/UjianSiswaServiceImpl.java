@@ -106,7 +106,7 @@ public class UjianSiswaServiceImpl implements UjianSiswaService {
     }
 
     @Override
-    public UjianSiswa gradeExam(UjianSiswaDTO ujianSiswaDTO, Integer grade) {
+    public UjianSiswa gradeExam(UjianSiswaDTO ujianSiswaDTO, Double grade) {
         UjianSiswa ujianSiswa = getUjianSiswaByUjianIdAndSiswaId(ujianSiswaDTO.getUjianId(), ujianSiswaDTO.getStudentId());
 
         if (ujianSiswa == null) {

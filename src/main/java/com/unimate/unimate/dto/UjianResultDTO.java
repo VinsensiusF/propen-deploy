@@ -13,5 +13,8 @@ public class UjianResultDTO {
     private Long ujianId;
 
     @NotNull
+    private Long siswaId;
+
+    @NotNull
     private List<StudentAnswerDTO> list;
 }
