@@ -152,8 +152,8 @@ public class AccountRestController {
         return ResponseEntity.ok(cleanAccount);
     }
 
-    @PutMapping("/student")
-    @ValidateToken(RoleEnum.STUDENT)
+    @PutMapping("/edit")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
     public ResponseEntity<?> updateStudentAccount(@Valid @RequestBody EditUserAccountDTO editUserAccountDTO, HttpServletRequest request) {
         try {
             String requestToken = request.getHeader(JWT_HEADER).substring(7);
@@ -162,7 +162,7 @@ public class AccountRestController {
             account.setName(editUserAccountDTO.getName());
             account.setBio(editUserAccountDTO.getBio());
             account.setBirthday(editUserAccountDTO.getBirthday());
-            account.setJob(editUserAccountDTO.getJob().toUpperCase());
+            account.setJob(editUserAccountDTO.getJob());
             account.setPhoneNumber(editUserAccountDTO.getPhoneNumber());
             account.setAddress(editUserAccountDTO.getAddress());
             accountService.saveAccount(account);
