@@ -47,14 +47,6 @@ public class KelasServiceImpl implements KelasService {
     public Kelas createKelas(CreateKelasDTO createKelasDTO) {
         Kelas kelas = new Kelas();
 
-        if (createKelasDTO.getTeacherId() != null) {
-            Optional<Account> teacher = accountService.getAccountById(createKelasDTO.getTeacherId());
-            if (teacher.isEmpty()) {
-                throw new AccountNotFoundException();
-            }
-            kelas.setTeacher(teacher.get());
-        }
-
         kelas.setName(createKelasDTO.getName());
         kelas.setRating(0f);
         kelas.setCategory(createKelasDTO.getCategory());
@@ -74,13 +66,6 @@ public class KelasServiceImpl implements KelasService {
         if (kelas == null) {
             throw new KelasNotFoundException();
         }
-        if (updateKelasDTO.getTeacherId() != null) {
-            Optional<Account> teacher = accountService.getAccountById(updateKelasDTO.getTeacherId());
-            if (teacher.isEmpty()) {
-                throw new AccountNotFoundException();
-            }
-            kelas.setTeacher(teacher.get());
-        }
 
         // disabled rating update by default
         // kelas.setRating(updateKelasDTO.getRating());
@@ -94,22 +79,6 @@ public class KelasServiceImpl implements KelasService {
         saveKelas(kelas);
         return kelas;
 
-    }
-
-
-    @Override
-    public Kelas setTeacherToKelas(SetTeacherDTO teacherDTO) {
-        Optional<Account> teacher = accountService.getAccountById(teacherDTO.getTeacherId());
-        if (teacher.isEmpty()) {
-            throw new AccountNotFoundException();
-        }
-        Kelas kelas = getKelasById(teacherDTO.getKelasId());
-        if (kelas == null) {
-            throw new KelasNotFoundException();
-        }
-        kelas.setTeacher(teacher.get());
-        kelasRepository.save(kelas);
-        return kelas;
     }
 
     @Override

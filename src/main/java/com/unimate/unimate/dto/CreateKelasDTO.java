@@ -21,6 +21,5 @@ public class CreateKelasDTO {
     private List<String> benefits;
     @NotNull
     private List<String> syllabuses;
-    private Long teacherId;
 
 }
