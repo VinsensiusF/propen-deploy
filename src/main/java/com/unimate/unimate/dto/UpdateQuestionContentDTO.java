@@ -15,6 +15,8 @@ public class UpdateQuestionContentDTO {
     @NotNull
     private String questionSentence;
 
+    private String questionText;
+
     @NotNull
     private String a;
 

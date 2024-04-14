@@ -59,6 +59,7 @@ public class QuestionServiceImpl implements QuestionService {
 
         QuestionContent questionContent = new QuestionContent();
         questionContent.setQuestionSentence(questionContentDTO.getQuestionSentence());
+        questionContent.setQuestionText(questionContent.getQuestionText());
         questionContent.setA(questionContentDTO.getA());
         questionContent.setB(questionContentDTO.getB());
         questionContent.setC(questionContentDTO.getC());
@@ -77,20 +78,13 @@ public class QuestionServiceImpl implements QuestionService {
             throw new QuestionContentNotFoundException();
         }
 
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println("");
-        System.out.println(updateQuestionContentDTO.toString());
-        System.out.println(updateQuestionContentDTO.getQuestionSentence());
-
         // QuestionContents aren't allowed to change Ujian
         questionContent.setA(updateQuestionContentDTO.getA());
         questionContent.setB(updateQuestionContentDTO.getB());
         questionContent.setC(updateQuestionContentDTO.getC());
         questionContent.setD(updateQuestionContentDTO.getD());
         questionContent.setQuestionSentence(updateQuestionContentDTO.getQuestionSentence());
+        questionContent.setQuestionText(questionContent.getQuestionText());
         questionContentRepository.save(questionContent);
 
         return questionContent;
