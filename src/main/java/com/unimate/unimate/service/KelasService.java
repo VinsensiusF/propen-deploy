@@ -19,8 +19,6 @@ public interface KelasService {
 
     Kelas updateKelas(UpdateKelasDTO updateKelasDTO);
 
-    Kelas setTeacherToKelas(SetTeacherDTO teacherDTO);
-
     void deleteKelas(Kelas kelas);
 
     Kelas updateRating(Long idKelas, Float newRating);

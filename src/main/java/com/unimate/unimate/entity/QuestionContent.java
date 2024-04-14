@@ -26,6 +26,8 @@ public class QuestionContent {
 
     private String questionSentence;
 
+    private String questionText;
+
     private String a;
 
     private String b;
