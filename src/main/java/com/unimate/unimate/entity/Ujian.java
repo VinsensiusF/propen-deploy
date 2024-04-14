@@ -1,5 +1,6 @@
 package com.unimate.unimate.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,7 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +44,12 @@ public class Ujian {
 
     //in seconds
     private Long duration;
+
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime startDate;
+
+    @JsonFormat(pattern="yyyy-MM-dd'T'HH:mm")
+    private LocalDateTime endDate;
 
     @CreationTimestamp
     private Date createdAt;

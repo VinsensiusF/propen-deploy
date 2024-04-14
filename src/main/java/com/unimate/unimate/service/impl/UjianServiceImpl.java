@@ -46,10 +46,20 @@ public class UjianServiceImpl implements UjianService {
         if (kelas == null) {
             throw new KelasNotFoundException();
         }
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
+        System.out.println(ujianDTO.getStart());
+        System.out.println(ujianDTO.getStart().getClass().getName());
+        System.out.println("");
+        System.out.println(ujianDTO.getEnd());
+        System.out.println(ujianDTO.getEnd().getClass().getName());
         Ujian ujian = new Ujian();
         ujian.setKelas(kelasService.getKelasById(ujianDTO.getKelasId()));
         ujian.setTitle(ujianDTO.getTitle());
         ujian.setDuration(ujianDTO.getDuration());
+        ujian.setStartDate(ujianDTO.getStart());
+        ujian.setEndDate(ujianDTO.getEnd());
         saveUjian(ujian);
 
         return ujian;
