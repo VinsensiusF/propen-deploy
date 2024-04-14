@@ -10,6 +10,9 @@ public class QuestionContentDTO {
     private Long ujianId;
     @NotNull
     private String questionSentence;
+
+    private String questionText;
+
     @NotNull
     private String a;
     @NotNull

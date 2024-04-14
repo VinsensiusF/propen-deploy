@@ -71,4 +71,9 @@ public class AppExceptionHandler {
     public ResponseEntity<CustomErrorResponse> UjianNotFound(AccountNotFoundException accountNotFoundException) {
         return new ResponseEntity<>(accountNotFoundException.generateCustomErrorResponse(), HttpStatus.valueOf(accountNotFoundException.getHttpStatusCode()));
     }
+
+    @ExceptionHandler(KelasGuruNotFoundException.class)
+    public ResponseEntity<CustomErrorResponse> UjianNotFound(KelasGuruNotFoundException kelasGuruNotFoundException) {
+        return new ResponseEntity<>(kelasGuruNotFoundException.generateCustomErrorResponse(), HttpStatus.valueOf(kelasGuruNotFoundException.getHttpStatusCode()));
+    }
 }

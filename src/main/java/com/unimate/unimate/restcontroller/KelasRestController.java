@@ -4,9 +4,11 @@ import com.unimate.unimate.aspect.ValidateToken;
 import com.unimate.unimate.dto.*;
 import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.entity.Kelas;
+import com.unimate.unimate.entity.KelasGuru;
 import com.unimate.unimate.entity.KelasSiswa;
 import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.exception.KelasNotFoundException;
+import com.unimate.unimate.service.KelasGuruService;
 import com.unimate.unimate.service.KelasService;
 import com.unimate.unimate.service.KelasSiswaService;
 import jakarta.validation.Valid;
@@ -21,11 +23,13 @@ import java.util.List;
 public class KelasRestController {
     private final KelasService kelasService;
     private final KelasSiswaService kelasSiswaService;
+    private final KelasGuruService kelasGuruService;
 
     @Autowired
-    public KelasRestController(KelasService kelasService, KelasSiswaService kelasSiswaService) {
+    public KelasRestController(KelasService kelasService, KelasSiswaService kelasSiswaService, KelasGuruService kelasGuruService) {
         this.kelasService = kelasService;
         this.kelasSiswaService = kelasSiswaService;
+        this.kelasGuruService = kelasGuruService;
     }
 
     @GetMapping("/get-all")
@@ -142,9 +146,48 @@ public class KelasRestController {
 
     }
 
-    @PostMapping("assign-teacher")
-    public ResponseEntity<?> assignTeacherToKelas(@RequestBody SetTeacherDTO setTeacherDTO) {
-        Kelas kelas = kelasService.setTeacherToKelas(setTeacherDTO);
-        return ResponseEntity.ok(kelas);
+    @PostMapping("/assign-teacher")
+    @ValidateToken({RoleEnum.TEACHER, RoleEnum.ADMIN})
+    public ResponseEntity<?> assignTeacherToKelas(@Valid @RequestBody KelasGuruDTO kelasGuruDTO) {
+        KelasGuru kelasGuru = kelasGuruService.assignGuru(kelasGuruDTO);
+        return ResponseEntity.ok(kelasGuru);
     }
+
+    @PostMapping("/unassign-teacher")
+    public ResponseEntity<?> unassignTeacherFromKelas(@Valid @RequestBody KelasGuruDTO kelasGuruDTO) {
+        kelasGuruService.unassignGuru(kelasGuruDTO);
+        return ResponseEntity.ok("Teacher has been successfully unassigned from Kelas");
+    }
+
+    @GetMapping("/kelas-guru/find-all/{id}")
+    @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER})
+    public ResponseEntity<?> getKelasGuruListByKelasId(@PathVariable("id") Long kelasId) {
+        List<KelasGuru> kelasGuruList = kelasGuruService.findKelasGuruListByKelasId(kelasId);
+        return ResponseEntity.ok(kelasGuruList);
+    }
+
+    @GetMapping("/kelas-guru/{kelasId}/{guruId}")
+    @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER})
+    public ResponseEntity<?> getKelasGuruListByKelasId(@PathVariable("kelasId") Long kelasId, @PathVariable("guruId") Long guruId) {
+        KelasGuru kelasGuru = kelasGuruService.findKelasGuruByKelasIdAndGuruId(kelasId, guruId);
+        return ResponseEntity.ok(kelasGuru);
+    }
+
+    @GetMapping("/teachers-in-class/{id}")
+    @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER})
+    public ResponseEntity<?> getAllGuruInAClass(@PathVariable("id") Long kelasId) {
+        List<Account> guruList = kelasGuruService.findAllGuruInAClass(kelasId);
+        return ResponseEntity.ok(guruList);
+    }
+
+    @GetMapping("/classes-taught/{id}")
+    @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER})
+    public ResponseEntity<?> getAllKelasTaughtByAGuru(@PathVariable("id") Long guruId) {
+        List<Kelas> kelasList = kelasGuruService.findAllKelasTaughtByAGuru(guruId);
+        return ResponseEntity.ok(kelasList);
+    }
+
+
+
+
 }

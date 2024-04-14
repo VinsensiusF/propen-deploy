@@ -23,9 +23,9 @@ public class Kelas {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "teacher_id")
-    private Account teacher;
+//    @OneToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "teacher_id")
+//    private Account teacher;
 
     private String name;
 
@@ -55,6 +55,10 @@ public class Kelas {
     @OneToMany(mappedBy = "kelas", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<KelasSiswa> kelasSiswa = new ArrayList<>();
+
+    @OneToMany(mappedBy = "kelas", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<KelasGuru> kelasGuru = new ArrayList<>();
 
     @OneToMany(mappedBy = "kelas", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Course> courses = new ArrayList<>();
