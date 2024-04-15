@@ -1,5 +1,7 @@
 package com.unimate.unimate.entity;
 
+import com.unimate.unimate.enums.AccountStatusEnum;
+import com.unimate.unimate.enums.BlogType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.sql.Blob;
 import java.util.Date;
 
 @Getter
@@ -24,16 +27,14 @@ public class Blog {
 
     private String title;
 
-    private String penulis;
+    private String writer;
 
     // 5-mins reading time
     private String readingTime;
 
-    // info beasiswa
-    private String type;
-
-    // judul pendek
-    private String shortTitle;
+    // INFORMASI_BEASISWA, PEKERJAAN_LUAR_NEGERI, TIPS_TRIK
+    @Enumerated(EnumType.STRING)
+    private BlogType blogType;
 
     @Column(columnDefinition = "TEXT")
     private String content;
@@ -45,4 +46,7 @@ public class Blog {
     private Date modifiedAt;
 
     private Date deletedAt;
+
+    @Lob
+    private Blob image;
 }
