@@ -2,27 +2,38 @@ package com.unimate.unimate.service.impl;
 
 import com.unimate.unimate.dto.UjianDTO;
 import com.unimate.unimate.dto.UpdateUjianDTO;
+import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.entity.Kelas;
+import com.unimate.unimate.entity.KelasGuru;
 import com.unimate.unimate.entity.Ujian;
+import com.unimate.unimate.exception.AccountNotFoundException;
 import com.unimate.unimate.exception.KelasNotFoundException;
 import com.unimate.unimate.exception.UjianNotFoundException;
 import com.unimate.unimate.repository.UjianRepository;
+import com.unimate.unimate.service.AccountService;
+import com.unimate.unimate.service.KelasGuruService;
 import com.unimate.unimate.service.KelasService;
 import com.unimate.unimate.service.UjianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UjianServiceImpl implements UjianService {
     private final UjianRepository ujianRepository;
     private final KelasService kelasService;
+    private final AccountService accountService;
+    private final KelasGuruService kelasGuruService;
 
     @Autowired
-    public UjianServiceImpl(UjianRepository ujianRepository, KelasService kelasService){
+    public UjianServiceImpl(UjianRepository ujianRepository, KelasService kelasService, AccountService accountService, KelasGuruService kelasGuruService){
         this.ujianRepository = ujianRepository;
         this.kelasService = kelasService;
+        this.accountService = accountService;
+        this.kelasGuruService = kelasGuruService;
     }
 
     @Override
@@ -73,6 +84,8 @@ public class UjianServiceImpl implements UjianService {
         }
         ujian.setDuration(updateUjianDTO.getDuration());
         ujian.setTitle(updateUjianDTO.getTitle());
+        ujian.setStartDate(updateUjianDTO.getStart());
+        ujian.setEndDate(updateUjianDTO.getEnd());
         saveUjian(ujian);
 
         return ujian;
@@ -84,5 +97,20 @@ public class UjianServiceImpl implements UjianService {
     }
 
 
+    @Override
+    public List<Ujian> findUjianListByGuruId(Long guruId) {
+        Optional<Account> guru = accountService.getAccountById(guruId);
+        if (guru.isEmpty()) {
+            throw new AccountNotFoundException();
+        }
 
+        List<Ujian> ujianList = new ArrayList<>();
+
+        List<Kelas> kelasList = kelasGuruService.findAllKelasTaughtByAGuru(guruId);
+        for (Kelas kelas : kelasList) {
+            ujianList.addAll(ujianRepository.findAllByKelas(kelas));
+        }
+        return ujianList;
+
+    }
 }
