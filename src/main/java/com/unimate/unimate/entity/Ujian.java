@@ -29,7 +29,6 @@ public class Ujian {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JsonIgnore
     @JoinColumn(name = "kelasId")
     private Kelas kelas;
 

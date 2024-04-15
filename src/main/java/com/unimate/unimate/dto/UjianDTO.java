@@ -24,8 +24,8 @@ public class UjianDTO {
     private Long duration;
 
     @NotNull
-    private LocalDateTime start;
+    private LocalDateTime startDate;
 
     @NotNull
-    private LocalDateTime end;
+    private LocalDateTime endDate;
 }
