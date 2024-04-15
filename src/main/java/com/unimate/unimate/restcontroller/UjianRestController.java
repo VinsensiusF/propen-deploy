@@ -40,6 +40,13 @@ public class UjianRestController {
         return ResponseEntity.ok(ujianService.getAllUjian());
     }
 
+    @GetMapping("/get-all/by-teacher/{id}")
+    @ValidateToken({RoleEnum.ADMIN, RoleEnum.TEACHER})
+    public ResponseEntity<?> findAllUjianByTeacher(@PathVariable("id") Long guruId) {
+        List<Ujian> ujianList = ujianService.findUjianListByGuruId(guruId);
+        return ResponseEntity.ok(ujianList);
+    }
+
     @GetMapping("/{id}")
     @ValidateToken({RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.STUDENT, RoleEnum.CUSTOMER_SERVICE})
     public ResponseEntity<?> findUjianById(@PathVariable("id") Long id) {

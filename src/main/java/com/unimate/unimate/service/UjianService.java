@@ -20,4 +20,6 @@ public interface UjianService {
     Ujian updateUjian (UpdateUjianDTO updateUjianDTO);
 
     void deleteUjian(Ujian ujian);
+
+    List<Ujian> findUjianListByGuruId(Long guruId);
 }
