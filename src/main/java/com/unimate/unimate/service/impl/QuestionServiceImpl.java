@@ -59,7 +59,8 @@ public class QuestionServiceImpl implements QuestionService {
 
         QuestionContent questionContent = new QuestionContent();
         questionContent.setQuestionSentence(questionContentDTO.getQuestionSentence());
-        questionContent.setQuestionText(questionContent.getQuestionText());
+        questionContent.setQuestionText(questionContentDTO.getQuestionText());
+     
         questionContent.setA(questionContentDTO.getA());
         questionContent.setB(questionContentDTO.getB());
         questionContent.setC(questionContentDTO.getC());

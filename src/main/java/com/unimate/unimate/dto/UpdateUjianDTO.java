@@ -11,6 +11,9 @@ public class UpdateUjianDTO {
     private Long id;
 
     @NotNull
+    private Long kelasId;
+
+    @NotNull
     private String title;
 
     @NotNull

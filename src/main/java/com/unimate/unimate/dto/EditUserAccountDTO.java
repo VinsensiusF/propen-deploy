@@ -11,14 +11,14 @@ import java.util.Date;
 public class EditUserAccountDTO {
     @NotNull
     private String name;
-    @NotNull
+
     private String bio;
-    @NotNull
+
     private Date birthday;
-    @NotNull
+
     private String job;
-    @NotNull
+
     private String phoneNumber;
-    @NotNull
+
     private String address;
 }

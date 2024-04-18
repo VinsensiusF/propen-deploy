@@ -24,8 +24,10 @@ public class QuestionContent {
     @JsonIgnore
     private Ujian ujian;
 
+    @Column(columnDefinition = "TEXT")
     private String questionSentence;
 
+    @Column(columnDefinition = "TEXT")
     private String questionText;
 
     private String a;

@@ -86,6 +86,8 @@ public class UjianServiceImpl implements UjianService {
         ujian.setTitle(updateUjianDTO.getTitle());
         ujian.setEndDate(updateUjianDTO.getEndDate());
         ujian.setStartDate(updateUjianDTO.getStartDate());
+        Kelas kelas = kelasService.getKelasById(updateUjianDTO.getKelasId());
+        ujian.setKelas(kelas);
         saveUjian(ujian);
 
         return ujian;

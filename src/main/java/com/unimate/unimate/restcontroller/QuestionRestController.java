@@ -35,6 +35,7 @@ public class QuestionRestController {
     @PostMapping("/create")
     @ValidateToken({RoleEnum.ADMIN, RoleEnum.TEACHER})
     public ResponseEntity<?> createQuestion(@RequestBody QuestionContentDTO questionContentDTO){
+        System.out.println(questionContentDTO);
         QuestionContent questionContent = questionService.createQuestionContent(questionContentDTO);
 
         if (questionContent != null) {
