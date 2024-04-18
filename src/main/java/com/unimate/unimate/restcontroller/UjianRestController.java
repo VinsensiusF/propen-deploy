@@ -102,6 +102,13 @@ public class UjianRestController {
         return ResponseEntity.ok("Siswa has been successfully abandoned Ujian");
     }
 
+    @GetMapping("/ujian-siswa/{id}")
+    @ValidateToken({RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.STUDENT})
+    public ResponseEntity<?> getUjianSiswaById(@PathVariable("id") Long id) {
+        UjianSiswa ujianSiswa = ujianSiswaService.getUjianSiswaById(id);
+        return ResponseEntity.ok(ujianSiswa);
+    }
+
     @GetMapping("/ujian-siswa/list-by-ujian/{id}")
     @ValidateToken({RoleEnum.ADMIN, RoleEnum.TEACHER})
     public ResponseEntity<?> getUjianSiswaByUjianId(@PathVariable("id") Long ujianId) {
@@ -119,7 +126,7 @@ public class UjianRestController {
     @GetMapping("/ujian-siswa/list-by-ujian-and-siswa/{ujianId}/{siswaId}")
     @ValidateToken({RoleEnum.ADMIN, RoleEnum.TEACHER})
     public ResponseEntity<?> getUjianSiswaByUjianIdAndSiswaId(@PathVariable("ujianId") Long ujianId, @PathVariable("siswaId") Long siswaId) {
-        List<UjianSiswa> ujianSiswaList = ujianSiswaService.getUjianSiswaBySiswaId(siswaId);
+        UjianSiswa ujianSiswaList = ujianSiswaService.getUjianSiswaByUjianIdAndSiswaId(ujianId, siswaId);
         return ResponseEntity.ok(ujianSiswaList);
     }
 
