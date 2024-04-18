@@ -297,10 +297,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             SignUpDTO signUpDTOTopLevel = new SignUpDTO("toplevel@gmail.com", "toplevel", "toplevel");
             SignUpDTO signUpDTOTeacher = new SignUpDTO("teacher@gmail.com", "teacher", "teacher");
             SignUpDTO signUpDTOCS = new SignUpDTO("cs@gmail.com", "cs", "cs");
+            SignUpDTO signUpDTOStudent = new SignUpDTO("student@gmail.com", "student", "student");
             initialSignUp(signUpDTOAdmin);
             initialSignUp(signUpDTOTeacher);
             initialSignUp(signUpDTOTopLevel);
             initialSignUp(signUpDTOCS);
+            initialSignUp(signUpDTOStudent);
         }
         return accountRepository.findAll();
     }
@@ -317,6 +319,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             case "admin" -> account.setRole(roleRepository.findRoleByName(RoleEnum.ADMIN));
             case "toplevel" -> account.setRole(roleRepository.findRoleByName(RoleEnum.TOP_LEVEL));
             case "cs" -> account.setRole(roleRepository.findRoleByName(RoleEnum.CUSTOMER_SERVICE));
+            case "student" -> account.setRole(roleRepository.findRoleByName(RoleEnum.STUDENT));
         }
 
         account.setEmail(signUpDTO.getEmail());

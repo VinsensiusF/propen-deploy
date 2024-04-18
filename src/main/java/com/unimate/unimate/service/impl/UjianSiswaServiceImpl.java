@@ -73,6 +73,15 @@ public class UjianSiswaServiceImpl implements UjianSiswaService {
     }
 
     @Override
+    public UjianSiswa getUjianSiswaById(Long id) {
+        UjianSiswa ujianSiswa = ujianSiswaRepository.findUjianSiswaById(id);
+        if (ujianSiswa == null) {
+            throw new UjianSiswaNotFoundException();
+        }
+        return ujianSiswa;
+    }
+
+    @Override
     public List<UjianSiswa> getUjianSiswaByUjianId(Long ujianId) {
         Ujian ujian = ujianService.getUjianById(ujianId);
         if (ujian == null) {

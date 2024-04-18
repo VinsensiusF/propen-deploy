@@ -14,6 +14,8 @@ public interface UjianSiswaService {
     void abandonExam(UjianSiswaDTO ujianSiswaDTO);
     List<UjianSiswa> getUjianSiswaByUjianId(Long ujianId);
     List<UjianSiswa> getUjianSiswaBySiswaId(Long siswaId);
+
+    UjianSiswa getUjianSiswaById(Long id);
     UjianSiswa getUjianSiswaByUjianIdAndSiswaId(Long ujianId, Long siswaId);
     UjianSiswa gradeExam(UjianSiswaDTO ujianSiswaDTO, Double grade);
 
