@@ -14,42 +14,36 @@ import java.util.Set;
 @Data
 @Accessors(chain = true)
 public class ScholarshipResponseDTO {
-    @NotNull
-    private String name;
+    private Long scholarshipId;
 
-    @NotNull
+    private String title;
+
+    private String university;
+
+    private String minimumAge;
+
+    private String minimumGPA;
+
     private String description;
 
-    @NotNull
+    private String languageTest;
+
+    private String standardizedTest;
+
     private Date startedAt;
 
-    @NotNull
     private Date endedAt;
 
     //OPEN, CLOSED
-    @NotNull
     private ScholarshipStatus scholarshipStatus;
 
     //FULLY_FUNDED, PARTIALLY_FUNDED, SELF_FUNDED
-    @NotNull
     private ScholarshipType scholarshipType;
 
     //D3, D4, S1, S2, S3
-    @NotNull
     private Set<ScholarshipDegree> scholarshipDegrees;
 
-    @NotNull
-    private String ipkMinimal;
-
-    @NotNull
-    private String university;
-
-    @NotNull
-    private long minimalAge;
-
-    @NotNull
     private ArrayList<String> benefit;
 
-    @NotNull
     private ArrayList<String> major;
 }
