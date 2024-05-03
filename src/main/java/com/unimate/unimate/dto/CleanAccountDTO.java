@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.time.Instant;
+import java.util.Date;
 
 /**
  * DTO class for returning an Account Response without its password attribute
@@ -24,9 +25,23 @@ public class CleanAccountDTO {
     @NotNull
     private String profilePicture;
     @NotNull
-    private Role Role;
+    private Role role;
     @NotNull
     private AccountStatusEnum status;
+//    @NotNull
+//    private String status;
+//    @NotNull
+//    private String password;
+    @NotNull
+    private String address;
+    @NotNull
+    private String phoneNumber;
+    @NotNull
+    private Date birthday;
+    @NotNull
+    private String job;
+    @NotNull
+    private String bio;
 
     private Instant createdAt;
 

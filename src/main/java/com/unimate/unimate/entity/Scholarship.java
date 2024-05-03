@@ -28,9 +28,19 @@ public class Scholarship {
     @Column(name = "id")
     private Long id;
 
-    private String name;
+    private String title;
+
+    private String university;
+
+    private String minimumAge;
+
+    private String minimumGPA;
 
     private String description;
+
+    private String languageTest;
+
+    private String standardizedTest;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "started_at")
@@ -54,13 +64,6 @@ public class Scholarship {
     @CollectionTable(name = "scholarship_degrees", joinColumns = @JoinColumn(name = "scholarship_id")) // Define table for the collection
     @Column(name = "degree") // Define column name for the degree
     private Set<ScholarshipDegree> scholarshipDegrees;
-
-    @Column(name = "ipk_minimal")
-    private String ipkMinimal;
-
-    private String university;
-
-    private long minimalAge;
 
     @CreationTimestamp
     private Date createdAt;
