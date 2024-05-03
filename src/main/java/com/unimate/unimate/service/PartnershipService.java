@@ -3,7 +3,6 @@ package com.unimate.unimate.service;
 import com.unimate.unimate.dto.PartnershipDTO;
 import com.unimate.unimate.dto.UpdatePartnershipDTO;
 import com.unimate.unimate.entity.Partnership;
-
 import java.util.List;
 
 public interface PartnershipService {
@@ -14,6 +13,8 @@ public interface PartnershipService {
     List<Partnership> getAllPartnership();
 
     Partnership getPartnershipById(Long id);
+
+    Partnership getPartnershipByIdUser(Long user);
 
     Partnership createPartnership(PartnershipDTO partnershipDTO);
 

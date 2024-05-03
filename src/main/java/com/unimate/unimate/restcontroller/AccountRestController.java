@@ -229,6 +229,7 @@ public class AccountRestController {
             accountService.changePasword(requestNewPassword, account);
             return ResponseEntity.ok("Password changed successfully");
         } catch (Exception e) {
+            System.out.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to change password");
         }
     }

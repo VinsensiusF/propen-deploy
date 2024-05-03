@@ -83,6 +83,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public Account getAccountByIdUser(Long id) {
+        return accountRepository.findAccountById(id).get();
+    }
+
+    @Override
     public Optional<Account> getAccountByEmail(String email) {
         return accountRepository.findAccountByEmail(email);
     }

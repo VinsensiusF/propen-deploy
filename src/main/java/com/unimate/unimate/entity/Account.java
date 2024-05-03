@@ -72,6 +72,10 @@ public class Account {
     @JsonIgnore
     private List<KelasGuru> kelasGuru = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Partnership> requestForPartnership = new ArrayList<>();
+
     @CreationTimestamp
     private Instant createdAt;
 

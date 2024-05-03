@@ -19,6 +19,9 @@ public class UjianDTO {
     @NotNull
     private String title;
 
+    @NotNull
+    private Double passingGrade;
+
     // Duration in seconds
     @NotNull
     private Long duration;

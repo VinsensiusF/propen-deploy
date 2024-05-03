@@ -2,16 +2,21 @@ package com.unimate.unimate.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.experimental.Accessors;
+
 
 @Data
-@Accessors(chain = true)
 public class PartnershipDTO {
     @NotNull
-    private String name;
+    private String company;
 
     @NotNull
-    private String email;
+    private Long user;
+
+    @NotNull
+    private String companyEmail;
+
+    @NotNull
+    private String phoneNumber;
 
     @NotNull
     private String description;

@@ -78,14 +78,16 @@ public class QuestionServiceImpl implements QuestionService {
         if (questionContent == null) {
             throw new QuestionContentNotFoundException();
         }
+        
 
         // QuestionContents aren't allowed to change Ujian
         questionContent.setA(updateQuestionContentDTO.getA());
         questionContent.setB(updateQuestionContentDTO.getB());
         questionContent.setC(updateQuestionContentDTO.getC());
         questionContent.setD(updateQuestionContentDTO.getD());
+        questionContent.setCorrectAnswer(updateQuestionContentDTO.getCorrectAnswer());
         questionContent.setQuestionSentence(updateQuestionContentDTO.getQuestionSentence());
-        questionContent.setQuestionText(questionContent.getQuestionText());
+        questionContent.setQuestionText(updateQuestionContentDTO.getQuestionText());
         questionContentRepository.save(questionContent);
 
         return questionContent;

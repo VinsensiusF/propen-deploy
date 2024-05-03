@@ -3,8 +3,6 @@ package com.unimate.unimate.dto;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.experimental.Accessors;
-
-import java.time.Instant;
 import java.util.Date;
 
 @Data

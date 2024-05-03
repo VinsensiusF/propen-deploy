@@ -24,4 +24,7 @@ public class UpdateUjianDTO {
 
     @NotNull
     private LocalDateTime endDate;
+
+    @NotNull
+    private Double passingGrade;
 }

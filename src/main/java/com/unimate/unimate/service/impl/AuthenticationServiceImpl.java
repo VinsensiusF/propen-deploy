@@ -321,10 +321,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             case "cs" -> account.setRole(roleRepository.findRoleByName(RoleEnum.CUSTOMER_SERVICE));
             case "student" -> account.setRole(roleRepository.findRoleByName(RoleEnum.STUDENT));
         }
+        var passwordEncoder = new BCryptPasswordEncoder();
 
         account.setEmail(signUpDTO.getEmail());
         account.setName(signUpDTO.getName());
-        final String password = BCrypt.hashpw(signUpDTO.getPassword(), BCrypt.gensalt());
+        final String password = passwordEncoder.encode(signUpDTO.getPassword());;
         account.setPassword(password);
         account.setStatus(AccountStatusEnum.VERIFIED);
         accountRepository.save(account);

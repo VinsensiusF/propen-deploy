@@ -7,15 +7,12 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class UpdatePartnershipDTO {
+
     @NotNull
     private Long id;
 
     @NotNull
-    private String name;
+    private Integer status;
 
-    @NotNull
-    private String email;
-
-    @NotNull
-    private String description;
+   
 }

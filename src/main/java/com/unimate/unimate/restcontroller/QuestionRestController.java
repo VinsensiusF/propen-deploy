@@ -79,7 +79,7 @@ public class QuestionRestController {
         return ResponseEntity.ok(questionContent);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("delete/{id}")
     @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER})
     public ResponseEntity<?> deleteQuestionContent(@PathVariable("id") Long id) {
         QuestionContent questionContent = questionService.getQuestionContentById(id);
