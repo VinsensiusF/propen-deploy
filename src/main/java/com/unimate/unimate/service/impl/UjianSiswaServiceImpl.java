@@ -6,6 +6,7 @@ import com.unimate.unimate.entity.Ujian;
 import com.unimate.unimate.entity.UjianSiswa;
 import com.unimate.unimate.exception.AccountNotFoundException;
 import com.unimate.unimate.exception.UjianNotFoundException;
+import com.unimate.unimate.exception.UjianSiswaAlreadyExistsException;
 import com.unimate.unimate.exception.UjianSiswaNotFoundException;
 import com.unimate.unimate.repository.UjianSiswaRepository;
 import com.unimate.unimate.service.AccountService;
@@ -43,6 +44,7 @@ public class UjianSiswaServiceImpl implements UjianSiswaService {
 
     @Override
     public UjianSiswa takeExam(UjianSiswaDTO ujianSiswaDTO) {
+
         Optional<Account> siswa = accountService.getAccountById(ujianSiswaDTO.getStudentId());
         if (siswa.isEmpty()) {
             throw new AccountNotFoundException();
@@ -51,6 +53,11 @@ public class UjianSiswaServiceImpl implements UjianSiswaService {
         Ujian ujian = ujianService.getUjianById(ujianSiswaDTO.getUjianId());
         if (ujian == null) {
             throw new UjianNotFoundException();
+        }
+
+        UjianSiswa existingUjianSiswa = ujianSiswaRepository.findUjianSiswaByUjianIdAndSiswaId(ujianSiswaDTO.getUjianId(), ujianSiswaDTO.getStudentId());
+        if (existingUjianSiswa != null) {
+            throw new UjianSiswaAlreadyExistsException();
         }
 
         UjianSiswa ujianSiswa = new UjianSiswa();
@@ -111,7 +118,22 @@ public class UjianSiswaServiceImpl implements UjianSiswaService {
 
     @Override
     public UjianSiswa getUjianSiswaByUjianIdAndSiswaId(Long ujianId, Long siswaId) {
-        return ujianSiswaRepository.findUjianSiswaByUjianIdAndSiswaId(ujianId, siswaId);
+        Optional<Account> siswa = accountService.getAccountById(siswaId);
+        if (siswa.isEmpty()) {
+            throw new AccountNotFoundException();
+        }
+
+        Ujian ujian = ujianService.getUjianById(ujianId);
+        if (ujian == null) {
+            throw new UjianNotFoundException();
+        }
+
+        UjianSiswa ujianSiswa = ujianSiswaRepository.findUjianSiswaByUjianIdAndSiswaId(ujianId, siswaId);
+
+        if (ujianSiswa == null) {
+            throw new UjianSiswaNotFoundException();
+        }
+        return ujianSiswa;
     }
 
     @Override
