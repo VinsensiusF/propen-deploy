@@ -63,17 +63,22 @@ public class AppExceptionHandler {
     }
 
     @ExceptionHandler(UjianSiswaNotFoundException.class)
-    public ResponseEntity<CustomErrorResponse> UjianNotFound(UjianSiswaNotFoundException ujianSiswaNotFoundException) {
+    public ResponseEntity<CustomErrorResponse> UjianSiswaNotFound(UjianSiswaNotFoundException ujianSiswaNotFoundException) {
         return new ResponseEntity<>(ujianSiswaNotFoundException.generateCustomErrorResponse(), HttpStatus.valueOf(ujianSiswaNotFoundException.getHttpStatusCode()));
     }
 
     @ExceptionHandler(AccountNotFoundException.class)
-    public ResponseEntity<CustomErrorResponse> UjianNotFound(AccountNotFoundException accountNotFoundException) {
+    public ResponseEntity<CustomErrorResponse> AccountNotFound(AccountNotFoundException accountNotFoundException) {
         return new ResponseEntity<>(accountNotFoundException.generateCustomErrorResponse(), HttpStatus.valueOf(accountNotFoundException.getHttpStatusCode()));
     }
 
     @ExceptionHandler(KelasGuruNotFoundException.class)
-    public ResponseEntity<CustomErrorResponse> UjianNotFound(KelasGuruNotFoundException kelasGuruNotFoundException) {
+    public ResponseEntity<CustomErrorResponse> KelasGuruNotFound(KelasGuruNotFoundException kelasGuruNotFoundException) {
         return new ResponseEntity<>(kelasGuruNotFoundException.generateCustomErrorResponse(), HttpStatus.valueOf(kelasGuruNotFoundException.getHttpStatusCode()));
+    }
+
+    @ExceptionHandler(UjianSiswaAlreadyExistsException.class)
+    public ResponseEntity<CustomErrorResponse> UjianSiswaExists(UjianSiswaAlreadyExistsException ujianSiswaAlreadyExistsException) {
+        return new ResponseEntity<>(ujianSiswaAlreadyExistsException.generateCustomErrorResponse(), HttpStatus.valueOf(ujianSiswaAlreadyExistsException.getHttpStatusCode()));
     }
 }
