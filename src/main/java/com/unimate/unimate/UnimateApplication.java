@@ -1,11 +1,7 @@
 package com.unimate.unimate;
 
-import com.unimate.unimate.entity.Course;
-import com.unimate.unimate.entity.CourseContent;
-import com.unimate.unimate.entity.Kelas;
-import com.unimate.unimate.service.AuthenticationService;
-import com.unimate.unimate.service.CourseService;
-import com.unimate.unimate.service.KelasService;
+import com.unimate.unimate.entity.*;
+import com.unimate.unimate.service.*;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -33,7 +30,7 @@ public class UnimateApplication {
 
     @Bean
     @Transactional
-    CommandLineRunner run(AuthenticationService authenticationService, KelasService kelasService, CourseService courseService){
+    CommandLineRunner run(AuthenticationService authenticationService, KelasService kelasService, CourseService courseService, UjianService ujianService, QuestionService questionService){
         return args -> {
             Kelas kelas = new Kelas();
             kelas.setName("Kelas Matematika");
@@ -53,6 +50,47 @@ public class UnimateApplication {
             kelas2.setSyllabuses(new ArrayList<>(Arrays.asList("Klasik", "Termofisika", "Astrofisika")));
             kelas2.setPrice(15000L);
             kelasService.saveKelas(kelas2);
+
+            Ujian ujian = new Ujian();
+            ujian.setKelas(kelas);
+            ujian.setDuration(10000L);
+            ujian.setTitle("Ujian Fisika");
+            ujian.setStartDate(LocalDateTime.of(2024, 2, 3, 10, 5));
+            ujian.setEndDate(LocalDateTime.of(2024, 2, 4, 10, 5));
+            ujianService.saveUjian(ujian);
+
+            QuestionContent question1 = new QuestionContent();
+            question1.setQuestionSentence("Siapa penemu teori relativitas");
+            question1.setQuestionText("Teori relativitas, teori kerelatifan, atau teori kenisbian merupakan teori yang membahas mengenai kecepatan dan percepatan yang diukur secara berbeda melalui kerangka acuan.");
+            question1.setA("Isaac Newton");
+            question1.setB("Albert Einstein");
+            question1.setC("J. Robert Oppenheimer");
+            question1.setD("Nicola Tesla");
+            question1.setCorrectAnswer("Albert Einstein");
+            question1.setUjian(ujian);
+            questionService.saveQuesionContent(question1);
+
+            QuestionContent question2 = new QuestionContent();
+            question2.setQuestionSentence("Planet terpanas pada sistem tata surya?");
+            question2.setQuestionText("Planet, siarah, kaukab, pehu (Bahasa Batak kuno) atau greha (bahasa Jawa kuno) adalah benda astronomi yang mengorbit sebuah bintang atau sisa bintang yang cukup besar untuk memiliki gravitasi sendiri.");
+            question2.setA("Bumi");
+            question2.setB("Venus");
+            question2.setC("Merkurius");
+            question2.setD("Mars");
+            question2.setCorrectAnswer("Venus");
+            question2.setUjian(ujian);
+            questionService.saveQuesionContent(question2);
+
+            QuestionContent question3 = new QuestionContent();
+            question3.setQuestionSentence("Unsur dengan elektronegativitas tertinggi?");
+            question3.setA("Oksigen");
+            question3.setB("Xenon");
+            question3.setC("Fluor");
+            question3.setD("Helium");
+            question3.setCorrectAnswer("Fluor");
+            question3.setUjian(ujian);
+            questionService.saveQuesionContent(question3);
+
 
             Course course1 = new Course();
             course1.setName("Course 1");
