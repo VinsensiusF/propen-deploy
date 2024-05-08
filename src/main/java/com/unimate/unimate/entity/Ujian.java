@@ -55,8 +55,7 @@ public class Ujian {
 
     @UpdateTimestamp
     private Date modifiedAt;
-
-    @JoinColumn(name = "passingGrade")
+    
     private Double passingGrade;
 
     private Date deletedAt;
