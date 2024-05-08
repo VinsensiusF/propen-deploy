@@ -22,4 +22,6 @@ public interface UjianService {
     void deleteUjian(Ujian ujian);
 
     List<Ujian> findUjianListByGuruId(Long guruId);
+
+    List<Ujian> findUjianListByKelasId(Long kelasId);
 }

@@ -30,12 +30,12 @@ public class UnimateApplication {
 
     @Bean
     @Transactional
-    CommandLineRunner run(AuthenticationService authenticationService, KelasService kelasService, CourseService courseService, UjianService ujianService, QuestionService questionService){
+    CommandLineRunner run(AuthenticationService authenticationService, KelasService kelasService, CourseService courseService, UjianService ujianService, QuestionService questionService, KelasSiswaService kelasSiswaService){
         return args -> {
             Kelas kelas = new Kelas();
             kelas.setName("Kelas Matematika");
             kelas.setRating(4f);
-            kelas.setCategory("Pelajaran");
+            kelas.setCategory("Persiapan Tes");
             kelas.setDescription("Kelas yang susah");
             kelas.setBenefits(new ArrayList<>(Arrays.asList("Pintar", "Kaya", "Keren")));
             kelas.setSyllabuses(new ArrayList<>(Arrays.asList("Aljabar", "Statistik", "Geometri")));
@@ -59,6 +59,24 @@ public class UnimateApplication {
             ujian.setEndDate(LocalDateTime.of(2024, 2, 4, 10, 5));
             ujian.setPassingGrade(50.0);
             ujianService.saveUjian(ujian);
+
+            Ujian ujian3 = new Ujian();
+            ujian3.setKelas(kelas);
+            ujian3.setDuration(10000L);
+            ujian3.setTitle("Ujian Inggris");
+            ujian3.setStartDate(LocalDateTime.of(2024, 2, 3, 10, 5));
+            ujian3.setEndDate(LocalDateTime.of(2024, 2, 4, 10, 5));
+            ujian3.setPassingGrade(50.0);
+            ujianService.saveUjian(ujian3);
+
+            Ujian ujian2 = new Ujian();
+            ujian2.setKelas(kelas2);
+            ujian2.setDuration(10000L);
+            ujian2.setTitle("Ujian Fisika");
+            ujian2.setStartDate(LocalDateTime.of(2024, 2, 3, 10, 5));
+            ujian2.setEndDate(LocalDateTime.of(2024, 2, 4, 10, 5));
+            ujian2.setPassingGrade(50.0);
+            ujianService.saveUjian(ujian2);
 
             QuestionContent question1 = new QuestionContent();
             question1.setQuestionSentence("Siapa penemu teori relativitas");
@@ -92,6 +110,35 @@ public class UnimateApplication {
             question3.setUjian(ujian);
             questionService.saveQuesionContent(question3);
 
+            QuestionContent question4 = new QuestionContent();
+            question4.setQuestionSentence("Nama presiden pertama Indonesia?");
+            question4.setA("Jokowi");
+            question4.setB("Gusdur");
+            question4.setC("Prabowo");
+            question4.setD("Soekarno");
+            question4.setCorrectAnswer("Soekarno");
+            question4.setUjian(ujian2);
+            questionService.saveQuesionContent(question4);
+
+            QuestionContent question5 = new QuestionContent();
+            question5.setQuestionSentence("What is the color of the sky?");
+            question5.setA("Blue");
+            question5.setB("Green");
+            question5.setC("Violet");
+            question5.setD("Rainbow");
+            question5.setCorrectAnswer("Blue");
+            question5.setUjian(ujian3);
+            questionService.saveQuesionContent(question5);
+
+            QuestionContent question6 = new QuestionContent();
+            question6.setQuestionSentence("What's 1+1?");
+            question6.setA("1");
+            question6.setB("2");
+            question6.setC("3");
+            question6.setD("4");
+            question6.setCorrectAnswer("2");
+            question6.setUjian(ujian3);
+            questionService.saveQuesionContent(question6);
 
             Course course1 = new Course();
             course1.setName("Course 1");
@@ -99,37 +146,47 @@ public class UnimateApplication {
             Course course2 = new Course();
             course2.setName("Course 2");
             course2.setKelas(kelas);
-//            Course course3 = new Course();
-//            course3.setName("Course 3");
-//            course3.setKelas(kelas2);
+            Course course3 = new Course();
+            course3.setName("Course 3");
+            course3.setKelas(kelas2);
             courseService.saveCourse(course1);
             courseService.saveCourse(course2);
-//            courseService.saveCourse(course3);
+            courseService.saveCourse(course3);
+
 //
-//            CourseContent courseContent1 = new CourseContent();
-//            courseContent1.setType(1);
-//            courseContent1.setLink("www.course1.com/content1");
-//            courseContent1.setName("Zoom");
-//            courseContent1.setDescription("First content of Course 1");
-//            courseContent1.setCourse(course1);
-//            CourseContent courseContent2 = new CourseContent();
-//            courseContent2.setType(1);
-//            courseContent2.setLink("www.course1.com/content2");
-//            courseContent2.setName("Quiz");
-//            courseContent2.setDescription("Second content of Course 1");
-//            courseContent2.setCourse(course3);
-//            CourseContent courseContent3 = new CourseContent();
-//            courseContent3.setType(1);
-//            courseContent3.setLink("www.course2.com/content1");
-//            courseContent3.setName("Zoom");
-//            courseContent3.setDescription("First content of Course 2");
-//            courseContent3.setCourse(course2);
-//            courseService.saveCourseContent(courseContent1);
-//            courseService.saveCourseContent(courseContent2);
-//            courseService.saveCourseContent(courseContent3);
+            CourseContent courseContent1 = new CourseContent();
+            courseContent1.setType(1);
+            courseContent1.setLink("www.course1.com/content1");
+            courseContent1.setName("Zoom");
+            courseContent1.setDescription("First content of Course 1");
+            courseContent1.setCourse(course1);
+            CourseContent courseContent2 = new CourseContent();
+            courseContent2.setType(2);
+            courseContent2.setLink("www.course1.com/content2");
+            courseContent2.setName("Quiz");
+            courseContent2.setDescription("Second content of Course 1");
+            courseContent2.setCourse(course1);
+            CourseContent courseContent3 = new CourseContent();
+            courseContent3.setType(1);
+            courseContent3.setLink("www.course2.com/content1");
+            courseContent3.setName("Zoom");
+            courseContent3.setDescription("First content of Course 2");
+            courseContent3.setCourse(course2);
+            CourseContent courseContent4 = new CourseContent();
+            courseContent4.setType(1);
+            courseContent4.setLink("www.course2.com/content1");
+            courseContent4.setName("Zoom");
+            courseContent4.setDescription("First content of Course 3");
+            courseContent4.setCourse(course3);
+            courseService.saveCourseContent(courseContent1);
+            courseService.saveCourseContent(courseContent2);
+            courseService.saveCourseContent(courseContent3);
+            courseService.saveCourseContent(courseContent4);
 
 
             authenticationService.starter();
+//            kelasSiswaService.enrollStudent(5L, 1L);
+//            kelasSiswaService.enrollStudent(5L, 2L);
         };
     }
 }

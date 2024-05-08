@@ -110,4 +110,14 @@ public class UjianServiceImpl implements UjianService {
         return ujianList;
 
     }
+
+    @Override
+    public List<Ujian> findUjianListByKelasId(Long kelasId) {
+        Kelas kelas = kelasService.getKelasById(kelasId);
+        if (kelas == null) {
+            throw new KelasNotFoundException();
+        }
+
+        return ujianRepository.findUjianListByKelasId(kelasId);
+    }
 }
