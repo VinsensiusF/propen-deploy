@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface KelasSiswaService {
 
-    KelasSiswa enrollStudent(KelasSiswaDTO kelasSiswaDTO);
+    KelasSiswa enrollStudent(Long studentId, Long classId);
 
     void disenrollStudent(KelasSiswaDTO kelasSiswaDTO);
 
@@ -20,7 +20,7 @@ public interface KelasSiswaService {
 
     List<KelasSiswa> findKelasSiswaListByKelasId(Long id);
 
-    List<Kelas> getAllKelasEnrolledByStudent(Long studentId);
+    List<Kelas> getAllKelasEnrolledByStudent(Account siswa);
 
     List<Account> getAllStudentsInAClass(Long kelasId);
 

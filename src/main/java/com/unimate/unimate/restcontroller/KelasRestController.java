@@ -8,34 +8,103 @@ import com.unimate.unimate.entity.KelasGuru;
 import com.unimate.unimate.entity.KelasSiswa;
 import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.exception.KelasNotFoundException;
+import com.unimate.unimate.repository.RoleRepository;
+import com.unimate.unimate.service.AccountService;
 import com.unimate.unimate.service.KelasGuruService;
 import com.unimate.unimate.service.KelasService;
 import com.unimate.unimate.service.KelasSiswaService;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/kelas")
 public class KelasRestController {
+    
     private final KelasService kelasService;
     private final KelasSiswaService kelasSiswaService;
     private final KelasGuruService kelasGuruService;
+    private final AccountService accountService;
+    private static final String JWT_HEADER = "Authorization";
 
     @Autowired
-    public KelasRestController(KelasService kelasService, KelasSiswaService kelasSiswaService, KelasGuruService kelasGuruService) {
+    public KelasRestController(KelasService kelasService, KelasSiswaService kelasSiswaService, KelasGuruService kelasGuruService, AccountService accountService) {
         this.kelasService = kelasService;
         this.kelasSiswaService = kelasSiswaService;
         this.kelasGuruService = kelasGuruService;
+        this.accountService = accountService;
     }
 
     @GetMapping("/get-all")
-    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
-    public List<Kelas> getAllKelas() {
-        return kelasService.getAllKelas();
+    public List<KelasDTO> getAllKelas() {
+        List<KelasDTO> listKelas = new ArrayList<>();
+        for (Kelas kelas : kelasService.getAllKelas()){
+            KelasDTO kelasBaru = new KelasDTO();
+            kelasBaru.setId(kelas.getId());
+            kelasBaru.setCategory(kelas.getCategory());
+            kelasBaru.setName(kelas.getName());
+            kelasBaru.setPrice(kelas.getPrice());
+            listKelas.add(kelasBaru);
+        }
+        return listKelas;
+    }
+
+    @GetMapping("/get-bimbinganbeasiswa")
+    public List<KelasDTO> getKelasBimbinganBeasiswa() {
+        List<KelasDTO> listKelas = new ArrayList<>();
+        for (Kelas kelas : kelasService.getAllKelas()){
+            if (kelas.getCategory().equals("Bimbingan Beasiswa")) {
+                KelasDTO kelasBaru = new KelasDTO();
+                kelasBaru.setId(kelas.getId());
+                kelasBaru.setCategory(kelas.getCategory());
+                kelasBaru.setName(kelas.getName());
+                kelasBaru.setPrice(kelas.getPrice());
+                listKelas.add(kelasBaru);
+            }
+           
+        }
+        return listKelas;
+    }
+
+    
+    @GetMapping("/get-persiapantes")
+    public List<KelasDTO> getPersiapanTes() {
+        List<KelasDTO> listKelas = new ArrayList<>();
+        for (Kelas kelas : kelasService.getAllKelas()){
+            if (kelas.getCategory().equals("Persiapan Tes")) {
+                KelasDTO kelasBaru = new KelasDTO();
+                kelasBaru.setId(kelas.getId());
+                kelasBaru.setCategory(kelas.getCategory());
+                kelasBaru.setName(kelas.getName());
+                kelasBaru.setPrice(kelas.getPrice());
+                listKelas.add(kelasBaru);
+            }
+           
+        }
+        return listKelas;
+    }
+
+    @GetMapping("/get-webinar")
+    public List<KelasDTO> getWebinar() {
+        List<KelasDTO> listKelas = new ArrayList<>();
+        for (Kelas kelas : kelasService.getAllKelas()){
+            if (kelas.getCategory().equals("Webinar")) {
+                KelasDTO kelasBaru = new KelasDTO();
+                kelasBaru.setId(kelas.getId());
+                kelasBaru.setCategory(kelas.getCategory());
+                kelasBaru.setName(kelas.getName());
+                kelasBaru.setPrice(kelas.getPrice());
+                listKelas.add(kelasBaru);
+            }
+           
+        }
+        return listKelas;
     }
 
     @GetMapping("/get-all-name-only")
@@ -83,12 +152,7 @@ public class KelasRestController {
 
     }
 
-    @PostMapping("/enroll")
-    @ValidateToken(RoleEnum.ADMIN)
-    public ResponseEntity<?> enrollStudent(@RequestBody KelasSiswaDTO kelasSiswaDTO) {
-        KelasSiswa kelasSiswa = kelasSiswaService.enrollStudent(kelasSiswaDTO);
-        return ResponseEntity.ok(kelasSiswa);
-    }
+
 
     @PostMapping("/disenroll")
     @ValidateToken(RoleEnum.ADMIN)
@@ -104,17 +168,21 @@ public class KelasRestController {
         return ResponseEntity.ok(enrolledStudents);
     }
 
-    @GetMapping("/classes-enrolled/{id}")
+    @GetMapping("/classes-enrolled")
     @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.CUSTOMER_SERVICE, RoleEnum.TOP_LEVEL})
-    public ResponseEntity<?> getClassesEnrolled(@PathVariable("id") Long siswaId) {
-        List<Kelas> classesEnrolled = kelasSiswaService.getAllKelasEnrolledByStudent(siswaId);
+    public ResponseEntity<?> getClassesEnrolled(HttpServletRequest request) {
+        String requestToken = request.getHeader(JWT_HEADER).substring(7);
+        Account account = accountService.getAccountFromJwt(requestToken);
+        List<Kelas> classesEnrolled = kelasSiswaService.getAllKelasEnrolledByStudent(account);
         return ResponseEntity.ok(classesEnrolled);
     }
 
     @GetMapping("/is-enrolled")
     @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
-    public ResponseEntity<?> isStudentEnrolled(@RequestParam(required = true, name = "kelasId") Long kelasId, @RequestParam(required = true, name = "siswaId") Long siswaId) {
-        Boolean isEnrolled = kelasSiswaService.isStudentEnrolledInAClass(kelasId, siswaId);
+    public ResponseEntity<?> isStudentEnrolled(HttpServletRequest request,  @RequestParam(required = true, name = "kelasId") Long kelasId) {
+        String requestToken = request.getHeader(JWT_HEADER).substring(7);
+        Account account = accountService.getAccountFromJwt(requestToken);
+        Boolean isEnrolled = kelasSiswaService.isStudentEnrolledInAClass(kelasId, account.getId());
         return ResponseEntity.ok(isEnrolled);
     }
 

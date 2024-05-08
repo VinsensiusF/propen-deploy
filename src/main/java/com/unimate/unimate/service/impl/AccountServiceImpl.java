@@ -114,5 +114,9 @@ public class AccountServiceImpl implements AccountService {
         return accountRepository.save(user);
     }
 
+    @Override
+    public Long getCountAccount() {
+        return accountRepository.countAllAccount();
+    }
 
 }

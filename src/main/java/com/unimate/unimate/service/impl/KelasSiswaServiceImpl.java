@@ -34,9 +34,9 @@ public class KelasSiswaServiceImpl implements KelasSiswaService {
     }
 
     @Override
-    public KelasSiswa enrollStudent(KelasSiswaDTO kelasSiswaDTO) {
-        Optional<Account> siswa = accountService.getAccountById(kelasSiswaDTO.getStudentId());
-        Kelas kelas = kelasService.getKelasById(kelasSiswaDTO.getKelasId());
+    public KelasSiswa enrollStudent(Long studentId, Long classId) {
+        Optional<Account> siswa = accountService.getAccountById(studentId);
+        Kelas kelas = kelasService.getKelasById(classId);
 
         if (siswa.isEmpty()) {
             throw new EntityNotFoundException();
@@ -89,13 +89,9 @@ public class KelasSiswaServiceImpl implements KelasSiswaService {
     }
 
     @Override
-    public List<Kelas> getAllKelasEnrolledByStudent(Long studentId) {
-        Optional<Account> siswa = accountService.getAccountById(studentId);
-        if (siswa.isEmpty()) {
-            throw new EntityNotFoundException();
-        }
+    public List<Kelas> getAllKelasEnrolledByStudent(Account siswa) {
 
-        List<KelasSiswa> kelasSiswaList = siswa.get().getKelasSiswa();
+        List<KelasSiswa> kelasSiswaList = siswa.getKelasSiswa();
         List<Kelas> kelasList = new ArrayList<>();
         for (KelasSiswa ks :
                 kelasSiswaList) {

@@ -28,4 +28,6 @@ public interface AccountService {
     Account getAccountFromJwt(String jwt);
 
     Account changePasword(UpdatePasswordDTO changePasswordRequest, Account account);
+
+    Long getCountAccount();
 }
