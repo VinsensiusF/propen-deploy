@@ -298,4 +298,9 @@ public class ScholarshipServiceImpl implements ScholarshipService {
         scholarshipResponseDTO.setLanguageTest(scholarship.getLanguageTest());
         scholarshipResponseDTO.setStandardizedTest(scholarship.getStandardizedTest());
     }
+
+    @Override
+    public Long getCountScholarship() {
+        return scholarshipRepository.countAllScholarship();
+    }
 }

@@ -56,4 +56,6 @@ public interface ScholarshipService {
     List<ScholarshipResponseDTO> getAllScholarshipByOpeningMonth(int month);
 
     List<Scholarship> getScholarshipsByFilters(ScholarshipDegree degreeFilter, ScholarshipType fundFilter, String sortByOpeningDate, String keyword);
+
+    Long getCountScholarship();
 }

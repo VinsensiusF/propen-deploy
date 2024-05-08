@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.*;
@@ -17,6 +19,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "kelas")
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class Kelas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,4 +73,12 @@ public class Kelas {
     private Date modifiedAt;
 
     private Date deletedAt;
+
+    public boolean isDeleted() {
+        return this.deletedAt != null;
+    }
+
+    public void softDelete() {
+        this.deletedAt = new Date(); 
+    }
 }

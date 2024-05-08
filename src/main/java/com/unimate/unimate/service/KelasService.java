@@ -24,4 +24,6 @@ public interface KelasService {
     Kelas updateRating(Long idKelas, Float newRating);
 
     List<KelasNameOnly> getAllKelasNames();
+
+    Long getCountClass();
 }

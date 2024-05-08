@@ -17,4 +17,7 @@ public interface ScholarshipRepository extends JpaRepository<Scholarship, Long> 
     List<Scholarship> findScholarshipsByOpeningMonth(@Param("month") int month);
 
     List<Scholarship> findScholarshipsByTitleContainingIgnoreCase(String keyword);
+
+    @Query("SELECT COUNT(e) FROM Scholarship e")
+    Long countAllScholarship();
 }

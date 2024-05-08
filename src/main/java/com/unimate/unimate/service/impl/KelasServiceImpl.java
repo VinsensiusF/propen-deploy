@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class KelasServiceImpl implements KelasService {
@@ -35,7 +37,9 @@ public class KelasServiceImpl implements KelasService {
 
     @Override
     public List<Kelas> getAllKelas() {
-        return kelasRepository.findAll();
+        return kelasRepository.findAll().stream()
+        .filter(kelas -> !kelas.isDeleted()) // Filter out soft deleted kelas
+        .collect(Collectors.toList());
     }
 
     @Override
@@ -75,7 +79,7 @@ public class KelasServiceImpl implements KelasService {
         kelas.setPrice(updateKelasDTO.getPrice());
         kelas.setBenefits(updateKelasDTO.getBenefits());
         kelas.setSyllabuses(updateKelasDTO.getSyllabuses());
-        kelas.setIsFinished(updateKelasDTO.getIsFinished());
+    
         saveKelas(kelas);
         return kelas;
 
@@ -83,7 +87,8 @@ public class KelasServiceImpl implements KelasService {
 
     @Override
     public void deleteKelas(Kelas kelas) {
-        kelasRepository.delete(kelas);
+        kelas.softDelete();
+        kelasRepository.save(kelas);
     }
 
     @Override
@@ -100,5 +105,11 @@ public class KelasServiceImpl implements KelasService {
     @Override
     public List<KelasNameOnly> getAllKelasNames() {
         return kelasRepository.findKelasNameByIdNotNull();
+    }
+
+
+    @Override
+    public Long getCountClass() {
+        return kelasRepository.countAllClass();
     }
 }

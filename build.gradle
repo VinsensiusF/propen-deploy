@@ -43,7 +43,7 @@ dependencies {
 	implementation 'com.auth0:java-jwt:4.4.0'
 	implementation 'org.springframework.boot:spring-boot-starter-aop:3.2.2'
 	implementation 'javax.persistence:javax.persistence-api:2.2'
-	implementation 'io.hypersistence:hypersistence-utils-hibernate-60:3.7.3'
+	implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.7.3'
 	implementation 'javax.validation:validation-api:2.0.1.Final'
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
@@ -51,6 +51,7 @@ dependencies {
 	implementation 'org.hibernate:hibernate-core:6.4.4.Final'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-mail:3.2.3'
+	implementation 'com.midtrans:java-library:3.1.4'
 }
 
 tasks.named('test') {

@@ -333,4 +333,10 @@ public class BlogServiceImpl implements BlogService {
         }
     }
 
+
+    @Override
+    public Long getCountBlog() {
+        return blogRepository.countAllBlog();
+    }
+
 }

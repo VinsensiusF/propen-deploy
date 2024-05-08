@@ -31,4 +31,6 @@ public interface BlogService {
     List<BlogResponseDTO> getAllBlogsByTags(ArrayList<String> tags);
 
     List<BlogResponseDTO> getAllBlogsDesc();
+
+    Long getCountBlog();
 }
