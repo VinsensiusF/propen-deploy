@@ -5,6 +5,7 @@ import com.unimate.unimate.dto.PartnershipDTO;
 import com.unimate.unimate.dto.UpdatePartnershipDTO;
 import com.unimate.unimate.dto.UpdatePartnershipResponse;
 import com.unimate.unimate.entity.Partnership;
+import com.unimate.unimate.entity.PartnershipStatus;
 import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.service.PartnershipService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.TimeUnit;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/partnership")
@@ -84,5 +87,68 @@ public class PartnershipRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update partnership request.");
         }
     }
+
+   
+    @GetMapping("/monthly")
+    public ResponseEntity<?> getMonthlyRequests(@RequestParam("year") int year) {
+        try {
+            List<Object[]> monthlyRequests = partnershipService.getMonthlyRequests(year);
+
+            // Proses hasil kueri untuk mengonversi ke format yang diinginkan
+            Map<Integer, Integer> monthlyRequestsMap = new HashMap<>();
+            for (Object[] row : monthlyRequests) {
+                int month = (int) row[0];
+                long requestCount = (long) row[1];
+                monthlyRequestsMap.put(month, (int) requestCount);
+            }
+
+            return ResponseEntity.ok(monthlyRequestsMap);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to retrieve monthly requests: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/all-monthly")
+    public ResponseEntity<Map<Integer, Integer>> getMonthlyRequestsForAllYears() {
+        try {
+            Map<Integer, Integer> monthlyRequests = partnershipService.getMonthlyRequestsForAllYears();
+            return ResponseEntity.ok(monthlyRequests);
+        } catch (Exception e) {
+            // Handle exception
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @GetMapping("/daily")
+    public ResponseEntity<List<Map<String, Integer>>> getDailyRequests(
+            @RequestParam("year") int year,
+            @RequestParam("month") int month
+    ) {
+        try {
+            List<Map<String, Integer>> dailyRequests = partnershipService.getDailyRequests(year, month);
+            return ResponseEntity.ok(dailyRequests);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+    
+
+    @GetMapping("/status")
+    public ResponseEntity<List<Map<String, Object>>> getRequestsByStatus(
+            @RequestParam(value = "year", required = false) Integer year,
+            @RequestParam(value = "month", required = false) Integer month) {
+        try {
+            List<Map<String, Object>> requestsByStatus = partnershipService.getRequestsByStatus(year, month);
+            return ResponseEntity.ok(requestsByStatus);
+        } catch (Exception e) {
+            // Log the exception here
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+      
+      
+
 
 }
