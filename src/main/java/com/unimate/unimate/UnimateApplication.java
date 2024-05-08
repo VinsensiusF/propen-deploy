@@ -57,6 +57,7 @@ public class UnimateApplication {
             ujian.setTitle("Ujian Fisika");
             ujian.setStartDate(LocalDateTime.of(2024, 2, 3, 10, 5));
             ujian.setEndDate(LocalDateTime.of(2024, 2, 4, 10, 5));
+            ujian.setPassingGrade(50.0);
             ujianService.saveUjian(ujian);
 
             QuestionContent question1 = new QuestionContent();
