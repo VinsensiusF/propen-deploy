@@ -126,6 +126,21 @@ public class UjianRestController {
         return ResponseEntity.ok(ujianSiswaList);
     }
 
+    @GetMapping("/ujian-siswa/list-by-ujian-graded/{id}")
+    @ValidateToken({RoleEnum.ADMIN, RoleEnum.TEACHER})
+    public ResponseEntity<?> getUjianSiswaByUjianIdGraded(@PathVariable("id") Long ujianId) {
+        List<UjianSiswaResponseDTO> ujianSiswaList = ujianSiswaService.getUjianSiswaByUjianIdGraded(ujianId);
+        return ResponseEntity.ok(ujianSiswaList);
+    }
+
+    @GetMapping("/ujian-siswa/list-by-ujian-ungraded/{id}")
+    @ValidateToken({RoleEnum.ADMIN, RoleEnum.TEACHER})
+    public ResponseEntity<?> getUjianSiswaByUjianIdUngraded(@PathVariable("id") Long ujianId) {
+        List<UjianSiswaResponseDTO> ujianSiswaList = ujianSiswaService.getUjianSiswaByUjianIdUngraded(ujianId);
+        return ResponseEntity.ok(ujianSiswaList);
+    }
+
+
     @GetMapping("/ujian-siswa/list-by-siswa/{id}")
     @ValidateToken({RoleEnum.ADMIN, RoleEnum.TEACHER})
     public ResponseEntity<?> getUjianSiswaBySiswaId(@PathVariable("id") Long siswaId) {
