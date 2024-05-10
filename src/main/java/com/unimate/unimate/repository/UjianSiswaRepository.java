@@ -20,5 +20,11 @@ public interface UjianSiswaRepository extends JpaRepository<UjianSiswa, Long> {
     @Query("SELECT us FROM UjianSiswa us WHERE us.siswa.id = :siswaId")
     List<UjianSiswa> findUjianSiswaListBySiswaId(@Param("siswaId") Long siswaId);
 
+    @Query("SELECT us FROM UjianSiswa us WHERE us.ujian.id = :ujianId AND us.grade IS NOT NULL")
+    List<UjianSiswa> findUjianSiswaListByUjianIdGraded(@Param("ujianId") Long ujianId);
+
+    @Query("SELECT us FROM UjianSiswa us WHERE us.ujian.id = :ujianId AND us.grade IS NULL")
+    List<UjianSiswa> findUjianSiswaListByUjianIdUngraded(@Param("ujianId") Long ujianId);
+
     UjianSiswa findUjianSiswaById(Long id);
 }
