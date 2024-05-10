@@ -1,41 +1,45 @@
 package com.unimate.unimate.service.impl;
 
 import com.unimate.unimate.config.AuthConfigProperties;
+import com.unimate.unimate.dto.ProfileImageDTO;
 import com.unimate.unimate.dto.UpdateAccountDTO;
 import com.unimate.unimate.dto.UpdatePasswordDTO;
 import com.unimate.unimate.entity.Account;
-import com.unimate.unimate.enums.AccountStatusEnum;
 import com.unimate.unimate.enums.RoleEnum;
 import com.unimate.unimate.exception.EntityNotFoundException;
 import com.unimate.unimate.repository.AccountRepository;
 import com.unimate.unimate.repository.RoleRepository;
-import com.unimate.unimate.repository.TokenRepository;
 import com.unimate.unimate.service.AccountService;
+import com.unimate.unimate.service.CloudinaryService;
 import com.unimate.unimate.util.JwtUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 @Service
 @Slf4j
 public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
-    private final TokenRepository tokenRepository;
     private final RoleRepository roleRepository;
+  
+    private final CloudinaryService cloudinaryService;
+ 
 
     private final AuthConfigProperties configProperties;
 
     @Autowired
-    public AccountServiceImpl(AccountRepository accountRepository, TokenRepository tokenRepository, AuthConfigProperties configProperties, RoleRepository roleRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository, AuthConfigProperties configProperties, RoleRepository roleRepository, CloudinaryService cloudinaryService) {
         this.accountRepository = accountRepository;
-        this.tokenRepository = tokenRepository;
         this.configProperties = configProperties;
         this.roleRepository = roleRepository;
+        this.cloudinaryService = cloudinaryService;
     }
 
     @Override
@@ -46,7 +50,6 @@ public class AccountServiceImpl implements AccountService {
     // TODO implement updateAccount
     @Override
     public Account updateAccount(UpdateAccountDTO  accountRequest) {
-        var passwordEncoder = new BCryptPasswordEncoder();
         Optional<Account> optionalAccount = getAccountById(accountRequest.getId());
         if (optionalAccount.isEmpty()) {
             throw new EntityNotFoundException();
@@ -54,7 +57,6 @@ public class AccountServiceImpl implements AccountService {
         Account account = optionalAccount.get();
         account.setName(accountRequest.getName());
         account.setEmail(accountRequest.getEmail());
-//        account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
         account.setRole(roleRepository.findRoleByName(RoleEnum.valueOf(accountRequest.getRole())));
 //        account.setStatus(AccountStatusEnum.valueOf(accountRequest.getStatus()));
         account.setProfilePicture(accountRequest.getProfilePicture());
@@ -118,5 +120,30 @@ public class AccountServiceImpl implements AccountService {
     public Long getCountAccount() {
         return accountRepository.countAllAccount();
     }
+
+    @Override
+    public ResponseEntity<Map> uploadImageProfile(ProfileImageDTO profileImageDTO) {
+        Account account = getAccountByEmail(profileImageDTO.getEmail()).get();
+        try {
+            if (account == null) {
+                return ResponseEntity.badRequest().build();
+            }
+       
+            String url = (cloudinaryService.uploadFile(profileImageDTO.getFile(), "profile"));
+            if(url == null) {
+                return ResponseEntity.badRequest().build();
+            }
+            account.setProfilePicture(url);
+            accountRepository.save(account);
+            return ResponseEntity.ok().body(Map.of("url", account.getProfilePicture()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+    }
+
+
 
 }

@@ -52,7 +52,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-mail:3.2.3'
 	implementation 'com.midtrans:java-library:3.1.4'
+	implementation 'com.cloudinary:cloudinary-http44:1.36.0'
 }
+	
 
 tasks.named('test') {
 	useJUnitPlatform()

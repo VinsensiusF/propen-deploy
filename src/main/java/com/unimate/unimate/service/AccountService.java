@@ -1,11 +1,14 @@
 package com.unimate.unimate.service;
 
 import com.unimate.unimate.dto.UpdatePasswordDTO;
+import com.unimate.unimate.dto.ProfileImageDTO;
 import com.unimate.unimate.dto.UpdateAccountDTO;
 import com.unimate.unimate.entity.Account;
-
+import java.util.Map;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
 
 public interface AccountService {
 
@@ -30,4 +33,6 @@ public interface AccountService {
     Account changePasword(UpdatePasswordDTO changePasswordRequest, Account account);
 
     Long getCountAccount();
+
+    public ResponseEntity<Map> uploadImageProfile(ProfileImageDTO profileImageDTO);
 }

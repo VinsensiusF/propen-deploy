@@ -4,6 +4,7 @@ import com.unimate.unimate.aspect.ValidateToken;
 import com.unimate.unimate.dto.CleanAccountDTO;
 import com.unimate.unimate.dto.CreateAccountDTO;
 import com.unimate.unimate.dto.EditUserAccountDTO;
+import com.unimate.unimate.dto.ProfileImageDTO;
 import com.unimate.unimate.dto.UpdateAccountDTO;
 import com.unimate.unimate.dto.UpdatePasswordDTO;
 import com.unimate.unimate.dto.mapper.AccountMapper;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.List;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/account")
@@ -233,9 +235,16 @@ public class AccountRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to change password");
         }
     }
+    
+    @PostMapping("/change-profile-picture")
+    public ResponseEntity<Map> upload(ProfileImageDTO profileImageDTO) {
+        try {
+        return accountService.uploadImageProfile(profileImageDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "Terjadi kesalahan dalam memproses permintaan."));
+        }
+    }
 
-
-
- 
     
 }

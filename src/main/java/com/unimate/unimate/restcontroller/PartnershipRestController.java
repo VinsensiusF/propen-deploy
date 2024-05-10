@@ -90,6 +90,7 @@ public class PartnershipRestController {
 
    
     @GetMapping("/monthly")
+    @ValidateToken(RoleEnum.CUSTOMER_SERVICE)
     public ResponseEntity<?> getMonthlyRequests(@RequestParam("year") int year) {
         try {
             List<Object[]> monthlyRequests = partnershipService.getMonthlyRequests(year);
@@ -109,6 +110,7 @@ public class PartnershipRestController {
     }
 
     @GetMapping("/all-monthly")
+    @ValidateToken(RoleEnum.CUSTOMER_SERVICE)
     public ResponseEntity<Map<Integer, Integer>> getMonthlyRequestsForAllYears() {
         try {
             Map<Integer, Integer> monthlyRequests = partnershipService.getMonthlyRequestsForAllYears();
@@ -121,6 +123,7 @@ public class PartnershipRestController {
     }
 
     @GetMapping("/daily")
+    @ValidateToken(RoleEnum.CUSTOMER_SERVICE)
     public ResponseEntity<List<Map<String, Integer>>> getDailyRequests(
             @RequestParam("year") int year,
             @RequestParam("month") int month
@@ -135,6 +138,7 @@ public class PartnershipRestController {
     
 
     @GetMapping("/status")
+    @ValidateToken(RoleEnum.CUSTOMER_SERVICE)
     public ResponseEntity<List<Map<String, Object>>> getRequestsByStatus(
             @RequestParam(value = "year", required = false) Integer year,
             @RequestParam(value = "month", required = false) Integer month) {
