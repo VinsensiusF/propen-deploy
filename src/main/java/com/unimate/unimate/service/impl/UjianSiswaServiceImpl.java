@@ -1,6 +1,7 @@
 package com.unimate.unimate.service.impl;
 
 import com.unimate.unimate.dto.UjianSiswaDTO;
+import com.unimate.unimate.dto.UjianSiswaResponseDTO;
 import com.unimate.unimate.entity.Account;
 import com.unimate.unimate.entity.Ujian;
 import com.unimate.unimate.entity.UjianSiswa;
@@ -15,6 +16,7 @@ import com.unimate.unimate.service.UjianSiswaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -147,5 +149,49 @@ public class UjianSiswaServiceImpl implements UjianSiswaService {
         ujianSiswa.setGrade(grade);
         ujianSiswaRepository.save(ujianSiswa);
         return ujianSiswa;
+    }
+
+    @Override
+    public List<UjianSiswaResponseDTO> getUjianSiswaByUjianIdGraded(Long ujianId) {
+        Ujian ujian = ujianService.getUjianById(ujianId);
+        if (ujian == null) {
+            throw new UjianNotFoundException();
+        }
+
+        List<UjianSiswa> ujianSiswaList = ujianSiswaRepository.findUjianSiswaListByUjianIdGraded(ujianId);
+        List<UjianSiswaResponseDTO> responseDTOList = new ArrayList<>();
+
+        for (UjianSiswa us : ujianSiswaList) {
+            UjianSiswaResponseDTO dto = new UjianSiswaResponseDTO();
+            dto.setId(us.getId());
+            dto.setUjianId(us.getUjian().getId());
+            dto.setSiswa(us.getSiswa());
+            dto.setGrade(us.getGrade());
+            responseDTOList.add(dto);
+        }
+
+        return responseDTOList;
+    }
+
+    @Override
+    public List<UjianSiswaResponseDTO> getUjianSiswaByUjianIdUngraded(Long ujianId) {
+        Ujian ujian = ujianService.getUjianById(ujianId);
+        if (ujian == null) {
+            throw new UjianNotFoundException();
+        }
+
+        List<UjianSiswa> ujianSiswaList = ujianSiswaRepository.findUjianSiswaListByUjianIdUngraded(ujianId);
+        List<UjianSiswaResponseDTO> responseDTOList = new ArrayList<>();
+
+        for (UjianSiswa us : ujianSiswaList) {
+            UjianSiswaResponseDTO dto = new UjianSiswaResponseDTO();
+            dto.setId(us.getId());
+            dto.setUjianId(us.getUjian().getId());
+            dto.setSiswa(us.getSiswa());
+            dto.setGrade(us.getGrade());
+            responseDTOList.add(dto);
+        }
+
+        return responseDTOList;
     }
 }
