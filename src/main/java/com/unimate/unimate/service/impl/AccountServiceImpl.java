@@ -14,6 +14,7 @@ import com.unimate.unimate.service.CloudinaryService;
 import com.unimate.unimate.util.JwtUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -123,25 +124,26 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public ResponseEntity<Map> uploadImageProfile(ProfileImageDTO profileImageDTO) {
-        Account account = getAccountByEmail(profileImageDTO.getEmail()).get();
+        Account account = getAccountByEmail(profileImageDTO.getEmail()).orElse(null);
+        if (account == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         try {
-            if (account == null) {
-                return ResponseEntity.badRequest().build();
+            // Menghapus file gambar lama jika sudah ada
+            if (account.getProfilePicture() != null) {
+                    cloudinaryService.deleteFileByUrl(account.getProfilePicture(), "profile");
             }
-       
-            String url = (cloudinaryService.uploadFile(profileImageDTO.getFile(), "profile"));
-            if(url == null) {
-                return ResponseEntity.badRequest().build();
+            String url = cloudinaryService.uploadFile(profileImageDTO.getFile(), "profile");
+            if (url == null) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Gagal mengunggah file gambar."));
             }
             account.setProfilePicture(url);
             accountRepository.save(account);
             return ResponseEntity.ok().body(Map.of("url", account.getProfilePicture()));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
         }
-
-
     }
 
 
