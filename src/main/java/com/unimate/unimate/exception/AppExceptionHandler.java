@@ -47,6 +47,11 @@ public class AppExceptionHandler {
         return new ResponseEntity<>(accountExistedException.generateCustomErrorResponse(), HttpStatus.valueOf(accountExistedException.getHttpStatusCode()));
     }
 
+    @ExceptionHandler(AccountVerificationException.class)
+    public ResponseEntity<CustomErrorResponse> AccountVerificationException(AccountVerificationException accountVerificationException){
+        return new ResponseEntity<>(accountVerificationException.generateCustomErrorResponse(), HttpStatus.valueOf(accountVerificationException.getHttpStatusCode()));
+    }
+
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<CustomErrorResponse> InvalidTokenException(InvalidPasswordException InvalidPasswordException){
         return new ResponseEntity<>(InvalidPasswordException.generateCustomErrorResponse(), HttpStatus.valueOf(InvalidPasswordException.getHttpStatusCode()));

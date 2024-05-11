@@ -16,6 +16,7 @@ import com.unimate.unimate.repository.RoleRepository;
 import com.unimate.unimate.service.AuthenticationService;
 import com.unimate.unimate.service.EmailService;
 import com.unimate.unimate.util.JwtUtility;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
+@Transactional
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Value("${FRONT_END_URL}")
@@ -79,7 +81,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Optional<Account> existingAccount = accountRepository.findAccountByEmail(signUpDTO.getEmail());
         var passwordEncoder = new BCryptPasswordEncoder();
         if (existingAccount.isPresent()) {
-            throw new AccountExistedException();
+            if(existingAccount.get().getStatus().equals(AccountStatusEnum.VERIFIED)){
+                throw new AccountExistedException();
+            }
+            boolean token = tokenRepository.findTokenByAccountAndTokenTypeAndExpiredAtIsAfter(existingAccount.get(), TokenType.ACCOUNT_VERIFICATION, Instant.now()).isPresent();
+            if(token){
+                throw new AccountVerificationException();
+            }
+            Token newToken = generateToken(existingAccount.get());
+            sendAccountVerificationEmail(newToken.getToken(), existingAccount.get().getEmail());
+            return ResponseEntity.ok("Account has been created. Check your email for verification.");
         }
         final Account account = new Account();
         account.setRole(roleRepository.findRoleByName(RoleEnum.STUDENT));
@@ -90,18 +101,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         account.setStatus(AccountStatusEnum.UNVERIFIED);
         accountRepository.save(account);
 
-        Token token = new Token();
-        token.setToken(UUID.randomUUID());
-        token.setAccount(account);
-        token.setTokenType(TokenType.ACCOUNT_VERIFICATION);
-        token.setIssuedAt(Instant.now());
-        token.setExpiredAt(Instant.now().plus(15, ChronoUnit.MINUTES));
-        tokenRepository.save(token);
-
-        //ToDo implement email service
-        HashMap<String, String> body = new HashMap<>();
-        body.put("verificationlink", generateVerificationLink(token.getToken()));
-        emailService.send(account.getEmail(), body);
+        Token token = generateToken(account);
+        sendAccountVerificationEmail(token.getToken(), account.getEmail());
 
         return ResponseEntity.ok("Account has been created. Check your email for verification.");
     }
@@ -330,4 +331,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         account.setStatus(AccountStatusEnum.VERIFIED);
         accountRepository.save(account);
     }
+
+    private Token generateToken(Account account){
+        Token token = new Token();
+        token.setToken(UUID.randomUUID());
+        token.setAccount(account);
+        token.setTokenType(TokenType.ACCOUNT_VERIFICATION);
+        token.setIssuedAt(Instant.now());
+        token.setExpiredAt(Instant.now().plus(1, ChronoUnit.MINUTES));
+        return tokenRepository.save(token);
+    }
+
+    private void sendAccountVerificationEmail(UUID token, String email){
+        HashMap<String, String> body = new HashMap<>();
+        body.put("verificationlink", generateVerificationLink(token));
+        emailService.send(email, body);
+    }
 }
+
