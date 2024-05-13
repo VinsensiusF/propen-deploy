@@ -72,7 +72,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!BCrypt.checkpw(signInDTO.getPassword(), account.getPassword())) {
             throw new InvalidPasswordException();
         }
-        return "Bearer " + JwtUtility.jwtGenerator(account.getId(), configProperties.getSecret(), account.getRole().getName());
+        return "Bearer " + JwtUtility.jwtGenerator(account.getId(), configProperties.getSecret(), account.getRole().getName(), signInDTO.getRememberMe());
     }
 
     public ResponseEntity<String> signUp(SignUpDTO signUpDTO) {

@@ -25,16 +25,24 @@ import java.util.Arrays;
 @UtilityClass
 public class JwtUtility {
 
-    public String jwtGenerator(Long id, String secret, RoleEnum role) throws JWTCreationException {
+    public String jwtGenerator(Long id, String secret, RoleEnum role, Boolean rememberMe) throws JWTCreationException {
         ArrayList<String> roles = new ArrayList<>();
         roles.add(role.toString());
+        Instant expirationTime;
+        if (rememberMe) {
+            expirationTime = Instant.now().plus(2, ChronoUnit.MONTHS);
+        } else {
+            expirationTime = Instant.now().plus(2, ChronoUnit.HOURS);
+        }
+        
         return JWT.create()
-                .withExpiresAt(Instant.now().plus(100000000, ChronoUnit.MINUTES))
+                .withExpiresAt(expirationTime)
                 .withJWTId(String.valueOf(id))
                 .withIssuer("auth0")
                 .withClaim("roles", roles)
                 .sign(Algorithm.HMAC256(secret.getBytes(StandardCharsets.UTF_8)));
     }
+    
 
     public DecodedJWT jwtVerifier(String token, String secret) throws JWTVerificationException {
         if (token.startsWith("Bearer ")) {

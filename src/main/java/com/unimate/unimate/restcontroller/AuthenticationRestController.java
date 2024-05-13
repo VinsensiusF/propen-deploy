@@ -24,13 +24,9 @@ public class AuthenticationRestController {
         this.authenticationService = authenticationService;
     }
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> body) {
-        SignInDTO signInDTO = new SignInDTO();
-        signInDTO.setEmail(body.get("email"));
-        signInDTO.setPassword(body.get("password"));
-
+    public ResponseEntity<Map<String, String>> login(@RequestBody SignInDTO signInDTO) {
+    
         String token = authenticationService.login(signInDTO);
-
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put("token", token);
 

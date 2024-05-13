@@ -9,7 +9,7 @@ public class ForbiddenException extends BaseServiceException {
 //        super(HttpStatus.BAD_REQUEST, "Token not found in the request header.");
 //    }
 
-    public static final String DEFAULT_MESSAGE = "Token is not validated or Unauthorized Role.";
+    public static final String DEFAULT_MESSAGE = "Token tidak divalidasi atau Peran Tidak Diizinkan.";
     public static final String DEFAULT_TITLE = EntityNotFoundException.class.getSimpleName();
     public static final int DEFAULT_HTTP_CODE = HttpStatus.BAD_REQUEST.value();
 

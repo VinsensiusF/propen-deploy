@@ -3,7 +3,7 @@ package com.unimate.unimate.exception;
 import org.springframework.http.HttpStatus;
 
 public class InvalidPasswordException extends BaseServiceException{
-    public static final String DEFAULT_MESSAGE = "Wrong password!";
+    public static final String DEFAULT_MESSAGE = "Password Anda salah";
     public static final String DEFAULT_TITLE = InvalidPasswordException.class.getSimpleName();
     public static final int DEFAULT_HTTP_CODE = HttpStatus.BAD_REQUEST.value();
 

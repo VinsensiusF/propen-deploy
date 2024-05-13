@@ -11,4 +11,6 @@ public class SignInDTO {
     private String email;
     @NotNull
     private String password;
+
+    private Boolean rememberMe;
 }
