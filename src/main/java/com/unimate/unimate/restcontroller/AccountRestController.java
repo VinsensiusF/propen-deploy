@@ -236,9 +236,13 @@ public class AccountRestController {
         }
     }
     
-    @PostMapping("/change-profile-picture")
-    public ResponseEntity<Map> upload(ProfileImageDTO profileImageDTO) {
+    @PutMapping("/change-profile-picture")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.TOP_LEVEL, RoleEnum.CUSTOMER_SERVICE})
+    public ResponseEntity<Map> upload(ProfileImageDTO profileImageDTO, HttpServletRequest request) {
         try {
+            String requestToken = request.getHeader(JWT_HEADER).substring(7);
+            Account account = accountService.getAccountFromJwt(requestToken);
+            profileImageDTO.setEmail(account.getEmail());
         return accountService.uploadImageProfile(profileImageDTO);
         } catch (Exception e) {
             e.printStackTrace();

@@ -30,7 +30,7 @@ public class JwtUtility {
         roles.add(role.toString());
         Instant expirationTime;
         if (rememberMe) {
-            expirationTime = Instant.now().plus(2, ChronoUnit.MONTHS);
+            expirationTime = Instant.now().plus(1440, ChronoUnit.HOURS);
         } else {
             expirationTime = Instant.now().plus(2, ChronoUnit.HOURS);
         }

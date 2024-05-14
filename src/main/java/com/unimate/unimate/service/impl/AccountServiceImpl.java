@@ -142,6 +142,7 @@ public class AccountServiceImpl implements AccountService {
             accountRepository.save(account);
             return ResponseEntity.ok().body(Map.of("url", account.getProfilePicture()));
         }catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("message", e.getMessage()));
         }
     }
