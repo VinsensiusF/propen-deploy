@@ -182,6 +182,47 @@ public class ScholarshipServiceImpl implements ScholarshipService {
         return scholarship;
     }
 
+    private void updateScholarshipStatuses() {
+        List<Scholarship> scholarships = scholarshipRepository.findAll();
+        Date currentDate = new Date();
+        for (Scholarship scholarship : scholarships) {
+            if(scholarship.getScholarshipStatus() == null && currentDate.after(scholarship.getEndedAt())){
+                scholarship.setScholarshipStatus(ScholarshipStatus.CLOSED);
+                scholarshipRepository.save(scholarship);
+            }
+            if(scholarship.getScholarshipStatus() == null && currentDate.before(scholarship.getEndedAt())){
+                scholarship.setScholarshipStatus(ScholarshipStatus.OPEN);
+                scholarshipRepository.save(scholarship);
+            }
+            // If the scholarship is not already closed and today's date is after endedAt date
+            if (scholarship.getScholarshipStatus() != ScholarshipStatus.CLOSED && currentDate.after(scholarship.getEndedAt())) {
+                scholarship.setScholarshipStatus(ScholarshipStatus.CLOSED);
+                scholarshipRepository.save(scholarship); // Update the scholarship status
+            }
+            // the endDate is extended case
+            if (scholarship.getScholarshipStatus() == ScholarshipStatus.CLOSED && currentDate.before(scholarship.getEndedAt())) {
+                scholarship.setScholarshipStatus(ScholarshipStatus.OPEN);
+                scholarshipRepository.save(scholarship); // Update the scholarship status
+            }
+        }
+    }
+
+    private void scholarshipToScholarshipResponseDTO(ScholarshipResponseDTO scholarshipResponseDTO, Scholarship scholarship) {
+        scholarshipResponseDTO.setScholarshipId(scholarship.getId());
+        scholarshipResponseDTO.setTitle(scholarship.getTitle());
+        scholarshipResponseDTO.setDescription(scholarship.getDescription());
+        scholarshipResponseDTO.setScholarshipType(scholarship.getScholarshipType());
+        scholarshipResponseDTO.setScholarshipStatus(scholarship.getScholarshipStatus());
+        scholarshipResponseDTO.setScholarshipDegrees(scholarship.getScholarshipDegrees());
+        scholarshipResponseDTO.setMinimumAge(scholarship.getMinimumAge());
+        scholarshipResponseDTO.setMinimumGPA(scholarship.getMinimumGPA());
+        scholarshipResponseDTO.setStartedAt(scholarship.getStartedAt());
+        scholarshipResponseDTO.setEndedAt(scholarship.getEndedAt());
+        scholarshipResponseDTO.setUniversity(scholarship.getUniversity());
+        scholarshipResponseDTO.setLanguageTest(scholarship.getLanguageTest());
+        scholarshipResponseDTO.setStandardizedTest(scholarship.getStandardizedTest());
+    }
+
     @Override
     public List<ScholarshipResponseDTO> getAllScholarshipByOpeningMonth(int month) {
         updateScholarshipStatuses();
@@ -256,49 +297,6 @@ public class ScholarshipServiceImpl implements ScholarshipService {
         // Execute query and return results
         return entityManager.createQuery(criteriaQuery).getResultList();
     }
-
-
-    private void updateScholarshipStatuses() {
-        List<Scholarship> scholarships = scholarshipRepository.findAll();
-        Date currentDate = new Date();
-        for (Scholarship scholarship : scholarships) {
-            if(scholarship.getScholarshipStatus() == null && currentDate.after(scholarship.getEndedAt())){
-                scholarship.setScholarshipStatus(ScholarshipStatus.CLOSED);
-                scholarshipRepository.save(scholarship);
-            }
-            if(scholarship.getScholarshipStatus() == null && currentDate.before(scholarship.getEndedAt())){
-                scholarship.setScholarshipStatus(ScholarshipStatus.OPEN);
-                scholarshipRepository.save(scholarship);
-            }
-            // If the scholarship is not already closed and today's date is after endedAt date
-            if (scholarship.getScholarshipStatus() != ScholarshipStatus.CLOSED && currentDate.after(scholarship.getEndedAt())) {
-                scholarship.setScholarshipStatus(ScholarshipStatus.CLOSED);
-                scholarshipRepository.save(scholarship); // Update the scholarship status
-            }
-            // the endDate is extended case
-            if (scholarship.getScholarshipStatus() == ScholarshipStatus.CLOSED && currentDate.before(scholarship.getEndedAt())) {
-                scholarship.setScholarshipStatus(ScholarshipStatus.OPEN);
-                scholarshipRepository.save(scholarship); // Update the scholarship status
-            }
-        }
-    }
-
-    private void scholarshipToScholarshipResponseDTO(ScholarshipResponseDTO scholarshipResponseDTO, Scholarship scholarship) {
-        scholarshipResponseDTO.setScholarshipId(scholarship.getId());
-        scholarshipResponseDTO.setTitle(scholarship.getTitle());
-        scholarshipResponseDTO.setDescription(scholarship.getDescription());
-        scholarshipResponseDTO.setScholarshipType(scholarship.getScholarshipType());
-        scholarshipResponseDTO.setScholarshipStatus(scholarship.getScholarshipStatus());
-        scholarshipResponseDTO.setScholarshipDegrees(scholarship.getScholarshipDegrees());
-        scholarshipResponseDTO.setMinimumAge(scholarship.getMinimumAge());
-        scholarshipResponseDTO.setMinimumGPA(scholarship.getMinimumGPA());
-        scholarshipResponseDTO.setStartedAt(scholarship.getStartedAt());
-        scholarshipResponseDTO.setEndedAt(scholarship.getEndedAt());
-        scholarshipResponseDTO.setUniversity(scholarship.getUniversity());
-        scholarshipResponseDTO.setLanguageTest(scholarship.getLanguageTest());
-        scholarshipResponseDTO.setStandardizedTest(scholarship.getStandardizedTest());
-    }
-
     @Override
     public Long getCountScholarship() {
         return scholarshipRepository.countAllScholarship();
