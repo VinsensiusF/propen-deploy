@@ -19,7 +19,6 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "kelas")
-@OnDelete(action = OnDeleteAction.CASCADE)
 public class Kelas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +33,10 @@ public class Kelas {
 
     private Float rating = 0f;
 
+    private String classPicture;
+
+    private String cover;
+    
     private String category;
 
     @Column(columnDefinition = "TEXT")

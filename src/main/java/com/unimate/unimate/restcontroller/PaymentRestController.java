@@ -74,20 +74,25 @@ public class PaymentRestController {
         List<Payment> listPayments = paymentService.findBySiswaIdAndCourseId(account.getId(), kelas.getId());
 
         if (listPayments.size()>0) {
-            return ResponseEntity.badRequest().body("Maaf, anda masih memiliki pembayaran tertunda. Cek email anda");
+            Payment payment = listPayments.get(0);
+            SnapTokenDTO token = new SnapTokenDTO();
+            token.setToken(payment.getToken());
+            return ResponseEntity.ok(token);
 
         }
         Midtrans.clientKey = midtransClientKey;
         Midtrans.serverKey = midtransServerKey;
         Payment payment =  new Payment();
-        UUID idRand = UUID.randomUUID();
+    
         Map<String, Object> params = new HashMap<>();
         Map<String, String> transactionDetails = new HashMap<>();
-        transactionDetails.put("order_id", idRand.toString());
+        Map<String, String> customerDetails = new HashMap<>();
+        customerDetails.put("email", account.getEmail());
+        customerDetails.put("first_name", account.getName());
+        transactionDetails.put("order_id", payment.getId().toString());
         transactionDetails.put("gross_amount", String.valueOf( createPaymentSnapDTO.getPrice()));
         params.put("transaction_details", transactionDetails);
-
-        payment.setId(idRand);
+        params.put("customer_details", customerDetails);
         
         payment.setCourse(kelas);
         payment.setDate(new Date());
@@ -95,11 +100,12 @@ public class PaymentRestController {
         payment.setStatus("Pending");
        
         payment.setSiswa(account);
-        paymentService.savePayment(payment);
+   
         SnapTokenDTO token = new SnapTokenDTO();
         String transactionToken = SnapApi.createTransactionToken(params);
+        payment.setToken(transactionToken);
         token.setToken(transactionToken);
-
+        paymentService.savePayment(payment);
         return ResponseEntity.ok(token);
     }
 
@@ -213,6 +219,36 @@ public class PaymentRestController {
     @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.CUSTOMER_SERVICE, RoleEnum.TOP_LEVEL})
     public SalesPercentageDTO findG2Payments() {
         return paymentService.findG2PaymentToday();
+    }
+
+
+    @GetMapping("/g-7days")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.CUSTOMER_SERVICE, RoleEnum.TOP_LEVEL})
+    public SalesPercentageDTO findG7daysPayments() {
+        return paymentService.findGPaymentLast7Days();
+    }
+
+    
+
+    @GetMapping("/g2-7days")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.CUSTOMER_SERVICE, RoleEnum.TOP_LEVEL})
+    public SalesPercentageDTO findG27daysPayments() {
+        return paymentService.findG2PaymentLast7Days();
+    }
+
+    
+    @GetMapping("/g-30days")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.CUSTOMER_SERVICE, RoleEnum.TOP_LEVEL})
+    public SalesPercentageDTO findG30daysPayments() {
+        return paymentService.findGPaymentLast30Days();
+    }
+
+    
+
+    @GetMapping("/g2-30days")
+    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.CUSTOMER_SERVICE, RoleEnum.TOP_LEVEL})
+    public SalesPercentageDTO findG230daysPayments() {
+        return paymentService.findG2PaymentLast30Days();
     }
 
 }

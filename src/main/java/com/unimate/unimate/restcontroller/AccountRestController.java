@@ -32,6 +32,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.Collections;
 
 @RestController
@@ -250,5 +253,13 @@ public class AccountRestController {
         }
     }
 
+
+
+ 
+    @GetMapping("/teachers")
+    public ResponseEntity<?> getAllTeachers() {
+        List<Account> teachers = accountService.getAllTeachers();
+        return ResponseEntity.ok().body(teachers);
+    }
     
 }

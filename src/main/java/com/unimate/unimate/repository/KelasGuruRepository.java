@@ -15,4 +15,6 @@ public interface KelasGuruRepository extends JpaRepository<KelasGuru, Long> {
 
     @Query("SELECT kg FROM KelasGuru kg WHERE kg.kelas.id = :kelasId")
     List<KelasGuru> findKelasGuruListByKelasId(@Param("kelasId") Long kelasId);
+
+    boolean existsByKelasIdAndGuruId(Long kelasId, Long guruId);
 }

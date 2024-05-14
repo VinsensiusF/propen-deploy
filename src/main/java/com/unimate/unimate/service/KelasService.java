@@ -7,6 +7,10 @@ import com.unimate.unimate.dto.UpdateKelasDTO;
 import com.unimate.unimate.entity.Kelas;
 
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface KelasService {
     void saveKelas(Kelas kelas);
@@ -26,4 +30,8 @@ public interface KelasService {
     List<KelasNameOnly> getAllKelasNames();
 
     Long getCountClass();
+
+    ResponseEntity<Map> uploadImageClass(MultipartFile file, long id);
+    
+    ResponseEntity<Map> uploadCoverClass(MultipartFile file, long id);
 }

@@ -11,6 +11,8 @@ import com.unimate.unimate.repository.KelasGuruRepository;
 import com.unimate.unimate.service.AccountService;
 import com.unimate.unimate.service.KelasGuruService;
 import com.unimate.unimate.service.KelasService;
+
+import org.hibernate.DuplicateMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,10 @@ public class KelasGuruServiceImpl implements KelasGuruService {
 
     @Override
     public KelasGuru assignGuru(KelasGuruDTO kelasGuruDTO) {
+
+        if (kelasGuruRepository.existsByKelasIdAndGuruId(kelasGuruDTO.getKelasId(), kelasGuruDTO.getGuruId())) {
+            return null;
+        }
         Kelas kelas = kelasService.getKelasById(kelasGuruDTO.getKelasId());
         if (kelas == null) {
             throw new KelasNotFoundException();

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import java.util.UUID;
 import java.util.Date;
@@ -19,7 +21,7 @@ import java.util.Date;
 public class Payment {
     @Id
     @Column(name = "payment_id")
-    private UUID id;
+    private UUID id = UUID.randomUUID();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id")
@@ -41,4 +43,8 @@ public class Payment {
 
     @Column(name = "method")
     private String method;
+
+
+    @Column(name = "token")
+    private String token;
 }

@@ -18,6 +18,10 @@ public interface PaymentService {
      List<Payment> findPaymentToday();
      SalesPercentageDTO findGPaymentToday();
      SalesPercentageDTO findG2PaymentToday();
+     SalesPercentageDTO findGPaymentLast7Days();
+     SalesPercentageDTO findG2PaymentLast7Days();
+     SalesPercentageDTO findGPaymentLast30Days();
+     SalesPercentageDTO findG2PaymentLast30Days(); 
      List<Payment> findPaymentsLast7Days();
      List<Payment> findPaymentsLast30Days();
       List<Payment> findBySiswaIdAndCourseId(Long accountId, Long courseId);

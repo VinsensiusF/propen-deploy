@@ -30,5 +30,11 @@ public interface PaymentRepository extends JpaRepository<Payment,UUID>  {
     @Query(value = "SELECT SUM(e.net) FROM Payment e WHERE  DATE(e.payat) = DATE(:dateParam)")
     Long countByDate2(@Param("dateParam") Date dateParam);
     List<Payment> findBySiswaIdAndCourseIdAndStatusIn(Long siswaId, Long courseId, List<String> statuses);
+    @Query(value = "SELECT SUM(e.price) FROM Payment e WHERE DATE(e.payat) BETWEEN DATE(:startDate) AND DATE(:endDate)")
+Long countByDateRange(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+@Query(value = "SELECT SUM(e.net) FROM Payment e WHERE DATE(e.payat) BETWEEN DATE(:startDate) AND DATE(:endDate)")
+Long countByDateRange2(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
 
 }
