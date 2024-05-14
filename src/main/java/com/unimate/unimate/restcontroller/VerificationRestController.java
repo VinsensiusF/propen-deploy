@@ -19,7 +19,7 @@ public class VerificationRestController {
     public VerificationRestController(AuthenticationService authenticationService){
         this.authenticationService = authenticationService;
     }
-    @GetMapping("/email")
+    @PostMapping("/email")
     public ResponseEntity<String> verifyEmail(@RequestParam UUID token) {
         return authenticationService.verifyEmail(token);
     }

@@ -109,7 +109,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     //todo AUTH CONFIG PROPERTIES
     private String generateVerificationLink(UUID token) {
-        return backEndUrl+"/api/verify/email?token=" + token.toString();
+        return frontEndUrl+"/verify/email?token=" + token.toString();
     }
 
     private String generateVerificationForgetPassword(UUID token) {

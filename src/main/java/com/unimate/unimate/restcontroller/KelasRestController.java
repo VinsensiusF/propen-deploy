@@ -258,7 +258,7 @@ public class KelasRestController {
     }
 
     @GetMapping("/classes-taught")
-    @ValidateToken({RoleEnum.STUDENT, RoleEnum.ADMIN, RoleEnum.TEACHER, RoleEnum.CUSTOMER_SERVICE, RoleEnum.TOP_LEVEL})
+    @ValidateToken({RoleEnum.TEACHER})
     public ResponseEntity<?> getAllKelasTaughtByAGuru(HttpServletRequest request) {
         String requestToken = request.getHeader(JWT_HEADER).substring(7);
         Account account = accountService.getAccountFromJwt(requestToken);
