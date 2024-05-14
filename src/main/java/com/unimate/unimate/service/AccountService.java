@@ -19,7 +19,7 @@ public interface AccountService {
     void deleteAccount(Account account);
 
     List<Account> getAllAccount();
-
+    List<Account> getAllTeachers();
     Optional<Account> getAccountById(Long id);
 
 

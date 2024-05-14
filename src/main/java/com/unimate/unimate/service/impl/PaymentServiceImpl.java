@@ -205,6 +205,210 @@ public class PaymentServiceImpl implements PaymentService {
         return salesPercentageDTO;
     }
 
+    @Override
+    public SalesPercentageDTO findG2PaymentLast7Days() {
+    Date curDate = new Date();
+  
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(curDate);
+    calendar.add(Calendar.DATE, -1); // mengurangi satu hari dari tanggal sekarang
+    Date endDate = calendar.getTime();
+  
+    // mengatur tanggal awal 7 hari yang lalu
+    calendar.add(Calendar.DATE, -6); // 6 karena sudah mengurangi satu hari sebelumnya
+    Date startDate = calendar.getTime();
+  
+    Long totalCountEnd = paymentRepository.countByDateRange2(startDate, endDate);
+  
+    // Menghitung total 7 hari sebelumnya
+    calendar.setTime(startDate);
+    calendar.add(Calendar.DATE, -1); // mengurangi satu hari dari tanggal awal untuk mendapatkan tanggal akhir 7 hari sebelumnya
+    endDate = calendar.getTime();
+    calendar.add(Calendar.DATE, -6); // mengurangi 6 hari untuk mendapatkan tanggal awal 7 hari sebelumnya
+    startDate = calendar.getTime();
+  
+    Long totalCountStart = paymentRepository.countByDateRange2(startDate, endDate);
+  
+    // Mengecek jika totalCountStart tidak null, jika null, maka set ke 0L
+    totalCountStart = totalCountStart != null ? totalCountStart : 0L;
+    totalCountEnd = totalCountEnd != null ? totalCountEnd : 0L;
+
+    SalesPercentageDTO salesPercentageDTO = new SalesPercentageDTO();
+    double percentage;
+    if (totalCountEnd < totalCountStart) {
+        if (totalCountStart != 0) {
+            percentage = ((double)(totalCountStart - totalCountEnd) / totalCountStart) * 100;
+        } else {
+            percentage = 100; // Jika totalCountStart 0, maka dianggap 100% penurunan
+        }
+        salesPercentageDTO.setCentage(percentage);
+        salesPercentageDTO.setStatus(false); // Status false menunjukkan penurunan
+    } else if (totalCountEnd > totalCountStart) {
+        if (totalCountStart != 0) {
+            percentage = ((double)(totalCountEnd - totalCountStart) / totalCountStart) * 100;
+        } else {
+            percentage = 100; // Jika totalCountStart 0, maka dianggap 100% peningkatan
+        }
+        salesPercentageDTO.setCentage(percentage);
+        salesPercentageDTO.setStatus(true); // Status true menunjukkan peningkatan
+    }
+  
+    return salesPercentageDTO;
+}
+
+@Override
+public SalesPercentageDTO findGPaymentLast7Days() {
+    Date curDate = new Date();
+  
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(curDate);
+    calendar.add(Calendar.DATE, -1); // mengurangi satu hari dari tanggal sekarang
+    Date endDate = calendar.getTime();
+  
+    // mengatur tanggal awal 7 hari yang lalu
+    calendar.add(Calendar.DATE, -6); // 6 karena sudah mengurangi satu hari sebelumnya
+    Date startDate = calendar.getTime();
+  
+    Long totalCountEnd = paymentRepository.countByDateRange(startDate, endDate);
+  
+    // Menghitung total 7 hari sebelumnya
+    calendar.setTime(startDate);
+    calendar.add(Calendar.DATE, -1); // mengurangi satu hari dari tanggal awal untuk mendapatkan tanggal akhir 7 hari sebelumnya
+    endDate = calendar.getTime();
+    calendar.add(Calendar.DATE, -6); // mengurangi 6 hari untuk mendapatkan tanggal awal 7 hari sebelumnya
+    startDate = calendar.getTime();
+  
+    Long totalCountStart = paymentRepository.countByDateRange(startDate, endDate);
+  
+    // Mengecek jika totalCountStart tidak null, jika null, maka set ke 0L
+    totalCountStart = totalCountStart != null ? totalCountStart : 0L;
+    totalCountEnd = totalCountEnd != null ? totalCountEnd : 0L;
+
+    SalesPercentageDTO salesPercentageDTO = new SalesPercentageDTO();
+    double percentage;
+    if (totalCountEnd < totalCountStart) {
+        if (totalCountStart != 0) {
+            percentage = ((double)(totalCountStart - totalCountEnd) / totalCountStart) * 100;
+        } else {
+            percentage = 100; // Jika totalCountStart 0, maka dianggap 100% penurunan
+        }
+        salesPercentageDTO.setCentage(percentage);
+        salesPercentageDTO.setStatus(false); // Status false menunjukkan penurunan
+    } else if (totalCountEnd > totalCountStart) {
+        if (totalCountStart != 0) {
+            percentage = ((double)(totalCountEnd - totalCountStart) / totalCountStart) * 100;
+        } else {
+            percentage = 100; // Jika totalCountStart 0, maka dianggap 100% peningkatan
+        }
+        salesPercentageDTO.setCentage(percentage);
+        salesPercentageDTO.setStatus(true); // Status true menunjukkan peningkatan
+    }
+  
+    return salesPercentageDTO;
+}
+
+    
+@Override
+public SalesPercentageDTO findG2PaymentLast30Days() {
+Date curDate = new Date();
+
+Calendar calendar = Calendar.getInstance();
+calendar.setTime(curDate);
+calendar.add(Calendar.DATE, -1); // mengurangi satu hari dari tanggal sekarang
+Date endDate = calendar.getTime();
+
+// mengatur tanggal awal 7 hari yang lalu
+calendar.add(Calendar.DATE, -29); // 6 karena sudah mengurangi satu hari sebelumnya
+Date startDate = calendar.getTime();
+
+Long totalCountEnd = paymentRepository.countByDateRange2(startDate, endDate);
+
+// Menghitung total 7 hari sebelumnya
+calendar.setTime(startDate);
+calendar.add(Calendar.DATE, -1); // mengurangi satu hari dari tanggal awal untuk mendapatkan tanggal akhir 7 hari sebelumnya
+endDate = calendar.getTime();
+calendar.add(Calendar.DATE, -29); // mengurangi 6 hari untuk mendapatkan tanggal awal 7 hari sebelumnya
+startDate = calendar.getTime();
+
+Long totalCountStart = paymentRepository.countByDateRange2(startDate, endDate);
+
+// Mengecek jika totalCountStart tidak null, jika null, maka set ke 0L
+totalCountStart = totalCountStart != null ? totalCountStart : 0L;
+totalCountEnd = totalCountEnd != null ? totalCountEnd : 0L;
+
+SalesPercentageDTO salesPercentageDTO = new SalesPercentageDTO();
+double percentage;
+if (totalCountEnd < totalCountStart) {
+    if (totalCountStart != 0) {
+        percentage = ((double)(totalCountStart - totalCountEnd) / totalCountStart) * 100;
+    } else {
+        percentage = 100; // Jika totalCountStart 0, maka dianggap 100% penurunan
+    }
+    salesPercentageDTO.setCentage(percentage);
+    salesPercentageDTO.setStatus(false); // Status false menunjukkan penurunan
+} else if (totalCountEnd > totalCountStart) {
+    if (totalCountStart != 0) {
+        percentage = ((double)(totalCountEnd - totalCountStart) / totalCountStart) * 100;
+    } else {
+        percentage = 100; // Jika totalCountStart 0, maka dianggap 100% peningkatan
+    }
+    salesPercentageDTO.setCentage(percentage);
+    salesPercentageDTO.setStatus(true); // Status true menunjukkan peningkatan
+}
+
+return salesPercentageDTO;
+}
+
+@Override
+public SalesPercentageDTO findGPaymentLast30Days() {
+Date curDate = new Date();
+
+Calendar calendar = Calendar.getInstance();
+calendar.setTime(curDate);
+calendar.add(Calendar.DATE, -1); // mengurangi satu hari dari tanggal sekarang
+Date endDate = calendar.getTime();
+
+// mengatur tanggal awal 7 hari yang lalu
+calendar.add(Calendar.DATE, -29); // 6 karena sudah mengurangi satu hari sebelumnya
+Date startDate = calendar.getTime();
+
+Long totalCountEnd = paymentRepository.countByDateRange(startDate, endDate);
+
+// Menghitung total 7 hari sebelumnya
+calendar.setTime(startDate);
+calendar.add(Calendar.DATE, -1); // mengurangi satu hari dari tanggal awal untuk mendapatkan tanggal akhir 7 hari sebelumnya
+endDate = calendar.getTime();
+calendar.add(Calendar.DATE, -29); // mengurangi 6 hari untuk mendapatkan tanggal awal 7 hari sebelumnya
+startDate = calendar.getTime();
+
+Long totalCountStart = paymentRepository.countByDateRange(startDate, endDate);
+
+// Mengecek jika totalCountStart tidak null, jika null, maka set ke 0L
+totalCountStart = totalCountStart != null ? totalCountStart : 0L;
+totalCountEnd = totalCountEnd != null ? totalCountEnd : 0L;
+
+SalesPercentageDTO salesPercentageDTO = new SalesPercentageDTO();
+double percentage;
+if (totalCountEnd < totalCountStart) {
+    if (totalCountStart != 0) {
+        percentage = ((double)(totalCountStart - totalCountEnd) / totalCountStart) * 100;
+    } else {
+        percentage = 100; // Jika totalCountStart 0, maka dianggap 100% penurunan
+    }
+    salesPercentageDTO.setCentage(percentage);
+    salesPercentageDTO.setStatus(false); // Status false menunjukkan penurunan
+} else if (totalCountEnd > totalCountStart) {
+    if (totalCountStart != 0) {
+        percentage = ((double)(totalCountEnd - totalCountStart) / totalCountStart) * 100;
+    } else {
+        percentage = 100; // Jika totalCountStart 0, maka dianggap 100% peningkatan
+    }
+    salesPercentageDTO.setCentage(percentage);
+    salesPercentageDTO.setStatus(true); // Status true menunjukkan peningkatan
+}
+
+return salesPercentageDTO;
+}
 
     public  List<Payment> findBySiswaIdAndCourseId(Long accountId, Long courseId){
         List<String> status = new ArrayList<>();

@@ -6,6 +6,8 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 @Data
 @Accessors(chain = true)
 public class CreateKelasDTO {

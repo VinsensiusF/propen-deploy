@@ -10,4 +10,5 @@ public class KelasDTO {
     private String name;
     private long price;
     private String category;
+    private String cover;
 }

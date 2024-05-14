@@ -79,6 +79,10 @@ public class AccountServiceImpl implements AccountService {
     public List<Account> getAllAccount() {
         return accountRepository.findAll();
     }
+    @Override
+    public List<Account> getAllTeachers() {
+        return accountRepository.findAllTeachers();
+    }
 
     @Override
     public Optional<Account> getAccountById(Long id) {
