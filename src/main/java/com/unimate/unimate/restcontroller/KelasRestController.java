@@ -255,6 +255,13 @@ public class KelasRestController {
         return ResponseEntity.ok(kelasList);
     }
 
+    @GetMapping("/classes-taught/exam-only/{id}")
+    @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER})
+    public ResponseEntity<?> getAllPersiapanTestKelasTaughtByAGuru(@PathVariable("id") Long guruId) {
+        List<Kelas> kelasList = kelasGuruService.findAllPersiapanTesKelasTaughtByAGuru(guruId);
+        return ResponseEntity.ok(kelasList);
+    }
+
 
 
 
