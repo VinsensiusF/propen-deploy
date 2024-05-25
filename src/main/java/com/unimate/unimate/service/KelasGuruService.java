@@ -20,6 +20,7 @@ public interface KelasGuruService {
     KelasGuru findKelasGuruByKelasIdAndGuruId(Long kelasId, Long guruId);
     List<Account> findAllGuruInAClass(Long kelasId);
     List<Kelas> findAllKelasTaughtByAGuru(Long guruId);
+    List<Kelas> findAllPersiapanTesKelasTaughtByAGuru(Long guruId);
 
 
 }

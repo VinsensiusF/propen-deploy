@@ -16,7 +16,6 @@ public class UpdateUjianDTO {
     @NotNull
     private String title;
 
-    @NotNull
     private Long duration;
 
     @NotNull

@@ -23,7 +23,7 @@ public class UjianDTO {
     private Double passingGrade;
 
     // Duration in seconds
-    @NotNull
+
     private Long duration;
 
     @NotNull

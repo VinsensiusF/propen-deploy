@@ -118,4 +118,23 @@ public class KelasGuruServiceImpl implements KelasGuruService {
         }
         return kelasList;
     }
+
+    @Override
+    public List<Kelas> findAllPersiapanTesKelasTaughtByAGuru(Long guruId) {
+        Optional<Account> guru = accountService.getAccountById(guruId);
+        if (guru.isEmpty()) {
+            throw new AccountNotFoundException();
+
+        }
+
+        List<Kelas> kelasList = new ArrayList<>();
+        for (KelasGuru kg : guru.get().getKelasGuru()) {
+            if (kg.getKelas().getCategory().equals("Persiapan Tes")) {
+                kelasList.add(kg.getKelas());
+            }
+        }
+
+        return kelasList;
+
+    }
 }

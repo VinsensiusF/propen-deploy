@@ -61,7 +61,10 @@ public class UjianServiceImpl implements UjianService {
         Ujian ujian = new Ujian();
         ujian.setKelas(kelasService.getKelasById(ujianDTO.getKelasId()));
         ujian.setTitle(ujianDTO.getTitle());
-        ujian.setDuration(ujianDTO.getDuration());
+
+        if (ujianDTO.getDuration() != null) ujian.setDuration(ujianDTO.getDuration());
+
+
         ujian.setStartDate(ujianDTO.getStartDate());
         ujian.setEndDate(ujianDTO.getEndDate());
         ujian.setPassingGrade(ujianDTO.getPassingGrade());
@@ -76,7 +79,8 @@ public class UjianServiceImpl implements UjianService {
         if (ujian == null) {
             throw new UjianNotFoundException();
         }
-        ujian.setDuration(updateUjianDTO.getDuration());
+        if (updateUjianDTO.getDuration() != null) ujian.setDuration(updateUjianDTO.getDuration());
+
         ujian.setTitle(updateUjianDTO.getTitle());
         ujian.setEndDate(updateUjianDTO.getEndDate());
         ujian.setStartDate(updateUjianDTO.getStartDate());
