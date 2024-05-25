@@ -266,10 +266,12 @@ public class KelasRestController {
         return ResponseEntity.ok(kelasList);
     }
 
-    @GetMapping("/classes-taught/exam-only/{id}")
+    @GetMapping("/classes-taught/exam-only")
     @ValidateToken({RoleEnum.ADMIN,RoleEnum.TEACHER})
-    public ResponseEntity<?> getAllPersiapanTestKelasTaughtByAGuru(@PathVariable("id") Long guruId) {
-        List<Kelas> kelasList = kelasGuruService.findAllPersiapanTesKelasTaughtByAGuru(guruId);
+    public ResponseEntity<?> getAllPersiapanTestKelasTaughtByAGuru(HttpServletRequest request) {
+        String requestToken = request.getHeader(JWT_HEADER).substring(7);
+        Account account = accountService.getAccountFromJwt(requestToken);
+        List<Kelas> kelasList = kelasGuruService.findAllPersiapanTesKelasTaughtByAGuru(account.getId());
         return ResponseEntity.ok(kelasList);
     }
 
